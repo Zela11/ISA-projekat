@@ -1,0 +1,15 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <a class="navbar-brand" href="/">Irish Pub</a>
+    <ul class="navbar-menu">
+      <li class="navbar-item"><a class="navbar-link" routerLink="/home">Home</a></li>
+      <li class="navbar-item"><a class="navbar-link" href="/about">About</a></li>
+      <li class="navbar-item"><a class="navbar-link" href="/services">Menu</a></li>
+      <li class="navbar-item"><a class="navbar-link" href="/contact">Contact</a></li>
+    </ul>
+    <div class="navbar-actions">
+      <button *ngIf="!isLoggedIn" class="navbar-button" routerLink="/login">Login</button>
+      <button *ngIf="isLoggedIn" class="navbar-button" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</nav>

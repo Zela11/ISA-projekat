@@ -1,0 +1,37 @@
+<div class="register-container">
+  <div class="register-form">
+    <h2 class="form-title">Register</h2>
+    <form (ngSubmit)="onRegister(registerForm)" #registerForm="ngForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" [(ngModel)]="email" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !email">Email is required.</div>
+      </div>
+      <div class="form-group">
+        <label for="firstname">First Name</label>
+        <input type="text" id="firstname" name="firstname" [(ngModel)]="firstname" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !firstname">First name is required.</div>
+      </div>
+      <div class="form-group">
+        <label for="lastname">Last Name</label>
+        <input type="text" id="lastname" name="lastname" [(ngModel)]="lastname" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !lastname">Last name is required.</div>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" [(ngModel)]="password" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !password">Password is required.</div>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !confirmPassword">Please confirm your password.</div>
+        <div class="error-message" *ngIf="registerForm.submitted && password !== confirmPassword">Passwords do not match.</div>
+      </div>
+      <button type="submit" class="submit-button">Register</button>
+    </form>
+    <div class="login-link">
+      <p>Already have an account? <a routerLink="/login">Login here</a></p>
+    </div>
+  </div>
+</div>
