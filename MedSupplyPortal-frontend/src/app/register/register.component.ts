@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserService } from '../services/user/user.service';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { User } from '../shared/model/user';
 
 @Component({
   selector: 'app-register',
@@ -9,19 +10,29 @@ import { Router } from '@angular/router';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  email: string = '';
-  firstname: string = '';
-  lastname: string = '';
+  user: User = {
+    id: 0,
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    city: '',
+    country: '',
+    phoneNumber: '',
+    occupation: '',
+    companyInfo: '',
+    userType: 0, // Default value, adjust as necessary
+    penaltyPoints: 0 // Default value, adjust as necessary
+  };
   password: string = '';
   confirmPassword: string = '';
 
   constructor(private userService: UserService, private router: Router) {}
 
-
   onRegister(form: NgForm): void {
     if (form.valid && this.password === this.confirmPassword) {
-      const { email, firstname, lastname, password } = this;
-      this.userService.register(email, firstname, lastname, password).subscribe(
+      this.user.password = this.password;
+      this.userService.register(this.user).subscribe(
         response => {
           console.log('Registration successful', response.message);
           this.router.navigate(['login']);

@@ -4,18 +4,43 @@
     <form (ngSubmit)="onRegister(registerForm)" #registerForm="ngForm">
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" [(ngModel)]="email" required>
-        <div class="error-message" *ngIf="registerForm.submitted && !email">Email is required.</div>
+        <input type="email" id="email" name="email" [(ngModel)]="user.email" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !user.email">Email is required.</div>
       </div>
       <div class="form-group">
         <label for="firstname">First Name</label>
-        <input type="text" id="firstname" name="firstname" [(ngModel)]="firstname" required>
-        <div class="error-message" *ngIf="registerForm.submitted && !firstname">First name is required.</div>
+        <input type="text" id="firstname" name="firstname" [(ngModel)]="user.firstname" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !user.firstname">First name is required.</div>
       </div>
       <div class="form-group">
         <label for="lastname">Last Name</label>
-        <input type="text" id="lastname" name="lastname" [(ngModel)]="lastname" required>
-        <div class="error-message" *ngIf="registerForm.submitted && !lastname">Last name is required.</div>
+        <input type="text" id="lastname" name="lastname" [(ngModel)]="user.lastname" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !user.lastname">Last name is required.</div>
+      </div>
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" name="city" [(ngModel)]="user.city" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !user.city">City is required.</div>
+      </div>
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input type="text" id="country" name="country" [(ngModel)]="user.country" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !user.country">Country is required.</div>
+      </div>
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input type="text" id="phoneNumber" name="phoneNumber" [(ngModel)]="user.phoneNumber" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !user.phoneNumber">Phone number is required.</div>
+      </div>
+      <div class="form-group">
+        <label for="occupation">Occupation</label>
+        <input type="text" id="occupation" name="occupation" [(ngModel)]="user.occupation" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !user.occupation">Occupation is required.</div>
+      </div>
+      <div class="form-group">
+        <label for="companyInfo">Company Info</label>
+        <input type="text" id="companyInfo" name="companyInfo" [(ngModel)]="user.companyInfo" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !user.companyInfo">Company info is required.</div>
       </div>
       <div class="form-group">
         <label for="password">Password</label>

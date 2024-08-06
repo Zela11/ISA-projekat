@@ -19,6 +19,5 @@ public class User
     public string Occupation { get; set; }
     public string CompanyInfo { get; set; }
     public UserType Type { get; set; }
-    //public List<Order> OrderHistory { get; set; }  // Istorija narudžbina
     public int PenaltyPoints { get; set; }  // Penal poeni za korisnike
 }

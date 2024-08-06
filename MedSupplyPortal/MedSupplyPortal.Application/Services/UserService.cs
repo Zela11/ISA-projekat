@@ -46,7 +46,13 @@ namespace MedSupplyPortal.Application.Services
                 LastName = registerUserDto.LastName,
                 Email = registerUserDto.Email,
                 Password = registerUserDto.Password,
-                Type = UserType.Guest
+                City = registerUserDto.City,
+                Country = registerUserDto.Country,
+                PhoneNumber = registerUserDto.PhoneNumber,
+                Occupation = registerUserDto.Occupation,
+                CompanyInfo = registerUserDto.CompanyInfo,
+                Type = UserType.RegisteredUser,
+                PenaltyPoints = registerUserDto.PenaltyPoints,
             };
             await _userRepository.AddAsync(user);
             return true;
