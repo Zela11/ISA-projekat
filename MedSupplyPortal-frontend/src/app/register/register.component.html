@@ -10,13 +10,13 @@
       </div>
       <div class="form-group">
         <label for="firstname">First Name</label>
-        <input type="text" id="firstname" name="firstname" [(ngModel)]="user.firstname" required>
-        <div class="error-message" *ngIf="registerForm.submitted && !user.firstname">First name is required.</div>
+        <input type="text" id="firstname" name="firstname" [(ngModel)]="user.firstName" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !user.firstName">First name is required.</div>
       </div>
       <div class="form-group">
         <label for="lastname">Last Name</label>
-        <input type="text" id="lastname" name="lastname" [(ngModel)]="user.lastname" required>
-        <div class="error-message" *ngIf="registerForm.submitted && !user.lastname">Last name is required.</div>
+        <input type="text" id="lastname" name="lastname" [(ngModel)]="user.lastName" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !user.lastName">Last name is required.</div>
       </div>
 
       <!-- Address fields -->

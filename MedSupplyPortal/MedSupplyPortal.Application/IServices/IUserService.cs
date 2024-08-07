@@ -11,5 +11,9 @@ namespace MedSupplyPortal.Application.IServices
     {
         Task<bool> RegisterUserAsync(RegisterUserDto registerUserDto);
         Task<(string Token, int UserId)> AuthenticationAsync(string email, string password);
+        Task<RegisterUserDto> GetByIdAsync(int id); 
+        Task<IEnumerable<RegisterUserDto>> GetSystemAdmins();
+        Task<bool> RegisterCompanyAdminAsync(RegisterUserDto userDto, int companyId);
+
     }
 }

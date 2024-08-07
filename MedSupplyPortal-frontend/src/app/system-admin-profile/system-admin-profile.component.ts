@@ -1,30 +1,69 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { TokenStorageService } from '../services/user/token.service';
+import { UserService } from '../services/user/user.service';
+import { CompanyService } from '../services/company/company.service';
+import { Company } from '../shared/model/company';
+import { User } from '../shared/model/user';
 
 @Component({
   selector: 'app-system-admin-profile',
   templateUrl: './system-admin-profile.component.html',
   styleUrls: ['./system-admin-profile.component.css']
 })
-export class SystemAdminProfileComponent {
-  adminFirstName: string = 'John';
-  adminLastName: string = 'Doe';
-  companies = [
-    {
-      name: 'Tech Innovations Inc.',
-      description: 'A leading tech company specializing in innovative solutions.',
-      averageRating: 4.5
+export class SystemAdminProfileComponent implements OnInit {
+
+  userId : number = 0;
+  user : User = {
+    id: 0, 
+    firstName: '',
+    lastName: '', 
+    email: '',
+    password: '',
+    phoneNumber: '',
+    occupation: '',
+    userType: 0, 
+    penaltyPoints: 0,
+    address: {
+      city: '',
+      country: '',
+      street: '',
+      latitude: undefined,
+      longitude: undefined
     },
-    {
-      name: 'Creative Solutions LLC',
-      description: 'A company focused on creative marketing and design.',
-      averageRating: 4.2
-    },
-    {
-      name: 'Healthwise Corp.',
-      description: 'Provides health-related products and services.',
-      averageRating: 4.7
-    }
-  ];
+    companyId: undefined,
+  }
+  constructor(private tokenStorage: TokenStorageService, private userService: UserService, private companyService: CompanyService) {}
+
+  ngOnInit(): void {
+    this.userId = this.tokenStorage.getUserId();
+    this.fetchUser();
+    this.fetchCompanies();
+
+  }
+
+  fetchCompanies() {
+    this.companyService.getAll().subscribe(
+      (data: Company[]) => {
+       this.companies = data;
+      },
+      (error) => {
+        console.error('Failed to fetch companies', error);
+      }
+    );
+  }
+
+  fetchUser() {
+    console.log("fetc usera");
+    this.userService.getById(this.userId).subscribe(
+      (user) => {
+        this.user = user;
+        console.log('Fetched user:', this.user.firstName);
+
+      }
+    )
+  }
+  companies: Company[] = [];
+
 
   systemAdmins = [
     {
@@ -47,29 +86,53 @@ export class SystemAdminProfileComponent {
   showCompanyPopup: boolean = false;
   showSysAdminPopup: boolean = false;
 
-  newCompany = {
+  newCompany: Company = {
+    id: 0,
     name: '',
     description: '',
+    address: {
+      city: '',
+      country: '',
+      street: '',
+      latitude: undefined,
+      longitude: undefined
+    },
     averageRating: 0
   };
-  newSysAdmin = {
+  newSysAdmin : User  ={
+    id: 0,
     email: '',
     password: '',
     firstName: '',
-    lastName: ''
+    lastName: '',
+    phoneNumber: '',
+    occupation: '',
+    userType: 2,
+    penaltyPoints: 0,
+    address: {
+      city: '',
+      country: '',
+      street: '', // Assuming you want a street field for Address
+      latitude: undefined, // Optional, can be null
+      longitude: undefined, // Optional, can be null
+    },
+    companyId: undefined // Optional, if applicable
   };
 
-  // Method to handle the add admin button click
   showAddAdminPopup(company: any): void {
-    // Implement the logic to show a popup or modal for adding an admin
     console.log(`Add admin for company: ${company.name}`);
   }
   addCompany(): void {
-    if (this.newCompany.name && this.newCompany.description && this.newCompany.averageRating) {
-      this.companies.push({ ...this.newCompany });
-      this.newCompany = { name: '', description: '', averageRating: 0 }; // Clear the form
-      this.closeCompanyPopup();
-    }
+    console.log(this.newCompany);
+    this.companyService.create(this.newCompany).subscribe(
+      response => {
+        console.log('Registration successful', response);
+      },
+      error => {
+        console.log('Greska', error);
+      }
+      
+    );
   }
 
   showAddSysAdminPopup(): void {
@@ -81,11 +144,18 @@ export class SystemAdminProfileComponent {
   }
 
   addSysAdmin(): void {
-    if (this.newSysAdmin.email && this.newSysAdmin.password && this.newSysAdmin.firstName && this.newSysAdmin.lastName) {
-      this.systemAdmins.push({ ...this.newSysAdmin });
-      this.newSysAdmin = { email: '', password: '', firstName: '', lastName: '' }; // Clear the form
+      console.log(this.newSysAdmin);
+      this.userService.register(this.newSysAdmin).subscribe(
+        response => {
+          console.log('Registration successful', response.message);
+        },
+        error => {
+          console.log('Greska', error);
+        }
+        
+      );
       this.closeSysAdminPopup();
-    }
+    
   }
   showAddCompanyPopup(): void {
     this.showCompanyPopup = true;

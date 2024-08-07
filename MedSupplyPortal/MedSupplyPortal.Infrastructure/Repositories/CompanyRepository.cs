@@ -33,8 +33,13 @@ public class CompanyRepository : ICompanyRepository
                .ToListAsync();
     }
 
-    public Task<Company> GetByIdAsync(int id)
+    public async Task<Company> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _context.Companies.FirstOrDefaultAsync(c => c.Id == id);
+    }
+    public async Task UpdateAsync(Company company)
+    {
+        _context.Set<Company>().Update(company);
+        await _context.SaveChangesAsync();
     }
 }

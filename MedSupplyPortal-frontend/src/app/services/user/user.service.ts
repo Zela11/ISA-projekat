@@ -40,7 +40,11 @@ export class UserService {
   }
 
   register(user: User): Observable<any> {
+    console.log(user.userType);
     return this.http.post(`${this.apiUrl}/register`, user);
 
+  }
+  getById(id: number) : Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
 }

@@ -12,8 +12,8 @@ import { User } from '../shared/model/user';
 export class RegisterComponent {
   user: User = {
     id: 0,
-    firstname: '',
-    lastname: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     phoneNumber: '',

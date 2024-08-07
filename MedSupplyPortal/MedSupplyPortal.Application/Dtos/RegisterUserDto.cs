@@ -14,8 +14,9 @@ public class RegisterUserDto
     public string Password { get; set; }
     public string PhoneNumber { get; set; }
     public string Occupation { get; set; }
-    public UserType Type { get; set; }
+    public int UserType { get; set; }
     public int PenaltyPoints { get; set; }
     public AddressDto Address { get; set; }
+    public int? CompanyId { get; set; }
 
 }
