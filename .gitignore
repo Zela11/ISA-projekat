@@ -86,7 +86,6 @@ package-lock.json
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
 *.sw*
 
 # Environment variable files
