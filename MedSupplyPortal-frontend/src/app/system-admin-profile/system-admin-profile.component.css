@@ -1,0 +1,217 @@
+.admin-container {
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .admin-header {
+    margin-bottom: 20px;
+  }
+  
+  .admin-header h1 {
+    margin: 0;
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .add-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #2196f3; /* Promeni prema potrebi */
+    color: white;
+    cursor: pointer;
+  }
+  
+  .add-button:hover {
+    background-color: #1976d2; /* Promeni prema potrebi */
+  }
+  
+  .company-list {
+    margin-bottom: 30px;
+  }
+  
+  .company-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .company-card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 250px;
+  }
+  
+  .company-name {
+    margin: 0 0 10px;
+  }
+  
+  .company-description {
+    margin: 0 0 10px;
+  }
+  
+  .company-rating {
+    margin: 0 0 10px;
+  }
+  
+  .add-admin-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4caf50; /* Promeni prema potrebi */
+    color: white;
+    cursor: pointer;
+  }
+  
+  .add-admin-button:hover {
+    background-color: #45a049; /* Promeni prema potrebi */
+  }
+  
+  .system-admin-list {
+    margin-top: 20px;
+  }
+  
+  .system-admin-list ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .system-admin-list li {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+/* Styles for the popup */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+  }
+  
+  .popup-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .submit-button, .close-button {
+    padding: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    margin-right: 0.5rem;
+  }
+  
+  .submit-button {
+    background-color: #4caf50; /* Green */
+  }
+  
+  .submit-button:hover {
+    background-color: #45a049; /* Darker green */
+  }
+  
+  .close-button {
+    background-color: #f44336; /* Red */
+  }
+  
+  .close-button:hover {
+    background-color: #e53935; /* Darker red */
+  }
+  /* Styles for the popup */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+  }
+  
+  .popup-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .submit-button, .close-button {
+    padding: 0.75rem;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    cursor: pointer;
+    margin-right: 0.5rem;
+  }
+  
+  .submit-button {
+    background-color: #4caf50; /* Green */
+  }
+  
+  .submit-button:hover {
+    background-color: #45a049; /* Darker green */
+  }
+  
+  .close-button {
+    background-color: #f44336; /* Red */
+  }
+  
+  .close-button:hover {
+    background-color: #e53935; /* Darker red */
+  }
+  
+    

@@ -25,9 +25,10 @@ namespace MedSupplyPortal.Application.Services
             _tokenService = tokenService;
 
         }
-
+        
         public async Task<(string Token, int UserId)> AuthenticationAsync(string email, string password)
         {
+            
             var user = await _userRepository.GetUserByEmailAsync(email); ;
             if (user == null || !VerifyPasswordHash(password, user.Password))
             {
@@ -37,23 +38,34 @@ namespace MedSupplyPortal.Application.Services
             var token = _tokenService.GenerateToken(user);
             return (token , user.Id);
         }
-
+        
         public async Task<bool> RegisterUserAsync(RegisterUserDto registerUserDto)
         {
+            var address = new Address
+            {
+                City = registerUserDto.Address?.City,
+                Country = registerUserDto.Address?.Country,
+                Street = registerUserDto.Address?.Street,
+                Latitude = registerUserDto.Address?.Latitude,
+                Longitude = registerUserDto.Address?.Longitude
+            };
+
+            // Kreirajte User entitet i postavite adresu
             var user = new User
             {
                 FirstName = registerUserDto.FirstName,
                 LastName = registerUserDto.LastName,
                 Email = registerUserDto.Email,
                 Password = registerUserDto.Password,
-                City = registerUserDto.City,
-                Country = registerUserDto.Country,
+                Address = address, // Postavite Address entitet
                 PhoneNumber = registerUserDto.PhoneNumber,
                 Occupation = registerUserDto.Occupation,
-                CompanyInfo = registerUserDto.CompanyInfo,
-                Type = UserType.RegisteredUser,
+                Type = registerUserDto.Type, // Pretpostavljam da ste dodali UserType u DTO
                 PenaltyPoints = registerUserDto.PenaltyPoints,
+                CompanyId = null
             };
+
+            // Dodajte korisnika u repozitorijum
             await _userRepository.AddAsync(user);
             return true;
         }

@@ -11,12 +11,9 @@ namespace MedSupplyPortal.Domain.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        // da li imati objekat klase Location ili sve ovo u companiju
-        public string City { get; set; }
-        public string Country { get; set; }
-        public string AverageRating { get; set; }
-        public List<Appointment> Appointments {  get; set; }
-        public List<User> Administrators { get; set; }
-        public List<Equipment> equipments { get; set; }
+        public Address Address { get; set; }
+        public double AverageRating { get; set; }
+        public List<Equipment>? EquipmentList { get; set; }
+        public List<User> CompanyAdmins { get; set; }
     }
 }

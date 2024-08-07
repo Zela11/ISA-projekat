@@ -13,7 +13,7 @@ export class NavBarComponent implements OnInit {
   isLoggedIn: boolean = false;
   userId: number | null = null;
 
-  constructor(private userService: UserService, private tokenStorage: TokenStorageService) {}
+  constructor(private userService: UserService, private tokenStorage: TokenStorageService, private router: Router) {}
   ngOnInit(): void {
     this.checkLoginStatus();
     }
@@ -29,5 +29,6 @@ export class NavBarComponent implements OnInit {
   logout(): void {
     this.userService.logout();
     this.isLoggedIn = false;
+    this.router.navigate(['home']);
   }
 }

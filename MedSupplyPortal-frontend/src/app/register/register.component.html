@@ -2,6 +2,7 @@
   <div class="register-form">
     <h2 class="form-title">Register</h2>
     <form (ngSubmit)="onRegister(registerForm)" #registerForm="ngForm">
+      <!-- Existing fields -->
       <div class="form-group">
         <label for="email">Email</label>
         <input type="email" id="email" name="email" [(ngModel)]="user.email" required>
@@ -17,16 +18,25 @@
         <input type="text" id="lastname" name="lastname" [(ngModel)]="user.lastname" required>
         <div class="error-message" *ngIf="registerForm.submitted && !user.lastname">Last name is required.</div>
       </div>
+
+      <!-- Address fields -->
+      <div class="form-group">
+        <label for="street">Street</label>
+        <input type="text" id="street" name="street" [(ngModel)]="user.address.street" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !user.address.street">Street is required.</div>
+      </div>
       <div class="form-group">
         <label for="city">City</label>
-        <input type="text" id="city" name="city" [(ngModel)]="user.city" required>
-        <div class="error-message" *ngIf="registerForm.submitted && !user.city">City is required.</div>
+        <input type="text" id="city" name="city" [(ngModel)]="user.address.city" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !user.address.city">City is required.</div>
       </div>
       <div class="form-group">
         <label for="country">Country</label>
-        <input type="text" id="country" name="country" [(ngModel)]="user.country" required>
-        <div class="error-message" *ngIf="registerForm.submitted && !user.country">Country is required.</div>
+        <input type="text" id="country" name="country" [(ngModel)]="user.address.country" required>
+        <div class="error-message" *ngIf="registerForm.submitted && !user.address.country">Country is required.</div>
       </div>
+
+      <!-- Other fields -->
       <div class="form-group">
         <label for="phoneNumber">Phone Number</label>
         <input type="text" id="phoneNumber" name="phoneNumber" [(ngModel)]="user.phoneNumber" required>
@@ -37,11 +47,8 @@
         <input type="text" id="occupation" name="occupation" [(ngModel)]="user.occupation" required>
         <div class="error-message" *ngIf="registerForm.submitted && !user.occupation">Occupation is required.</div>
       </div>
-      <div class="form-group">
-        <label for="companyInfo">Company Info</label>
-        <input type="text" id="companyInfo" name="companyInfo" [(ngModel)]="user.companyInfo" required>
-        <div class="error-message" *ngIf="registerForm.submitted && !user.companyInfo">Company info is required.</div>
-      </div>
+
+      <!-- Password fields -->
       <div class="form-group">
         <label for="password">Password</label>
         <input type="password" id="password" name="password" [(ngModel)]="password" required>
@@ -53,6 +60,8 @@
         <div class="error-message" *ngIf="registerForm.submitted && !confirmPassword">Please confirm your password.</div>
         <div class="error-message" *ngIf="registerForm.submitted && password !== confirmPassword">Passwords do not match.</div>
       </div>
+
+      <!-- Submit button -->
       <button type="submit" class="submit-button">Register</button>
     </form>
     <div class="login-link">

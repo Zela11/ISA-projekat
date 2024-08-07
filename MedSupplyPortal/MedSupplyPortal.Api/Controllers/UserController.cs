@@ -13,7 +13,7 @@ public class UserController : ControllerBase
     {
         _userService = userService;
     }
-
+    
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto registerUserDto)
     {
@@ -28,7 +28,7 @@ public class UserController : ControllerBase
         {
             return BadRequest("Registration failed.");
         }
-
+        
         return Ok(new { message = "User registered successfully." });
     }
     [HttpPost("login")]

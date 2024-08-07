@@ -16,13 +16,18 @@ export class RegisterComponent {
     lastname: '',
     email: '',
     password: '',
-    city: '',
-    country: '',
     phoneNumber: '',
     occupation: '',
-    companyInfo: '',
     userType: 0, // Default value, adjust as necessary
-    penaltyPoints: 0 // Default value, adjust as necessary
+    penaltyPoints: 0, // Default value, adjust as necessary
+    address: {
+      city: '',
+      country: '',
+      street: '', // Assuming you want a street field for Address
+      latitude: undefined, // Optional, can be null
+      longitude: undefined, // Optional, can be null
+    },
+    companyId: undefined // Optional, if applicable
   };
   password: string = '';
   confirmPassword: string = '';

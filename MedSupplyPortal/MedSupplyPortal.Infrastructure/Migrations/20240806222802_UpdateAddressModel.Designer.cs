@@ -3,6 +3,7 @@ using System;
 using MedSupplyPortal.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedSupplyPortal.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240806222802_UpdateAddressModel")]
+    partial class UpdateAddressModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,9 +154,11 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                                 .HasColumnType("character varying(100)");
 
                             b1.Property<double?>("Latitude")
+                                .IsRequired()
                                 .HasColumnType("double precision");
 
                             b1.Property<double?>("Longitude")
+                                .IsRequired()
                                 .HasColumnType("double precision");
 
                             b1.Property<string>("Street")
@@ -205,9 +210,11 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                                 .HasColumnType("character varying(100)");
 
                             b1.Property<double?>("Latitude")
+                                .IsRequired()
                                 .HasColumnType("double precision");
 
                             b1.Property<double?>("Longitude")
+                                .IsRequired()
                                 .HasColumnType("double precision");
 
                             b1.Property<string>("Street")
