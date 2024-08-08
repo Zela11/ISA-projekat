@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/env/enviroment';
 import { TokenStorageService } from './token.service';
+import { User } from 'src/app/shared/model/user';
 
 @Injectable({
   providedIn: 'root'
@@ -38,8 +39,16 @@ export class UserService {
     this.currentUserSubject.next(null);
   }
 
-  register(email: string, firstname: string, lastname: string, password: string ): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, { email, firstname, lastname, password });
+  register(user: User): Observable<any> {
+    console.log(user.userType);
+    return this.http.post(`${this.apiUrl}/register`, user);
 
   }
+  getById(id: number) : Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/${id}`);
+  }
+  getSystemAdmins() : Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/getSystemAdmins`);
+  }
+
 }

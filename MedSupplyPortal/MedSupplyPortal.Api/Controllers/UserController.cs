@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MedSupplyPortal.Application.Dtos;
 using MedSupplyPortal.Application.IServices;
+using MedSupplyPortal.Domain.Entities;
 
 [ApiController]
 [Route("api/users")]
@@ -13,7 +14,7 @@ public class UserController : ControllerBase
     {
         _userService = userService;
     }
-
+    
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto registerUserDto)
     {
@@ -28,7 +29,7 @@ public class UserController : ControllerBase
         {
             return BadRequest("Registration failed.");
         }
-
+        
         return Ok(new { message = "User registered successfully." });
     }
     [HttpPost("login")]
@@ -41,5 +42,42 @@ public class UserController : ControllerBase
         }
 
         return Ok(new { Token = token, UserId = userId });
+    }
+    [HttpGet("{id}")]
+    public async Task<ActionResult<RegisterUserDto>> GetUserById(int id)
+    {
+        var user = await _userService.GetByIdAsync(id);
+        if (user == null) return NotFound();
+
+        return Ok(user);
+    }
+    [HttpGet("getSystemAdmins")]
+    public async Task<ActionResult<IEnumerable<RegisterUserDto>>> GetSystemAdmins()
+    {
+        try
+        {
+            var admins = await _userService.GetSystemAdmins();
+            return Ok(admins);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error");
+
+        }
+    }
+    [HttpPost("createCompanyAdmin/{companyId}")]
+    public async Task<IActionResult> RegisterCompanyAdmin([FromBody] RegisterUserDto userDto, [FromRoute] int companyId)
+    {
+        if (userDto == null)
+        {
+            return BadRequest("Invalid data.");
+        }
+
+        var result = await _userService.RegisterCompanyAdminAsync(userDto, companyId);
+        if (result)
+        {
+            return Ok("Company admin registered successfully.");
+        }
+        return NotFound("Company not found.");
     }
 }

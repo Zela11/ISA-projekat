@@ -12,5 +12,6 @@ public interface IUserRepository
     Task<User> GetByIdAsync(int id);
     Task AddAsync(User user);
     Task<User> GetUserByEmailAsync(string email);
+    Task<IEnumerable<User>> GetAllUsersAsync(); // Dodajte ovu metodu
 
 }

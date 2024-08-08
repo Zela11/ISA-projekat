@@ -1,0 +1,95 @@
+<div class="admin-container">
+    <header class="admin-header">
+      <h1>Welcome, {{ user.firstName }} {{ user.lastName }}</h1>
+    </header>
+  
+    <section class="company-list">
+      <div class="section-header">
+        <h2>Companies</h2>
+        <button class="add-button" routerLink="/companyForm">Add Company</button>
+      </div>
+      <div class="company-cards">
+        <div class="company-card" *ngFor="let company of companies">
+          <h3 class="company-name">{{ company.name }}</h3>
+          <p class="company-description">{{ company.description }}</p>
+          <p class="company-rating">Average Rating: {{ company.averageRating }}</p>
+          <p class="company-address">
+            Address: {{ company.address.street }}, {{ company.address.city }}, {{ company.address.country }}
+          </p>
+          <button class="add-admin-button" (click)="showAddAdminPopup(company)">Add Company Admin</button>
+        </div>
+      </div>
+    </section>
+  
+    <section class="system-admin-list">
+      <div class="section-header">
+        <h2>System Administrators</h2>
+        <button class="add-button" (click)="showAddSysAdminPopup()">Add Administrator</button>
+      </div>
+      <ul>
+        <li *ngFor="let admin of systemAdmins">
+          {{ admin.firstName }} {{ admin.lastName }} ({{ admin.email }})
+        </li>
+      </ul>
+    </section>
+  
+  
+    <!-- Popup for Adding Administrator -->
+    <div class="popup" *ngIf="showSysAdminPopup">
+      <div class="popup-content">
+        <h2>Add New System Administrator</h2>
+        <form (ngSubmit)="addSysAdmin()" #sysAdminForm="ngForm">
+          <div class="form-group">
+            <label for="adminEmail">Email</label>
+            <input type="email" id="adminEmail" name="adminEmail" [(ngModel)]="newSysAdmin.email" required>
+          </div>
+          <div class="form-group">
+            <label for="adminPassword">Password</label>
+            <input type="password" id="adminPassword" name="adminPassword" [(ngModel)]="newSysAdmin.password" required>
+          </div>
+          <div class="form-group">
+            <label for="adminFirstName">First Name</label>
+            <input type="text" id="adminFirstName" name="adminFirstName" [(ngModel)]="newSysAdmin.firstName" required>
+          </div>
+          <div class="form-group">
+            <label for="adminLastName">Last Name</label>
+            <input type="text" id="adminLastName" name="adminLastName" [(ngModel)]="newSysAdmin.lastName" required>
+          </div>
+          <button type="submit" class="submit-button">Add Administrator</button>
+          <button type="button" class="close-button" (click)="closeSysAdminPopup()">Close</button>
+        </form>
+      </div>
+    </div>
+
+<!-- Popup for Adding Company Admin -->
+<div class="popup" *ngIf="showCompanyAdminPopup">
+  <div class="popup-content">
+    <h2>Add Company Admin</h2>
+    <form (ngSubmit)="addCompanyAdmin()" #companyAdminForm="ngForm">
+      <div class="form-group">
+        <label for="companyAdminEmail">Email</label>
+        <input type="email" id="companyAdminEmail" name="companyAdminEmail" [(ngModel)]="newCompanyAdmin.email" required>
+      </div>
+      <div class="form-group">
+        <label for="companyAdminPassword">Password</label>
+        <input type="password" id="companyAdminPassword" name="companyAdminPassword" [(ngModel)]="newCompanyAdmin.password" required>
+      </div>
+      <div class="form-group">
+        <label for="companyAdminFirstName">First Name</label>
+        <input type="text" id="companyAdminFirstName" name="companyAdminFirstName" [(ngModel)]="newCompanyAdmin.firstName" required>
+      </div>
+      <div class="form-group">
+        <label for="companyAdminLastName">Last Name</label>
+        <input type="text" id="companyAdminLastName" name="companyAdminLastName" [(ngModel)]="newCompanyAdmin.lastName" required>
+      </div>
+      <div class="form-group">
+        <label for="companyAdminPhoneNumber">Phone Number</label>
+        <input type="text" id="companyAdminPhoneNumber" name="companyAdminPhoneNumber" [(ngModel)]="newCompanyAdmin.phoneNumber" required>
+      </div>
+      <button type="submit" class="submit-button">Add Company Admin</button>
+      <button type="button" class="close-button" (click)="closeCompanyAdminPopup()">Close</button>
+    </form>
+  </div>
+</div>
+</div>
+  
