@@ -9,7 +9,8 @@ import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegisterComponent } from './register/register.component';
-import { SystemAdminProfileComponent } from './system-admin-profile/system-admin-profile.component';  // Dodaj ovu liniju
+import { SystemAdminProfileComponent } from './system-admin-profile/system-admin-profile.component';
+import { CompanyFormComponent } from './company-form/company-form.component';  // Dodaj ovu liniju
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { SystemAdminProfileComponent } from './system-admin-profile/system-admin
     NavBarComponent,
     LoginComponent,
     RegisterComponent,
-    SystemAdminProfileComponent
+    SystemAdminProfileComponent,
+    CompanyFormComponent
   ],
   imports: [
     BrowserModule,

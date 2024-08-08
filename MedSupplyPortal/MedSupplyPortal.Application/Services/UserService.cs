@@ -64,11 +64,24 @@ namespace MedSupplyPortal.Application.Services
                 Occupation = registerUserDto.Occupation,
                 Type = (UserType)registerUserDto.UserType, // Pretpostavljam da ste dodali UserType u DTO
                 PenaltyPoints = registerUserDto.PenaltyPoints,
-                CompanyId = null
+                CompanyId = registerUserDto.CompanyId
             };
 
-            // Dodajte korisnika u repozitorijum
+
+
             await _userRepository.AddAsync(user);
+            if(registerUserDto.CompanyId != null)
+            {
+                int id = (int)registerUserDto.CompanyId;
+                var company = await _companyRepository.GetByIdAsync(id);
+                if(company != null)
+                {
+                    company.CompanyAdmins.Add(user);
+                    await _companyRepository.UpdateAsync(company);
+                }
+            }
+
+
             return true;
         }
         private bool VerifyPasswordHash(string password, string storedPassword)
@@ -159,7 +172,7 @@ namespace MedSupplyPortal.Application.Services
 
             await _userRepository.AddAsync(user);
 
-            // Add user to company's list of admins
+
             company.CompanyAdmins.Add(user);
             // Save the updated company
             await _companyRepository.UpdateAsync(company);

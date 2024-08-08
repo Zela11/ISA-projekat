@@ -29,7 +29,8 @@ public class CompanyRepository : ICompanyRepository
     public async Task<List<Company>> GetAllAsync()
     {
         return await _context.Companies
-               .Include(c => c.Address) 
+               .Include(c => c.Address)
+               .Include(c => c.CompanyAdmins)
                .ToListAsync();
     }
 

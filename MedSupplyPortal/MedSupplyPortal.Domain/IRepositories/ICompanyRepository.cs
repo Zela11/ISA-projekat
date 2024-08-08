@@ -12,6 +12,6 @@ public interface ICompanyRepository
     Task<Company> GetByIdAsync(int id);
     Task AddAsync(Company company);
     Task<List<Company>> GetAllAsync();
-    Task UpdateAsync(Company company); // Dodaj ovu liniju
+    Task UpdateAsync(Company company); 
 
 }

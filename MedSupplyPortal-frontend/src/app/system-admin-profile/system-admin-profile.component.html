@@ -6,7 +6,7 @@
     <section class="company-list">
       <div class="section-header">
         <h2>Companies</h2>
-        <button class="add-button" (click)="showAddCompanyPopup()">Add Company</button>
+        <button class="add-button" routerLink="/companyForm">Add Company</button>
       </div>
       <div class="company-cards">
         <div class="company-card" *ngFor="let company of companies">
@@ -33,45 +33,11 @@
       </ul>
     </section>
   
-    <!-- Popup for Adding Company -->
-    <div class="popup" *ngIf="showCompanyPopup">
-      <div class="popup-content">
-        <h2>Add New Company</h2>
-        <form (ngSubmit)="addCompany()" #companyForm="ngForm">
-          <div class="form-group">
-            <label for="companyName">Name</label>
-            <input type="text" id="companyName" name="companyName" [(ngModel)]="newCompany.name" required>
-          </div>
-          <div class="form-group">
-            <label for="companyDescription">Description</label>
-            <input type="text" id="companyDescription" name="companyDescription" [(ngModel)]="newCompany.description" required>
-          </div>
-          <div class="form-group">
-            <label for="companyRating">Average Rating</label>
-            <input type="number" id="companyRating" name="companyRating" [(ngModel)]="newCompany.averageRating" min="0" max="5" step="0.1" required>
-          </div>
-          <div class="form-group">
-            <label for="companyStreet">Street</label>
-            <input type="text" id="companyStreet" name="companyStreet" [(ngModel)]="newCompany.address.street" required>
-          </div>
-          <div class="form-group">
-            <label for="companyCity">City</label>
-            <input type="text" id="companyCity" name="companyCity" [(ngModel)]="newCompany.address.city" required>
-          </div>
-          <div class="form-group">
-            <label for="companyCountry">Country</label>
-            <input type="text" id="companyCountry" name="companyCountry" [(ngModel)]="newCompany.address.country" required>
-          </div>
-          <button type="submit" class="submit-button">Add Company</button>
-          <button type="button" class="close-button" (click)="closeCompanyPopup()">Close</button>
-        </form>
-      </div>
-    </div>
   
     <!-- Popup for Adding Administrator -->
     <div class="popup" *ngIf="showSysAdminPopup">
       <div class="popup-content">
-        <h2>Add New Administrator</h2>
+        <h2>Add New System Administrator</h2>
         <form (ngSubmit)="addSysAdmin()" #sysAdminForm="ngForm">
           <div class="form-group">
             <label for="adminEmail">Email</label>
@@ -94,5 +60,36 @@
         </form>
       </div>
     </div>
+
+<!-- Popup for Adding Company Admin -->
+<div class="popup" *ngIf="showCompanyAdminPopup">
+  <div class="popup-content">
+    <h2>Add Company Admin</h2>
+    <form (ngSubmit)="addCompanyAdmin()" #companyAdminForm="ngForm">
+      <div class="form-group">
+        <label for="companyAdminEmail">Email</label>
+        <input type="email" id="companyAdminEmail" name="companyAdminEmail" [(ngModel)]="newCompanyAdmin.email" required>
+      </div>
+      <div class="form-group">
+        <label for="companyAdminPassword">Password</label>
+        <input type="password" id="companyAdminPassword" name="companyAdminPassword" [(ngModel)]="newCompanyAdmin.password" required>
+      </div>
+      <div class="form-group">
+        <label for="companyAdminFirstName">First Name</label>
+        <input type="text" id="companyAdminFirstName" name="companyAdminFirstName" [(ngModel)]="newCompanyAdmin.firstName" required>
+      </div>
+      <div class="form-group">
+        <label for="companyAdminLastName">Last Name</label>
+        <input type="text" id="companyAdminLastName" name="companyAdminLastName" [(ngModel)]="newCompanyAdmin.lastName" required>
+      </div>
+      <div class="form-group">
+        <label for="companyAdminPhoneNumber">Phone Number</label>
+        <input type="text" id="companyAdminPhoneNumber" name="companyAdminPhoneNumber" [(ngModel)]="newCompanyAdmin.phoneNumber" required>
+      </div>
+      <button type="submit" class="submit-button">Add Company Admin</button>
+      <button type="button" class="close-button" (click)="closeCompanyAdminPopup()">Close</button>
+    </form>
   </div>
+</div>
+</div>
   

@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { TokenStorageService } from '../services/user/token.service';
 import { UserService } from '../services/user/user.service';
 import { CompanyService } from '../services/company/company.service';
 import { Company } from '../shared/model/company';
 import { User } from '../shared/model/user';
+import * as L from 'leaflet';
+import { Map, tileLayer, Marker, icon, LatLng } from 'leaflet';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-system-admin-profile',
@@ -11,6 +15,8 @@ import { User } from '../shared/model/user';
   styleUrls: ['./system-admin-profile.component.css']
 })
 export class SystemAdminProfileComponent implements OnInit {
+
+  showCompanyAdminPopup: boolean = false;
 
   userId : number = 0;
   user : User = {
@@ -32,13 +38,30 @@ export class SystemAdminProfileComponent implements OnInit {
     },
     companyId: undefined,
   }
-  constructor(private tokenStorage: TokenStorageService, private userService: UserService, private companyService: CompanyService) {}
+  constructor(private router: Router, private tokenStorage: TokenStorageService, private userService: UserService, private companyService: CompanyService) {}
+
+
+
+
+
 
   ngOnInit(): void {
     this.userId = this.tokenStorage.getUserId();
     this.fetchUser();
     this.fetchCompanies();
+    this.fetchAdmins();
 
+  }
+
+  fetchAdmins() {
+    this.userService.getSystemAdmins().subscribe(
+      (data: User[]) => {
+        this.systemAdmins = data;
+      },
+      (error) => {
+        console.log("Greska prilikom fetchovanja admina", error);
+      }
+    );
   }
 
   fetchCompanies() {
@@ -63,42 +86,11 @@ export class SystemAdminProfileComponent implements OnInit {
     )
   }
   companies: Company[] = [];
+  systemAdmins: User[] = [];
 
-
-  systemAdmins = [
-    {
-      firstName: 'Alice',
-      lastName: 'Johnson',
-      email: 'alice.johnson@example.com'
-    },
-    {
-      firstName: 'Bob',
-      lastName: 'Smith',
-      email: 'bob.smith@example.com'
-    },
-    {
-      firstName: 'Charlie',
-      lastName: 'Brown',
-      email: 'charlie.brown@example.com'
-    }
-  ];
-
-  showCompanyPopup: boolean = false;
   showSysAdminPopup: boolean = false;
 
-  newCompany: Company = {
-    id: 0,
-    name: '',
-    description: '',
-    address: {
-      city: '',
-      country: '',
-      street: '',
-      latitude: undefined,
-      longitude: undefined
-    },
-    averageRating: 0
-  };
+
   newSysAdmin : User  ={
     id: 0,
     email: '',
@@ -112,28 +104,33 @@ export class SystemAdminProfileComponent implements OnInit {
     address: {
       city: '',
       country: '',
-      street: '', // Assuming you want a street field for Address
-      latitude: undefined, // Optional, can be null
-      longitude: undefined, // Optional, can be null
+      street: '', 
+      latitude: undefined,
+      longitude: undefined, 
     },
-    companyId: undefined // Optional, if applicable
+    companyId: undefined
   };
 
-  showAddAdminPopup(company: any): void {
-    console.log(`Add admin for company: ${company.name}`);
-  }
-  addCompany(): void {
-    console.log(this.newCompany);
-    this.companyService.create(this.newCompany).subscribe(
-      response => {
-        console.log('Registration successful', response);
-      },
-      error => {
-        console.log('Greska', error);
-      }
-      
-    );
-  }
+  newCompanyAdmin: User = {
+    id: 0,
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    occupation: '',
+    userType: 1,
+    penaltyPoints: 0,
+    address: {
+      city: '',
+      country: '',
+      street: '', 
+      latitude: undefined,
+      longitude: undefined, 
+    },
+    companyId: 0
+  };
+ 
 
   showAddSysAdminPopup(): void {
     this.showSysAdminPopup = true;
@@ -148,6 +145,7 @@ export class SystemAdminProfileComponent implements OnInit {
       this.userService.register(this.newSysAdmin).subscribe(
         response => {
           console.log('Registration successful', response.message);
+          this.fetchAdmins();
         },
         error => {
           console.log('Greska', error);
@@ -157,11 +155,27 @@ export class SystemAdminProfileComponent implements OnInit {
       this.closeSysAdminPopup();
     
   }
-  showAddCompanyPopup(): void {
-    this.showCompanyPopup = true;
+
+  showAddAdminPopup(company: any): void {
+    this.newCompanyAdmin.companyId = company.id;
+    this.showCompanyAdminPopup = true;
   }
 
-  closeCompanyPopup(): void {
-    this.showCompanyPopup = false;
+  closeCompanyAdminPopup(): void {
+    this.showCompanyAdminPopup = false;
   }
+
+  addCompanyAdmin(): void {
+    this.userService.register(this.newCompanyAdmin).subscribe(
+      response => {
+        console.log('Company Admin added successfully', response.message);
+      },
+      error => {
+        console.log('Greska', error);
+      }
+    );
+    this.closeCompanyAdminPopup();
+  }
+
+
 }

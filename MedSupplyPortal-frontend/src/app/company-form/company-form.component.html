@@ -1,0 +1,34 @@
+<div class="company-form">
+  <form (ngSubmit)="submitForm()" #companyForm="ngForm">
+    <h2>Create New Company</h2>
+
+    <div class="form-group">
+      <label for="name">Company Name:</label>
+      <input type="text" id="name" [(ngModel)]="newCompany.name" name="name" required>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <textarea id="description" [(ngModel)]="newCompany.description" name="description" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="rating">Rating:</label>
+      <input type="number" id="rating" [(ngModel)]="newCompany.averageRating" name="rating" min="0" max="5" step="0.1" required>
+    </div>
+
+    <div class="form-group">
+      <label for="map">Location:</label>
+      <div id="map" #map class="map"></div>
+      <div class="location-info">
+        <p>Street: {{ newCompany.address.street }}</p>
+        <p>City: {{ newCompany.address.city }}</p>
+        <p>Country: {{ newCompany.address.country }}</p>
+        <p>Latitude: {{ newCompany.address.latitude }}</p>
+        <p>Longitude: {{ newCompany.address.longitude }}</p>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-button">Create Company</button>
+  </form>
+</div>
