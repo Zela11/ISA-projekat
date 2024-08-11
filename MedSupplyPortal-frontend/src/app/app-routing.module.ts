@@ -5,15 +5,19 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { SystemAdminProfileComponent } from './system-admin-profile/system-admin-profile.component';
 import { CompanyFormComponent } from './company-form/company-form.component';
+import { CompanyAdminProfileComponent } from './company-admin-profile/company-admin-profile.component';
+import { CompanyProfileComponent } from './company-profile/company-profile.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'login' , component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: 'profile', component: SystemAdminProfileComponent},
+  {path: 'company-admin-profile', component: CompanyAdminProfileComponent},
   {path: 'companyForm', component: CompanyFormComponent},
-  {path: '', redirectTo: '/home', pathMatch: 'full' }, // Podrazumevana ruta
-  {path: '**', redirectTo: '/home' } ,// Rukovanje nepoznatim rutama
+  {path: 'company-profile', component: CompanyProfileComponent},
+  {path: 'system-admin-profile', component: SystemAdminProfileComponent},
+  {path: '', redirectTo: '/home', pathMatch: 'full' },
+  {path: '**', redirectTo: '/home' } ,
 
 ];
 

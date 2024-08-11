@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.Net.Sockets;
+using System.ComponentModel.Design;
 
 
 namespace MedSupplyPortal.Application.Services
@@ -28,17 +30,21 @@ namespace MedSupplyPortal.Application.Services
 
         }
         
-        public async Task<(string Token, int UserId)> AuthenticationAsync(string email, string password)
+        public async Task<(string Token, int UserId, int CompanyId)> AuthenticationAsync(string email, string password)
         {
             
             var user = await _userRepository.GetUserByEmailAsync(email); ;
             if (user == null || !VerifyPasswordHash(password, user.Password))
             {
-                return (null,0);
+                return (null,0, 0);
             }
-
+            var companyId = 0;
+            if (user.CompanyId != null)
+            {
+                companyId = (int)user.CompanyId;
+            }
             var token = _tokenService.GenerateToken(user);
-            return (token , user.Id);
+            return (token , user.Id, companyId);
         }
         
         public async Task<bool> RegisterUserAsync(RegisterUserDto registerUserDto)
@@ -114,7 +120,8 @@ namespace MedSupplyPortal.Application.Services
                     Street = user.Address.Street,
                     Latitude = user.Address.Latitude,
                     Longitude = user.Address.Longitude
-                }
+                },
+                CompanyId = user.CompanyId,
             };
         }
 
@@ -179,8 +186,49 @@ namespace MedSupplyPortal.Application.Services
 
             return true;
         }
+        public async Task<bool> UpdateUserAsync(int id, RegisterUserDto updateUserDto)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                return false; // User not found
+            }
+
+            var address = new Address
+            {
+                City = updateUserDto.Address.City,
+                Country = updateUserDto.Address.Country,
+                Street = updateUserDto.Address.Street,
+                Latitude = updateUserDto.Address.Latitude,
+                Longitude = updateUserDto.Address.Longitude
+            };
+
+            user.FirstName = updateUserDto.FirstName;
+            user.LastName = updateUserDto.LastName;
+            user.PhoneNumber = updateUserDto.PhoneNumber;
+            user.Email = updateUserDto.Email;
+            user.Address = address;
+            user.Password = updateUserDto.Password;
+            user.CompanyId = updateUserDto.CompanyId == 0 ? (int?)null : updateUserDto.CompanyId;
+            user.Occupation = updateUserDto.Occupation;
+            user.Type = (UserType)updateUserDto.UserType;
 
 
+            await _userRepository.UpdateAsync(user);
+            return true;
+        }
+        public async void ChangePasswordAsync(int userId, string currentPassword, string newPassword)
+        {
+            if (!_userRepository.CheckPassword(userId, currentPassword))
+            {
+                throw new ArgumentException("Current password is incorrect");
+            }
+
+            var user = await _userRepository.GetByIdAsync(userId);
+            user.Password = newPassword;
+            await _userRepository.UpdateAsync(user);
+        }
     }
     
 }

@@ -42,4 +42,16 @@ public class UserRepository : IUserRepository
     {
         return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
     }
+    public async Task UpdateAsync(User user)
+    {
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+    }
+    public bool CheckPassword(int userId, string currentPassword)
+    {
+        var user = _context.Users.Find(userId);
+        if (user == null) return false;
+
+        return user.Password == currentPassword;
+    }
 }

@@ -35,13 +35,13 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginUserDto loginDto)
     {
-        var (token ,userId) = await _userService.AuthenticationAsync(loginDto.Email, loginDto.Password);
+        var (token ,userId, companyId) = await _userService.AuthenticationAsync(loginDto.Email, loginDto.Password);
         if (token == null)
         {
             return Unauthorized();
         }
 
-        return Ok(new { Token = token, UserId = userId });
+        return Ok(new { Token = token, UserId = userId, CompanyId = companyId });
     }
     [HttpGet("{id}")]
     public async Task<ActionResult<RegisterUserDto>> GetUserById(int id)
@@ -79,5 +79,34 @@ public class UserController : ControllerBase
             return Ok("Company admin registered successfully.");
         }
         return NotFound("Company not found.");
+    }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateUser(int id, [FromBody] RegisterUserDto updateUserDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var result = await _userService.UpdateUserAsync(id, updateUserDto);
+        if (!result)
+        {
+            return NotFound("User not found.");
+        }
+
+        return Ok(new { message = "User updated successfully." });
+    }
+    [HttpPut("{userId}/change-password")]
+    public IActionResult ChangePassword(int userId, [FromBody] ChangePasswordDto changePasswordDto)
+    {
+        try
+        {
+            _userService.ChangePasswordAsync(userId, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+            return Ok(new { message = "Password updated successfully" });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }

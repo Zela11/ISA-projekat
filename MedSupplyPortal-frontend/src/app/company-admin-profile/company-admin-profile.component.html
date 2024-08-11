@@ -1,0 +1,60 @@
+<div class="profile-container">
+    <header class="profile-header">
+      <h1>PROFILE</h1>
+    </header>
+  
+    <section class="profile-info">
+        <button class="change-password-button" (click)="openChangePasswordPopup()">Change Password</button>
+  
+      <form (ngSubmit)="saveChanges()" #profileForm="ngForm">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" id="firstName" name="firstName" [(ngModel)]="admin.firstName" required>
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" name="lastName" [(ngModel)]="admin.lastName" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" [(ngModel)]="admin.email" disabled>
+        </div>
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number</label>
+          <input type="text" id="phoneNumber" name="phoneNumber" [(ngModel)]="admin.phoneNumber" required>
+        </div>
+        <button type="submit" class="save-button">Save Changes</button>
+      </form>
+    </section>
+  
+    <hr class="divider">
+    <button type="submit" class="save-button" routerLink="/company-profile">Go to company profile</button>
+
+  
+    <div *ngIf="isChangePasswordPopupVisible" class="popup-overlay">
+        <div class="popup-content">
+          <h2>Change Password</h2>
+          <form (ngSubmit)="updatePassword()" #passwordForm="ngForm">
+            <div class="form-group">
+              <label for="currentPassword">Current Password</label>
+              <input type="password" id="currentPassword" name="currentPassword" [(ngModel)]="currentPassword" required>
+            </div>
+            <div class="form-group">
+              <label for="newPassword">New Password</label>
+              <input type="password" id="newPassword" name="newPassword" [(ngModel)]="newPassword" required>
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword">Confirm New Password</label>
+              <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword" required>
+            </div>
+            <div *ngIf="passwordsDoNotMatch" class="error-message">
+              Passwords do not match!
+            </div>
+            <button type="submit" class="change-button">Change</button>
+            <button type="button" class="cancel-button" (click)="closeChangePasswordPopup()">Cancel</button>
+          </form>
+        </div>
+      </div>
+      
+
+</div>
