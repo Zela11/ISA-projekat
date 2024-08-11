@@ -39,4 +39,30 @@ public class CompanyController : ControllerBase
         var companies = await _companyService.GetAllAsync();
         return Ok(companies);
     }
+    [HttpGet("{id}")]
+    public async Task<ActionResult<CompanyDto>> GetById(int id)
+    {
+        var company = await _companyService.GetByIdAsync(id);
+        if (company == null)
+        {
+            return NotFound();
+        }
+        return Ok(company);
+    }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateCompany(int id, [FromBody] CompanyDto companyDto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var result = await _companyService.UpdateCompanyAsync(id, companyDto);
+        if (!result)
+        {
+            return NotFound("Company not found.");
+        }
+
+        return Ok(new { message = "Company updated successfully." });
+    }
 }

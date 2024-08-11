@@ -12,5 +12,7 @@ public interface ICompanyService
 {
     Task<bool> CreateCompanyAsync(CompanyDto companyDto);
     Task<List<Company>> GetAllAsync();
+    Task<Company> GetByIdAsync(int id);
+    Task<bool> UpdateCompanyAsync(int id, CompanyDto companyDto);
 
 }

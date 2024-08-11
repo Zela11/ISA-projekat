@@ -12,6 +12,7 @@ public interface IUserRepository
     Task<User> GetByIdAsync(int id);
     Task AddAsync(User user);
     Task<User> GetUserByEmailAsync(string email);
-    Task<IEnumerable<User>> GetAllUsersAsync(); // Dodajte ovu metodu
-
+    Task<IEnumerable<User>> GetAllUsersAsync();
+    Task UpdateAsync(User user);
+    bool CheckPassword(int userId, string currentPassword);
 }

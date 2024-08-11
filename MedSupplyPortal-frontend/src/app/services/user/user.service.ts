@@ -10,14 +10,24 @@ import { User } from 'src/app/shared/model/user';
 })
 export class UserService {
 
-  private currentUserSubject: BehaviorSubject<any>;
-  public currentUser: Observable<any>;
+  private currentUserSubject: BehaviorSubject<User | null>;
+  public currentUser: Observable<User | null>;
 
   constructor(private http: HttpClient, private tokenStorage: TokenStorageService) {
-    const savedUser = this.tokenStorage.getUserId();
-    this.currentUserSubject = new BehaviorSubject<any>(savedUser);
+    const userId = this.tokenStorage.getUserId();
+    this.currentUserSubject = new BehaviorSubject<any>(userId);
     this.currentUser = this.currentUserSubject.asObservable();
-   }
+    if (userId) {
+      this.getById(userId).subscribe(
+        (user: User) => {
+          this.currentUserSubject.next(user);
+        },
+        (error) => {
+          console.error('Error fetching user', error);
+        }
+      );
+    }
+  }
   private apiUrl = `${environment.apiUrl}/users`; // API URL
 
 
@@ -30,9 +40,16 @@ export class UserService {
  
   }
   handleLoginResponse(response: any): void {
-    this.tokenStorage.saveToken(response.token, response.userId);
-    this.currentUserSubject.next(response.userId);
-
+    console.log(response);
+    this.tokenStorage.saveToken(response.token, response.userId, response.companyId);
+    this.getById(response.userId).subscribe(
+      (user: User) => {
+        this.currentUserSubject.next(user);
+      },
+      (error) => {
+        console.error('Error fetching user after login', error);
+      }
+    );
   }
   logout() {
     this.tokenStorage.clear();
@@ -49,6 +66,14 @@ export class UserService {
   }
   getSystemAdmins() : Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}/getSystemAdmins`);
+  }
+  update(user: User): Observable<any> {
+    console.log(user);
+    return this.http.put(`${this.apiUrl}/${this.tokenStorage.getUserId()}`, user);
+  }
+  changePassword(currentPassword: string, newPassword: string): Observable<any> {
+    const passwordChangeDto = { currentPassword, newPassword };
+    return this.http.put(`${this.apiUrl}/${this.tokenStorage.getUserId()}/change-password`, passwordChangeDto);
   }
 
 }
