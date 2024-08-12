@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ACCESS_TOKEN, COMPANY_ID, USER } from 'src/app/shared/constants';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -12,38 +13,34 @@ export class TokenStorageService {
     console.log(userId);
     console.log(companyId);
 
-  
-    localStorage.removeItem(ACCESS_TOKEN);
-    localStorage.removeItem(USER);
-    localStorage.removeItem(COMPANY_ID);
+    sessionStorage.removeItem(ACCESS_TOKEN);
+    sessionStorage.removeItem(USER);
+    sessionStorage.removeItem(COMPANY_ID);
     
-    localStorage.setItem(ACCESS_TOKEN, token);
-    localStorage.setItem(USER, userId.toString());
-    if(companyId)
-    {
-      localStorage.setItem(COMPANY_ID, companyId.toString());
+    sessionStorage.setItem(ACCESS_TOKEN, token);
+    sessionStorage.setItem(USER, userId.toString());
+    if (companyId) {
+      sessionStorage.setItem(COMPANY_ID, companyId.toString());
     }
-
   }
 
   getToken(): string | null {
-    return localStorage.getItem(ACCESS_TOKEN);
+    return sessionStorage.getItem(ACCESS_TOKEN);
   }
 
   getCompanyId(): number | null {
-    const companyIdString = localStorage.getItem(COMPANY_ID);
+    const companyIdString = sessionStorage.getItem(COMPANY_ID);
     return companyIdString ? parseInt(companyIdString, 10) : null;
   }
 
-
   getUserId(): number {
-    const userIdString = localStorage.getItem(USER);
+    const userIdString = sessionStorage.getItem(USER);
     return userIdString ? parseInt(userIdString, 10) : 0;
   }
 
   clear(): void {
-    localStorage.removeItem(ACCESS_TOKEN);
-    localStorage.removeItem(USER);
-    localStorage.removeItem(COMPANY_ID);
+    sessionStorage.removeItem(ACCESS_TOKEN);
+    sessionStorage.removeItem(USER);
+    sessionStorage.removeItem(COMPANY_ID);
   }
 }

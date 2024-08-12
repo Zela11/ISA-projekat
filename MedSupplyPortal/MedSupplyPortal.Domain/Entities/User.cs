@@ -18,5 +18,6 @@ public class User
     public string Occupation { get; set; }
     public UserType Type { get; set; }
     public int PenaltyPoints { get; set; }
-    public int? CompanyId {  get; set; }    
+    public int? CompanyId {  get; set; }
+    public bool IsFirstLogin { get; set; }
 }

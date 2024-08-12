@@ -34,7 +34,8 @@ export class CompanyAdminProfileComponent implements OnInit{
       longitude: undefined,
     },
     companyId: undefined,
-    occupation: ''
+    occupation: '',
+    isFirstLogin: false
   };
 
   constructor(private userService: UserService, private tokenStorage: TokenStorageService) {}

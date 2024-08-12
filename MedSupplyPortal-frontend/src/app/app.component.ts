@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
+import { TokenStorageService } from './services/user/token.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'MedSupplyPortal-frontend';
+
+  constructor(private tokenStorage: TokenStorageService) {}
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any): void {
+    this.tokenStorage.clear();
+  }
 }
