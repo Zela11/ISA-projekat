@@ -17,6 +17,7 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
+import { Equipment } from '../shared/model/equipment';
 
 @Component({
   selector: 'app-company-profile',
@@ -43,6 +44,19 @@ export class CompanyProfileComponent implements OnInit {
   private map!: Map;
   private marker!: Feature;
 
+  searchQuery: string = '';
+
+  isUpdateMode = false; 
+  selectedEquipmentId: number | null = null; 
+  showModal = false;
+  newEquipment :  Equipment = {
+    id: 0,
+    name: '',
+    description: '',
+    isAvailable: false,
+    companyId: 0
+  };
+
   constructor(
     private companyService: CompanyService,
     private tokenStorage: TokenStorageService,
@@ -64,7 +78,9 @@ export class CompanyProfileComponent implements OnInit {
         this.company = data;
         console.log(this.company);
         if (data.address.latitude && data.address.longitude) {
+          if(!this.map) {
           this.initializeMap(data.address.latitude, data.address.longitude);
+          }
         }
       },
       (error) => {
@@ -111,24 +127,30 @@ export class CompanyProfileComponent implements OnInit {
 
     this.map.addLayer(vectorLayer);
 
-    // Dodajte mogućnost ažuriranja markera i lokacije na klik
     this.map.on('click', (event) => {
       const coordinates = toLonLat(event.coordinate);
       this.updateLocation(coordinates[1], coordinates[0]);
     });
   }
 
+  deinitializeMap(): void {
+    if (this.map) {
+        this.map.setTarget(undefined);  
+        this.map.getLayers().clear();
+        this.map = null as any; 
+        this.marker = null as any; 
+    }
+}
+
   updateLocation(lat: number, lon: number): void {
     this.company.address.latitude = lat;
     this.company.address.longitude = lon;
 
-    // Ažurirajte marker poziciju
     this.marker.setGeometry(new Point(fromLonLat([lon, lat])));
     this.reverseGeocode(lat, lon);
 
   }
   reverseGeocode(latitude: number, longitude: number) {
-    // Replace with your geocoding API endpoint
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
       .then(response => response.json())
       .then(data => {
@@ -141,7 +163,6 @@ export class CompanyProfileComponent implements OnInit {
   }
 
   saveCompany(): void {
-    
     this.companyService.update(this.company).subscribe(
       () => {
         alert('Company details updated successfully.');
@@ -151,24 +172,80 @@ export class CompanyProfileComponent implements OnInit {
       }
     );
   }
-  addEquipment() {
-    console.log('Adding new equipment...');
+  openAddEquipmentDialog(): void {
+    this.isUpdateMode = false;
+    this.showModal = true;
+    this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0};
+  }
+  saveEquipment(): void {
+    if (this.isUpdateMode) {
+      this.updateEquipment();
+    } else {
+      this.addEquipment();
+    }
   }
 
-  editEquipment(equipmentId: number) {
-    console.log('Editing equipment with ID:', equipmentId);
+  closeModal(): void {
+    this.showModal = false;
+  }
+  openUpdateEquipmentDialog(equipment: any): void {
+    this.isUpdateMode = true; 
+    this.selectedEquipmentId = equipment.id;
+    this.newEquipment = { ...equipment }; 
+    console.log(this.newEquipment);
+    this.showModal = true;
+  }
+  updateEquipment(): void {
+    if (this.selectedEquipmentId !== null && this.newEquipment.name) {
+      this.companyService.updateEquipment(this.company.id, this.newEquipment).subscribe(
+        (response) => {
+          if(this.company.equipmentList) 
+          {
+            const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipmentId);
+            if (index !== -1) {
+              this.company.equipmentList[index] = { ...this.newEquipment };
+            }
+          }
+         
+          this.closeModal();
+          alert('Equipment updated successfully!');
+        },
+        (error) => {
+          console.error('Error updating equipment:', error);
+        }
+      );
+    }
   }
 
   deleteEquipment(equipmentId: number) {
     this.companyService.deleteEquipment(this.company.id, equipmentId)
       .subscribe(
-        () => {
-          alert('Equipment deleted successfully.');
+        (response) => {
+          console.log('Equipment created successfully', response);
           this.loadCompanyData(this.company.id);
         },
       (error) => {
         console.error('Error updating company details:', error);
         }
       );
+  }
+  addEquipment(): void {
+    if (this.newEquipment.name) {
+      this.companyService.addEquipment(this.company.id, this.newEquipment).subscribe(
+        (response) => {
+          console.log("Success", response);
+          this.company.equipmentList = [];
+          this.company.equipmentList.push(this.newEquipment);
+          this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0};
+          this.closeModal();
+          this.deinitializeMap();
+          this.loadCompanyData(this.company.id);
+          alert('Equipment added successfully!');
+        },
+        (error) => {
+          console.error('Error adding equipment:', error);
+        }
+      );
+    }
   }
 }

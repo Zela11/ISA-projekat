@@ -72,7 +72,7 @@ public class CompanyController : ControllerBase
             return BadRequest(ModelState);
 
         await _companyService.AddEquipmentToCompanyAsync(companyId, equipmentDto);
-        return Ok("Equipment added successfully.");
+        return Ok(new { message = "Equipment created successfully." });
     }
     [HttpPut("{companyId}/equipment/{equipmentId}")]
     public async Task<IActionResult> UpdateEquipment(int companyId, int equipmentId, [FromBody] EquipmentDto equipmentDto)
@@ -81,13 +81,13 @@ public class CompanyController : ControllerBase
             return BadRequest(ModelState);
 
         await _companyService.UpdateEquipmentAsync(companyId, equipmentId, equipmentDto);
-        return Ok("Equipment updated successfully.");
+        return Ok(new { message = "Equipment updated successfully." });
     }
 
     [HttpDelete("{companyId}/equipment/{equipmentId}")]
     public async Task<IActionResult> DeleteEquipment(int companyId, int equipmentId)
     {
         await _companyService.DeleteEquipmentAsync(companyId, equipmentId);
-        return Ok("Equipment deleted successfully.");
+        return Ok(new { message = "Equipment deleted successfully." });
     }
 }
