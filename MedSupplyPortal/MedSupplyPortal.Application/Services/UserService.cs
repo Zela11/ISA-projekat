@@ -44,6 +44,7 @@ namespace MedSupplyPortal.Application.Services
                 companyId = (int)user.CompanyId;
             }
             var token = _tokenService.GenerateToken(user);
+            
             return (token , user.Id, companyId);
         }
         
@@ -58,22 +59,20 @@ namespace MedSupplyPortal.Application.Services
                 Longitude = registerUserDto.Address?.Longitude
             };
 
-            // Kreirajte User entitet i postavite adresu
             var user = new User
             {
                 FirstName = registerUserDto.FirstName,
                 LastName = registerUserDto.LastName,
                 Email = registerUserDto.Email,
                 Password = registerUserDto.Password,
-                Address = address, // Postavite Address entitet
+                Address = address,
                 PhoneNumber = registerUserDto.PhoneNumber,
                 Occupation = registerUserDto.Occupation,
-                Type = (UserType)registerUserDto.UserType, // Pretpostavljam da ste dodali UserType u DTO
+                Type = (UserType)registerUserDto.UserType,
                 PenaltyPoints = registerUserDto.PenaltyPoints,
-                CompanyId = registerUserDto.CompanyId
+                CompanyId = registerUserDto.CompanyId,
+                IsFirstLogin = true
             };
-
-
 
             await _userRepository.AddAsync(user);
             if(registerUserDto.CompanyId != null)
@@ -122,6 +121,7 @@ namespace MedSupplyPortal.Application.Services
                     Longitude = user.Address.Longitude
                 },
                 CompanyId = user.CompanyId,
+                IsFirstLogin = user.IsFirstLogin
             };
         }
 
@@ -145,7 +145,8 @@ namespace MedSupplyPortal.Application.Services
                     Street = u.Address.Street,
                     Latitude = u.Address.Latitude,
                     Longitude = u.Address.Longitude
-                }
+                },
+                IsFirstLogin = u.IsFirstLogin
             });
         }
         public async Task<bool> RegisterCompanyAdminAsync(RegisterUserDto userDto, int companyId)
@@ -161,10 +162,10 @@ namespace MedSupplyPortal.Application.Services
                 FirstName = userDto.FirstName,
                 LastName = userDto.LastName,
                 Email = userDto.Email,
-                Password = userDto.Password, // Hash password before saving
+                Password = userDto.Password, 
                 PhoneNumber = userDto.PhoneNumber,
                 Occupation = userDto.Occupation,
-                Type = UserType.CompanyAdmin, // Assuming UserType.Admin is appropriate for company admins
+                Type = UserType.CompanyAdmin,
                 PenaltyPoints = userDto.PenaltyPoints,
                 Address = new Address
                 {
@@ -174,14 +175,15 @@ namespace MedSupplyPortal.Application.Services
                     Latitude = userDto.Address.Latitude,
                     Longitude = userDto.Address.Longitude
                 },
-                CompanyId = companyId
+                CompanyId = companyId,
+                IsFirstLogin = true
+
             };
 
             await _userRepository.AddAsync(user);
 
 
             company.CompanyAdmins.Add(user);
-            // Save the updated company
             await _companyRepository.UpdateAsync(company);
 
             return true;
@@ -192,7 +194,7 @@ namespace MedSupplyPortal.Application.Services
 
             if (user == null)
             {
-                return false; // User not found
+                return false;
             }
 
             var address = new Address
@@ -213,7 +215,7 @@ namespace MedSupplyPortal.Application.Services
             user.CompanyId = updateUserDto.CompanyId == 0 ? (int?)null : updateUserDto.CompanyId;
             user.Occupation = updateUserDto.Occupation;
             user.Type = (UserType)updateUserDto.UserType;
-
+            user.IsFirstLogin = updateUserDto.IsFirstLogin;
 
             await _userRepository.UpdateAsync(user);
             return true;
@@ -227,6 +229,10 @@ namespace MedSupplyPortal.Application.Services
 
             var user = await _userRepository.GetByIdAsync(userId);
             user.Password = newPassword;
+            if(user.IsFirstLogin == true)
+            {
+                user.IsFirstLogin = false;
+            }
             await _userRepository.UpdateAsync(user);
         }
     }

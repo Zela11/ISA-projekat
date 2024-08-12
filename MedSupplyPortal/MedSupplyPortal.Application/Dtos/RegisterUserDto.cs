@@ -18,5 +18,5 @@ public class RegisterUserDto
     public int PenaltyPoints { get; set; }
     public AddressDto Address { get; set; }
     public int? CompanyId { get; set; }
-
+    public bool IsFirstLogin { get; set; } 
 }

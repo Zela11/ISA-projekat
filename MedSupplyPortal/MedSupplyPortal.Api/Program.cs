@@ -64,7 +64,7 @@ app.UseCors("AllowAllOrigins");
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();  // <-- Add this line to enable authentication
+app.UseAuthentication(); 
 
 app.UseAuthorization();
 

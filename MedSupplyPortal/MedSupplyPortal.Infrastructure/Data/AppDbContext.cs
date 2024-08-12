@@ -36,7 +36,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Occupation).HasMaxLength(100);
             entity.Property(e => e.PenaltyPoints).IsRequired();
             entity.Property(e => e.Type).IsRequired();
-
+            entity.Property(e => e.IsFirstLogin).IsRequired();
             // Configure Address as owned entity
             entity.OwnsOne(e => e.Address, a =>
             {

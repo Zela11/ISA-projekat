@@ -37,6 +37,7 @@ export class SystemAdminProfileComponent implements OnInit {
       longitude: undefined
     },
     companyId: undefined,
+    isFirstLogin: false
   }
   constructor(private router: Router, private tokenStorage: TokenStorageService, private userService: UserService, private companyService: CompanyService) {}
 
@@ -108,7 +109,8 @@ export class SystemAdminProfileComponent implements OnInit {
       latitude: undefined,
       longitude: undefined, 
     },
-    companyId: undefined
+    companyId: undefined,
+    isFirstLogin: true
   };
 
   newCompanyAdmin: User = {
@@ -128,7 +130,8 @@ export class SystemAdminProfileComponent implements OnInit {
       latitude: undefined,
       longitude: undefined, 
     },
-    companyId: 0
+    companyId: 0,
+    isFirstLogin: true
   };
  
 

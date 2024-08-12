@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MedSupplyPortal.Application.Dtos;
 using MedSupplyPortal.Application.IServices;
 using MedSupplyPortal.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("api/users")]
@@ -51,6 +52,7 @@ public class UserController : ControllerBase
 
         return Ok(user);
     }
+    [Authorize(Roles = "SystemAdmin")]
     [HttpGet("getSystemAdmins")]
     public async Task<ActionResult<IEnumerable<RegisterUserDto>>> GetSystemAdmins()
     {

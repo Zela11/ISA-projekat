@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/env/enviroment';
@@ -65,7 +65,9 @@ export class UserService {
     return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
   getSystemAdmins() : Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiUrl}/getSystemAdmins`);
+    const token = this.tokenStorage.getToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<User[]>(`${this.apiUrl}/getSystemAdmins`, {headers});
   }
   update(user: User): Observable<any> {
     console.log(user);

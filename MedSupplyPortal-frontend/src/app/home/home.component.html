@@ -1,4 +1,24 @@
 <div class="weather-container">
-    <h1>Weather Forecast</h1>
+  <h1>Weather Forecast</h1>
+</div>
+
+<div *ngIf="showPasswordChangePopup" class="popup-overlay">
+  <div class="popup-content">
+    <h2>Change Password</h2>
+    <form (ngSubmit)="changePassword()">
+      <div>
+        <label for="currentPassword">Current Password:</label>
+        <input type="password" id="currentPassword" [(ngModel)]="currentPassword" name="currentPassword" required>
+      </div>
+      <div>
+        <label for="newPassword">New Password:</label>
+        <input type="password" id="newPassword" [(ngModel)]="newPassword" name="newPassword" required>
+      </div>
+      <div>
+        <label for="confirmNewPassword">Confirm New Password:</label>
+        <input type="password" id="confirmNewPassword" [(ngModel)]="confirmNewPassword" name="confirmNewPassword" required>
+      </div>
+      <button type="submit">Change Password</button>
+    </form>
   </div>
-  
+</div>
