@@ -31,16 +31,51 @@ public class CompanyRepository : ICompanyRepository
         return await _context.Companies
                .Include(c => c.Address)
                .Include(c => c.CompanyAdmins)
+               .Include(c => c.EquipmentList)
                .ToListAsync();
     }
 
     public async Task<Company> GetByIdAsync(int id)
     {
-        return await _context.Companies.FirstOrDefaultAsync(c => c.Id == id);
+        return await _context.Companies
+            .Include(c => c.CompanyAdmins)
+            .Include(c => c.EquipmentList)
+            .FirstOrDefaultAsync(c => c.Id == id);
     }
     public async Task UpdateAsync(Company company)
     {
         _context.Set<Company>().Update(company);
         await _context.SaveChangesAsync();
+    }
+    public async Task AddEquipmentToCompanyAsync(int companyId, Equipment equipment)
+    {
+        var company = await GetByIdAsync(companyId);
+        if (company != null)
+        {
+            company.EquipmentList ??= new List<Equipment>();
+            company.EquipmentList.Add(equipment);
+            _context.Companies.Update(company);
+            await _context.SaveChangesAsync();
+        }
+    }
+    public async Task UpdateEquipmentAsync(Equipment equipment)
+    {
+        _context.Equipments.Update(equipment);
+        await _context.SaveChangesAsync();
+    }
+    public async Task DeleteEquipmentAsync(int companyId, int equipmentId)
+    {
+        var company = await GetByIdAsync(companyId);
+        if (company != null)
+        {
+            var equipment = company.EquipmentList?.FirstOrDefault(e => e.Id == equipmentId);
+            if (equipment != null)
+            {
+                company.EquipmentList.Remove(equipment);
+                _context.Equipments.Remove(equipment);
+                _context.Companies.Update(company);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

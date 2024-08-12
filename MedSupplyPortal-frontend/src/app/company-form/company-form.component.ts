@@ -14,6 +14,8 @@ import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import { CompanyService } from '../services/company/company.service';
 import { Router } from '@angular/router';
+import { User } from '../shared/model/user';
+
 
 
 @Component({
@@ -38,7 +40,9 @@ export class CompanyFormComponent implements OnInit {
       latitude: 0,
       longitude: 0
     },
-    averageRating: 0
+    averageRating: 0,
+    companyAdmins: [],
+    equipmentList: []
   };
 
   private map!: Map;

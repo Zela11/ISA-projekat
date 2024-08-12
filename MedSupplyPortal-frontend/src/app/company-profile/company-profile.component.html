@@ -21,4 +21,34 @@
   </div>
 
   <button (click)="saveCompany()">Save Changes</button>
+
+  <!-- New section for displaying admins -->
+  <div class="admin-list">
+    <h2>Company Admins</h2>
+    <div *ngFor="let admin of company.companyAdmins" class="admin-item">
+      <p><strong>First Name:</strong> {{ admin.firstName }}</p>
+      <p><strong>Last Name:</strong> {{ admin.lastName }}</p>
+      <p><strong>Email:</strong> {{ admin.email }}</p>
+      <p><strong>Phone:</strong> {{ admin.phoneNumber }}</p>
+    </div>
+  </div>
+
+  <!-- New section for displaying equipment -->
+  <div class="equipment-section">
+    <div class="equipment-header">
+      <h2>Equipments</h2>
+      <button (click)="addEquipment()">Add Equipment</button>
+    </div>
+    <div class="equipment-list">
+      <div *ngFor="let equipment of company.equipmentList" class="equipment-card">
+        <h3>{{ equipment.name }}</h3>
+        <p>{{ equipment.description }}</p>
+        <p><strong>Status:</strong> {{ equipment.isAvailable ? 'Available' : 'Not Available' }}</p>
+        <div class="equipment-actions">
+          <button (click)="editEquipment(equipment.id)">Update</button>
+          <button (click)="deleteEquipment(equipment.id)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
