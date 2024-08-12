@@ -36,7 +36,9 @@ export class CompanyProfileComponent implements OnInit {
       latitude: 0,
       longitude: 0
     },
-    averageRating: 0
+    averageRating: 0,
+    companyAdmins: [],
+    equipmentList: []
   };
   private map!: Map;
   private marker!: Feature;
@@ -60,6 +62,7 @@ export class CompanyProfileComponent implements OnInit {
     this.companyService.getById(id).subscribe(
       (data: Company) => {
         this.company = data;
+        console.log(this.company);
         if (data.address.latitude && data.address.longitude) {
           this.initializeMap(data.address.latitude, data.address.longitude);
         }
@@ -147,5 +150,25 @@ export class CompanyProfileComponent implements OnInit {
         console.error('Error updating company details:', error);
       }
     );
+  }
+  addEquipment() {
+    console.log('Adding new equipment...');
+  }
+
+  editEquipment(equipmentId: number) {
+    console.log('Editing equipment with ID:', equipmentId);
+  }
+
+  deleteEquipment(equipmentId: number) {
+    this.companyService.deleteEquipment(this.company.id, equipmentId)
+      .subscribe(
+        () => {
+          alert('Equipment deleted successfully.');
+          this.loadCompanyData(this.company.id);
+        },
+      (error) => {
+        console.error('Error updating company details:', error);
+        }
+      );
   }
 }

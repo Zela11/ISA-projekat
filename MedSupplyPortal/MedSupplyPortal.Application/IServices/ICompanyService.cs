@@ -14,5 +14,7 @@ public interface ICompanyService
     Task<List<Company>> GetAllAsync();
     Task<Company> GetByIdAsync(int id);
     Task<bool> UpdateCompanyAsync(int id, CompanyDto companyDto);
-
+    Task AddEquipmentToCompanyAsync(int companyId, EquipmentDto equipmentDto);
+    Task UpdateEquipmentAsync(int companyId, int equipmentId, EquipmentDto equipmentDto);
+    Task DeleteEquipmentAsync(int companyId, int equipmentId);
 }

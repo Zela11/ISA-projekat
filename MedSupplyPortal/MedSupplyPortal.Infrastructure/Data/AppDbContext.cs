@@ -53,7 +53,6 @@ public class AppDbContext : DbContext
             entity.Property(c => c.Name).IsRequired().HasMaxLength(100);
             entity.Property(c => c.Description).HasMaxLength(500);
 
-            // Configure Address as owned entity
             entity.OwnsOne(c => c.Address, a =>
             {
                 a.Property(ad => ad.City).HasMaxLength(100).IsRequired();
@@ -63,7 +62,6 @@ public class AppDbContext : DbContext
                 a.Property(ad => ad.Longitude).IsRequired(false);
             });
 
-            // Configure relationships
             entity.HasMany(c => c.EquipmentList)
                   .WithOne()
                   .HasForeignKey(e => e.CompanyId)
@@ -79,7 +77,7 @@ public class AppDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
             entity.Property(e => e.Description).HasMaxLength(500);
-            entity.Property(e => e.IsAvailable).IsRequired(); // Ensure IsAvailable is configured
+            entity.Property(e => e.IsAvailable).IsRequired();
 
         });
 

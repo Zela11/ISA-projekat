@@ -9,10 +9,4 @@ import { TokenStorageService } from './services/user/token.service';
 export class AppComponent {
   title = 'MedSupplyPortal-frontend';
 
-  constructor(private tokenStorage: TokenStorageService) {}
-
-  @HostListener('window:beforeunload', ['$event'])
-  unloadNotification($event: any): void {
-    this.tokenStorage.clear();
-  }
 }

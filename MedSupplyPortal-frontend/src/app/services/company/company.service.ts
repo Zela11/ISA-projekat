@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Company } from 'src/app/shared/model/company';
 import { environment } from 'src/env/enviroment';
 import { TokenStorageService } from '../user/token.service';
+import { Equipment } from 'src/app/shared/model/equipment';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,15 @@ export class CompanyService {
     return this.http.get<Company>(`${this.apiUrl}/${id}`);
   }
   update(company: Company): Observable<any> {
-    console.log(company);
     return this.http.put(`${this.apiUrl}/${company.id}`, company);
+  }
+  addEquipment(companyId: number, equipment: Equipment) : Observable<any> {
+    return this.http.post(`${this.apiUrl}/${companyId}/equipment`, equipment);
+  }
+  updateEquipment(companyId: number, equipment: Equipment) : Observable<any> {
+    return this.http.put(`${this.apiUrl}/${companyId}/equipment/${equipment.id}`, equipment);
+  }
+  deleteEquipment(companyId: number, equipmentId: number) : Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${companyId}/equipment/${equipmentId}`);
   }
 }

@@ -65,4 +65,29 @@ public class CompanyController : ControllerBase
 
         return Ok(new { message = "Company updated successfully." });
     }
+    [HttpPost("{companyId}/equipment")]
+    public async Task<IActionResult> AddEquipment(int companyId, [FromBody] EquipmentDto equipmentDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        await _companyService.AddEquipmentToCompanyAsync(companyId, equipmentDto);
+        return Ok("Equipment added successfully.");
+    }
+    [HttpPut("{companyId}/equipment/{equipmentId}")]
+    public async Task<IActionResult> UpdateEquipment(int companyId, int equipmentId, [FromBody] EquipmentDto equipmentDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        await _companyService.UpdateEquipmentAsync(companyId, equipmentId, equipmentDto);
+        return Ok("Equipment updated successfully.");
+    }
+
+    [HttpDelete("{companyId}/equipment/{equipmentId}")]
+    public async Task<IActionResult> DeleteEquipment(int companyId, int equipmentId)
+    {
+        await _companyService.DeleteEquipmentAsync(companyId, equipmentId);
+        return Ok("Equipment deleted successfully.");
+    }
 }

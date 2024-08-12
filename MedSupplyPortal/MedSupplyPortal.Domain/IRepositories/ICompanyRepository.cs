@@ -12,6 +12,8 @@ public interface ICompanyRepository
     Task<Company> GetByIdAsync(int id);
     Task AddAsync(Company company);
     Task<List<Company>> GetAllAsync();
-    Task UpdateAsync(Company company); 
-
+    Task UpdateAsync(Company company);
+    Task AddEquipmentToCompanyAsync(int companyId, Equipment equipment);
+    Task UpdateEquipmentAsync(Equipment equipment);
+    Task DeleteEquipmentAsync(int companyId, int equipmentId);
 }

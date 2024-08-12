@@ -76,5 +76,37 @@ namespace MedSupplyPortal.Application.Services
             await _companyRepository.UpdateAsync(company);
             return true;
         }
+        public async Task AddEquipmentToCompanyAsync(int companyId, EquipmentDto equipmentDto)
+        {
+            var equipment = new Equipment
+            {
+                Name = equipmentDto.Name,
+                Description = equipmentDto.Description,
+                IsAvailable = equipmentDto.IsAvailable,
+                CompanyId = companyId
+            };
+
+            await _companyRepository.AddEquipmentToCompanyAsync(companyId, equipment);
+        }
+        public async Task UpdateEquipmentAsync(int companyId, int equipmentId, EquipmentDto equipmentDto)
+        {
+            var equipment = await _companyRepository.GetByIdAsync(companyId);
+            if (equipment != null)
+            {
+                var existingEquipment = equipment.EquipmentList?.FirstOrDefault(e => e.Id == equipmentId);
+                if (existingEquipment != null)
+                {
+                    existingEquipment.Name = equipmentDto.Name;
+                    existingEquipment.Description = equipmentDto.Description;
+                    existingEquipment.IsAvailable = equipmentDto.IsAvailable;
+                    await _companyRepository.UpdateEquipmentAsync(existingEquipment);
+                }
+            }
+        }
+
+        public async Task DeleteEquipmentAsync(int companyId, int equipmentId)
+        {
+            await _companyRepository.DeleteEquipmentAsync(companyId, equipmentId);
+        }
     }
 }
