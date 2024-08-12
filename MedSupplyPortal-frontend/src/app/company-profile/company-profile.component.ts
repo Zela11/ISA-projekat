@@ -17,6 +17,7 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
+import { Equipment } from '../shared/model/equipment';
 
 @Component({
   selector: 'app-company-profile',
@@ -42,6 +43,15 @@ export class CompanyProfileComponent implements OnInit {
   };
   private map!: Map;
   private marker!: Feature;
+
+  showModal = false;
+  newEquipment :  Equipment = {
+    id: 0,
+    name: '',
+    description: '',
+    isAvailable: false,
+    companyId: 0
+  };
 
   constructor(
     private companyService: CompanyService,
@@ -151,8 +161,12 @@ export class CompanyProfileComponent implements OnInit {
       }
     );
   }
-  addEquipment() {
-    console.log('Adding new equipment...');
+  openAddEquipmentDialog(): void {
+    this.showModal = true;
+  }
+
+  closeModal(): void {
+    this.showModal = false;
   }
 
   editEquipment(equipmentId: number) {
@@ -162,13 +176,31 @@ export class CompanyProfileComponent implements OnInit {
   deleteEquipment(equipmentId: number) {
     this.companyService.deleteEquipment(this.company.id, equipmentId)
       .subscribe(
-        () => {
-          alert('Equipment deleted successfully.');
+        (response) => {
+          console.log('Equipment created successfully', response);
           this.loadCompanyData(this.company.id);
         },
       (error) => {
         console.error('Error updating company details:', error);
         }
       );
+  }
+  addEquipment(): void {
+    if (this.newEquipment.name) {
+      this.companyService.addEquipment(this.company.id, this.newEquipment).subscribe(
+        (response) => {
+          console.log("Success", response);
+          this.company.equipmentList = [];
+          this.company.equipmentList.push(this.newEquipment);
+          this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0};
+          this.closeModal();
+          this.loadCompanyData(this.company.id);
+          alert('Equipment added successfully!');
+        },
+        (error) => {
+          console.error('Error adding equipment:', error);
+        }
+      );
+    }
   }
 }
