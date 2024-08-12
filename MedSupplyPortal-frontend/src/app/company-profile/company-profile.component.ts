@@ -44,6 +44,10 @@ export class CompanyProfileComponent implements OnInit {
   private map!: Map;
   private marker!: Feature;
 
+  searchQuery: string = '';
+
+  isUpdateMode = false; 
+  selectedEquipmentId: number | null = null; 
   showModal = false;
   newEquipment :  Equipment = {
     id: 0,
@@ -74,7 +78,9 @@ export class CompanyProfileComponent implements OnInit {
         this.company = data;
         console.log(this.company);
         if (data.address.latitude && data.address.longitude) {
+          if(!this.map) {
           this.initializeMap(data.address.latitude, data.address.longitude);
+          }
         }
       },
       (error) => {
@@ -121,24 +127,30 @@ export class CompanyProfileComponent implements OnInit {
 
     this.map.addLayer(vectorLayer);
 
-    // Dodajte mogućnost ažuriranja markera i lokacije na klik
     this.map.on('click', (event) => {
       const coordinates = toLonLat(event.coordinate);
       this.updateLocation(coordinates[1], coordinates[0]);
     });
   }
 
+  deinitializeMap(): void {
+    if (this.map) {
+        this.map.setTarget(undefined);  
+        this.map.getLayers().clear();
+        this.map = null as any; 
+        this.marker = null as any; 
+    }
+}
+
   updateLocation(lat: number, lon: number): void {
     this.company.address.latitude = lat;
     this.company.address.longitude = lon;
 
-    // Ažurirajte marker poziciju
     this.marker.setGeometry(new Point(fromLonLat([lon, lat])));
     this.reverseGeocode(lat, lon);
 
   }
   reverseGeocode(latitude: number, longitude: number) {
-    // Replace with your geocoding API endpoint
     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
       .then(response => response.json())
       .then(data => {
@@ -151,7 +163,6 @@ export class CompanyProfileComponent implements OnInit {
   }
 
   saveCompany(): void {
-    
     this.companyService.update(this.company).subscribe(
       () => {
         alert('Company details updated successfully.');
@@ -162,15 +173,48 @@ export class CompanyProfileComponent implements OnInit {
     );
   }
   openAddEquipmentDialog(): void {
+    this.isUpdateMode = false;
     this.showModal = true;
+    this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0};
+  }
+  saveEquipment(): void {
+    if (this.isUpdateMode) {
+      this.updateEquipment();
+    } else {
+      this.addEquipment();
+    }
   }
 
   closeModal(): void {
     this.showModal = false;
   }
-
-  editEquipment(equipmentId: number) {
-    console.log('Editing equipment with ID:', equipmentId);
+  openUpdateEquipmentDialog(equipment: any): void {
+    this.isUpdateMode = true; 
+    this.selectedEquipmentId = equipment.id;
+    this.newEquipment = { ...equipment }; 
+    console.log(this.newEquipment);
+    this.showModal = true;
+  }
+  updateEquipment(): void {
+    if (this.selectedEquipmentId !== null && this.newEquipment.name) {
+      this.companyService.updateEquipment(this.company.id, this.newEquipment).subscribe(
+        (response) => {
+          if(this.company.equipmentList) 
+          {
+            const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipmentId);
+            if (index !== -1) {
+              this.company.equipmentList[index] = { ...this.newEquipment };
+            }
+          }
+         
+          this.closeModal();
+          alert('Equipment updated successfully!');
+        },
+        (error) => {
+          console.error('Error updating equipment:', error);
+        }
+      );
+    }
   }
 
   deleteEquipment(equipmentId: number) {
@@ -194,6 +238,7 @@ export class CompanyProfileComponent implements OnInit {
           this.company.equipmentList.push(this.newEquipment);
           this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0};
           this.closeModal();
+          this.deinitializeMap();
           this.loadCompanyData(this.company.id);
           alert('Equipment added successfully!');
         },

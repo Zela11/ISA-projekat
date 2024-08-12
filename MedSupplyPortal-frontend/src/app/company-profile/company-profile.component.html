@@ -33,30 +33,43 @@
     </div>
   </div>
 
-  <!-- New section for displaying equipment -->
-  <div class="equipment-section">
-    <div class="equipment-header">
-      <h2>Equipments</h2>
-      <button (click)="openAddEquipmentDialog()">Add Equipment</button>
-    </div>
-    <div class="equipment-list">
-      <div *ngFor="let equipment of company.equipmentList" class="equipment-card">
-        <h3>{{ equipment.name }}</h3>
-        <p>{{ equipment.description }}</p>
-        <p><strong>Status:</strong> {{ equipment.isAvailable ? 'Available' : 'Not Available' }}</p>
-        <div class="equipment-actions">
-          <button (click)="editEquipment(equipment.id)">Update</button>
-          <button (click)="deleteEquipment(equipment.id)">Delete</button>
-        </div>
+<!-- New section for displaying equipment -->
+<div class="equipment-section">
+  <div class="equipment-header">
+    <h2>Equipments</h2>
+
+    <!-- Search bar -->
+    <input
+      type="text"
+      placeholder="Search Equipment"
+      [(ngModel)]="searchQuery"
+      class="equipment-search-bar"
+    />
+
+    <button (click)="openAddEquipmentDialog()">Add Equipment</button>
+  </div>
+  <div class="equipment-list">
+    <div
+    *ngFor="let equipment of (company.equipmentList || []) | filterEquipment:searchQuery"
+    class="equipment-card"
+    >
+      <h3>{{ equipment.name }}</h3>
+      <p>{{ equipment.description }}</p>
+      <p><strong>Status:</strong> {{ equipment.isAvailable ? 'Available' : 'Not Available' }}</p>
+      <div class="equipment-actions">
+        <button (click)="openUpdateEquipmentDialog(equipment)">Update</button>
+        <button (click)="deleteEquipment(equipment.id)">Delete</button>
       </div>
     </div>
   </div>
+</div>
 
- <div class="modal" *ngIf="showModal">
+
+  <div class="modal" *ngIf="showModal">
     <div class="modal-content">
       <span class="close" (click)="closeModal()">&times;</span>
-      <h2>Add Equipment</h2>
-      <form (ngSubmit)="addEquipment()">
+      <h2>{{ isUpdateMode ? 'Update Equipment' : 'Add Equipment' }}</h2>
+      <form (ngSubmit)="saveEquipment()">
         <label>
           Name:
           <input type="text" [(ngModel)]="newEquipment.name" name="name" required />
@@ -69,7 +82,7 @@
           <input type="checkbox" [(ngModel)]="newEquipment.isAvailable" name="isAvailable" />
           Available
         </label>
-        <button type="submit">Add Equipment</button>
+        <button type="submit">{{ isUpdateMode ? 'Save Changes' : 'Add Equipment' }}</button>
       </form>
     </div>
   </div>
