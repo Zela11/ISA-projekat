@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedSupplyPortal.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240806222503_CompanyAndEquipment")]
-    partial class CompanyAndEquipment
+    [Migration("20240815215625_CompanyUpdate")]
+    partial class CompanyUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,26 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("MedSupplyPortal.Domain.Entities.Appointment", b =>
+                {
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AdministratorId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Slot")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Duration")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("CompanyId", "AdministratorId", "Slot");
+
+                    b.ToTable("Appointments");
+                });
 
             modelBuilder.Entity("MedSupplyPortal.Domain.Entities.Company", b =>
                 {
@@ -41,10 +61,16 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
+                    b.Property<TimeOnly>("End")
+                        .HasColumnType("time without time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<TimeOnly>("Start")
+                        .HasColumnType("time without time zone");
 
                     b.HasKey("Id");
 
@@ -103,6 +129,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
+                    b.Property<bool>("IsFirstLogin")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -136,6 +165,15 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("MedSupplyPortal.Domain.Entities.Appointment", b =>
+                {
+                    b.HasOne("MedSupplyPortal.Domain.Entities.Company", null)
+                        .WithMany("Appointments")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("MedSupplyPortal.Domain.Entities.Company", b =>
                 {
                     b.OwnsOne("MedSupplyPortal.Domain.Entities.Address", "Address", b1 =>
@@ -153,10 +191,10 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                                 .HasMaxLength(100)
                                 .HasColumnType("character varying(100)");
 
-                            b1.Property<double>("Latitude")
+                            b1.Property<double?>("Latitude")
                                 .HasColumnType("double precision");
 
-                            b1.Property<double>("Longitude")
+                            b1.Property<double?>("Longitude")
                                 .HasColumnType("double precision");
 
                             b1.Property<string>("Street")
@@ -207,10 +245,10 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                                 .HasMaxLength(100)
                                 .HasColumnType("character varying(100)");
 
-                            b1.Property<double>("Latitude")
+                            b1.Property<double?>("Latitude")
                                 .HasColumnType("double precision");
 
-                            b1.Property<double>("Longitude")
+                            b1.Property<double?>("Longitude")
                                 .HasColumnType("double precision");
 
                             b1.Property<string>("Street")
@@ -232,6 +270,8 @@ namespace MedSupplyPortal.Infrastructure.Migrations
 
             modelBuilder.Entity("MedSupplyPortal.Domain.Entities.Company", b =>
                 {
+                    b.Navigation("Appointments");
+
                     b.Navigation("CompanyAdmins");
 
                     b.Navigation("EquipmentList");

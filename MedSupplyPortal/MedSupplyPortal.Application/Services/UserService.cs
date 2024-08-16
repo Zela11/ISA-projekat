@@ -220,7 +220,7 @@ namespace MedSupplyPortal.Application.Services
             await _userRepository.UpdateAsync(user);
             return true;
         }
-        public async void ChangePasswordAsync(int userId, string currentPassword, string newPassword)
+        public async Task<bool> ChangePasswordAsync(int userId, string currentPassword, string newPassword)
         {
             if (!_userRepository.CheckPassword(userId, currentPassword))
             {
@@ -234,6 +234,8 @@ namespace MedSupplyPortal.Application.Services
                 user.IsFirstLogin = false;
             }
             await _userRepository.UpdateAsync(user);
+            return true;
+            
         }
     }
     

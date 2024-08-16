@@ -87,3 +87,49 @@
     </div>
   </div>
 </div>
+
+<div class="appointment-section">
+  <div class="appointment-header">
+    <h2>Appointments</h2>
+
+    <!-- Button to add new appointment -->
+    <button (click)="openAddAppointmentDialog()">Add Appointment</button>
+  </div>
+  
+  <div class="appointment-list">
+    <div *ngFor="let appointment of company.appointments" class="appointment-card">
+      <p><strong>Date:</strong> {{ appointment.slot | date:'shortDate' }}</p>
+      <p><strong>Time:</strong> {{ appointment.slot | date:'shortTime' }}</p>
+      <p><strong>Duration:</strong> {{ appointment.duration }} minutes</p>
+      <div class="appointment-actions">
+        <button (click)="openUpdateAppointmentDialog(appointment)">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" *ngIf="showAppointmentModal">
+  <div class="modal-content">
+    <span class="close" (click)="closeAppointmentModal()">&times;</span>
+    <h2>{{ isAppointmentUpdateMode ? 'Update Appointment' : 'Add Appointment' }}</h2>
+    <form (ngSubmit)="saveAppointment()">
+      <label>
+        Admin:
+        <select [(ngModel)]="newAppointment.administratorId" name="adminId" required>
+          <option *ngFor="let admin of company.companyAdmins" [value]="admin.id">
+            {{ admin.firstName }} {{ admin.lastName }}
+          </option>
+        </select>
+      </label>
+      <label>
+        Date and Time:
+        <input type="datetime-local" [(ngModel)]="newAppointment.slot" name="datetime" required />
+      </label>
+      <label>
+        Duration:
+        <input type="text" [(ngModel)]="newAppointment.duration" name="duration" min="0" required />
+      </label>
+      <button type="submit">{{ isAppointmentUpdateMode ? 'Save Changes' : 'Add Appointment' }}</button>
+    </form>
+  </div>
+</div>

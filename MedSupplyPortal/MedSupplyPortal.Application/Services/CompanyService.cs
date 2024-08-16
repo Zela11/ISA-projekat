@@ -19,9 +19,15 @@ namespace MedSupplyPortal.Application.Services
             _companyRepository = companyRepository;
         }
 
-
-        public async Task<bool> CreateCompanyAsync(CompanyDto companyDto)
+    public async Task<bool> CreateCompanyAsync(CompanyDto companyDto)
         {
+            TimeOnly start;
+            TimeOnly end;
+
+            start = TimeOnly.Parse(companyDto.Start);
+            end = TimeOnly.Parse(companyDto.End);
+            
+
             var address = new Address
             {
                 City = companyDto.Address?.City,
@@ -36,6 +42,8 @@ namespace MedSupplyPortal.Application.Services
                 Description = companyDto.Description,
                 AverageRating = companyDto.AverageRating,
                 Address = address,
+                Start = start,
+                End = end,
                 EquipmentList = [],
                 CompanyAdmins = [],
             };
@@ -108,5 +116,19 @@ namespace MedSupplyPortal.Application.Services
         {
             await _companyRepository.DeleteEquipmentAsync(companyId, equipmentId);
         }
+
+        public async Task AddAppointmentToCompanyAsync(int companyId, AppointmentDto appointmentDto)
+        {
+            var appointment = new Appointment
+            {
+                CompanyId = companyId,
+                AdministratorId = appointmentDto.AdministratorId,
+                Duration = appointmentDto.Duration.ToString(),
+                Slot = appointmentDto.Slot
+            };
+
+            await _companyRepository.AddAppointmentToCompanyAsync(appointment);
+        }
+
     }
 }

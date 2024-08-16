@@ -22,6 +22,26 @@ namespace MedSupplyPortal.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("MedSupplyPortal.Domain.Entities.Appointment", b =>
+                {
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AdministratorId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("Slot")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Duration")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("CompanyId", "AdministratorId", "Slot");
+
+                    b.ToTable("Appointments");
+                });
+
             modelBuilder.Entity("MedSupplyPortal.Domain.Entities.Company", b =>
                 {
                     b.Property<int>("Id")
@@ -38,10 +58,16 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
+                    b.Property<TimeOnly>("End")
+                        .HasColumnType("time without time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<TimeOnly>("Start")
+                        .HasColumnType("time without time zone");
 
                     b.HasKey("Id");
 
@@ -134,6 +160,15 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     b.HasIndex("CompanyId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("MedSupplyPortal.Domain.Entities.Appointment", b =>
+                {
+                    b.HasOne("MedSupplyPortal.Domain.Entities.Company", null)
+                        .WithMany("Appointments")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MedSupplyPortal.Domain.Entities.Company", b =>
@@ -232,6 +267,8 @@ namespace MedSupplyPortal.Infrastructure.Migrations
 
             modelBuilder.Entity("MedSupplyPortal.Domain.Entities.Company", b =>
                 {
+                    b.Navigation("Appointments");
+
                     b.Navigation("CompanyAdmins");
 
                     b.Navigation("EquipmentList");

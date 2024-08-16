@@ -90,4 +90,13 @@ public class CompanyController : ControllerBase
         await _companyService.DeleteEquipmentAsync(companyId, equipmentId);
         return Ok(new { message = "Equipment deleted successfully." });
     }
+    [HttpPost("{companyId}/appointment")]
+    public async Task<IActionResult> AddAppointment(int companyId, [FromBody] AppointmentDto appointmentDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        await _companyService.AddAppointmentToCompanyAsync(companyId, appointmentDto);
+        return Ok(new { message = "Appointment created successfully." });
+    }
 }

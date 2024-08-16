@@ -15,7 +15,7 @@ namespace MedSupplyPortal.Application.IServices
         Task<IEnumerable<RegisterUserDto>> GetSystemAdmins();
         Task<bool> RegisterCompanyAdminAsync(RegisterUserDto userDto, int companyId);
         Task<bool> UpdateUserAsync(int id, RegisterUserDto updateUserDto);
-        void ChangePasswordAsync(int userId, string currentPassword, string newPassword);
+        Task<bool> ChangePasswordAsync(int userId, string currentPassword, string newPassword);
 
     }
 }

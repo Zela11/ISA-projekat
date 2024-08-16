@@ -12,5 +12,7 @@ public class CompanyDto
     public string Description { get; set; }
     public AddressDto Address { get; set; }
     public double AverageRating { get; set; }
+    public string Start {  get; set; }
+    public string End { get; set; }
 
 }
