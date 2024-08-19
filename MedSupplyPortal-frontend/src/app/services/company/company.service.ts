@@ -5,6 +5,7 @@ import { Company } from 'src/app/shared/model/company';
 import { environment } from 'src/env/enviroment';
 import { TokenStorageService } from '../user/token.service';
 import { Equipment } from 'src/app/shared/model/equipment';
+import { Appointment } from 'src/app/shared/model/appointment';
 
 @Injectable({
   providedIn: 'root'
@@ -36,5 +37,9 @@ export class CompanyService {
   }
   deleteEquipment(companyId: number, equipmentId: number) : Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${companyId}/equipment/${equipmentId}`);
+  }
+  addAppointment(companyId: number, appointment: Appointment) : Observable<any> {
+    console.log(appointment)
+    return this.http.post(`${this.apiUrl}/${companyId}/appointment`, appointment);
   }
 }

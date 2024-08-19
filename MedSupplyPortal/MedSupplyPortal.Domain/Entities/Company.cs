@@ -13,6 +13,9 @@ namespace MedSupplyPortal.Domain.Entities
         public string Description { get; set; }
         public Address Address { get; set; }
         public double AverageRating { get; set; }
+        public TimeOnly Start { get; set; }
+        public TimeOnly End { get; set; }
+        public List<Appointment>? Appointments { get; set; }
         public List<Equipment>? EquipmentList { get; set; }
         public List<User> CompanyAdmins { get; set; }
     }

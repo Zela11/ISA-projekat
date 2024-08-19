@@ -32,6 +32,7 @@ public class CompanyRepository : ICompanyRepository
                .Include(c => c.Address)
                .Include(c => c.CompanyAdmins)
                .Include(c => c.EquipmentList)
+               .Include(c => c.Appointments)
                .ToListAsync();
     }
 
@@ -40,6 +41,7 @@ public class CompanyRepository : ICompanyRepository
         return await _context.Companies
             .Include(c => c.CompanyAdmins)
             .Include(c => c.EquipmentList)
+            .Include(c => c.Appointments)
             .FirstOrDefaultAsync(c => c.Id == id);
     }
     public async Task UpdateAsync(Company company)
@@ -49,7 +51,7 @@ public class CompanyRepository : ICompanyRepository
     }
     public async Task AddEquipmentToCompanyAsync(int companyId, Equipment equipment)
     {
-        var company = await GetByIdAsync(companyId);
+        var company = await GetByIdAsync(companyId); 
         if (company != null)
         {
             company.EquipmentList ??= new List<Equipment>();
@@ -76,6 +78,20 @@ public class CompanyRepository : ICompanyRepository
                 _context.Companies.Update(company);
                 await _context.SaveChangesAsync();
             }
+        }
+    }
+    public async Task AddAppointmentToCompanyAsync(Appointment appointment)
+    {
+        var company = await GetByIdAsync(appointment.CompanyId);
+        appointment.Slot = appointment.Slot.ToUniversalTime();
+        bool isInWorkingHours = appointment.Slot.Hour >= company.Start.Hour && appointment.Slot.Hour <= company.End.Hour;
+        bool appointmentExists = company.Appointments.Exists(a => a.Slot == appointment.Slot);
+        if (company != null && isInWorkingHours && !appointmentExists)
+        {
+            company.Appointments ??= new List<Appointment>();
+            company.Appointments.Add(appointment);
+            _context.Companies.Update(company);
+            await _context.SaveChangesAsync();
         }
     }
 }

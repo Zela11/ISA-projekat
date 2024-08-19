@@ -40,7 +40,10 @@ export class CompanyFormComponent implements OnInit {
       latitude: 0,
       longitude: 0
     },
+    start: '',
+    end: '',
     averageRating: 0,
+    appointments: [],
     companyAdmins: [],
     equipmentList: []
   };

@@ -99,16 +99,11 @@ public class UserController : ControllerBase
         return Ok(new { message = "User updated successfully." });
     }
     [HttpPut("{userId}/change-password")]
-    public IActionResult ChangePassword(int userId, [FromBody] ChangePasswordDto changePasswordDto)
+    public async Task<IActionResult> ChangePassword(int userId, [FromBody] ChangePasswordDto changePasswordDto)
     {
-        try
-        {
-            _userService.ChangePasswordAsync(userId, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
-            return Ok(new { message = "Password updated successfully" });
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
+        
+        
+        var result = await _userService.ChangePasswordAsync(userId, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+        return Ok(new { message = "Password updated successfully" });
     }
 }

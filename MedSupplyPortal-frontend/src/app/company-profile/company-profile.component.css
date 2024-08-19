@@ -274,3 +274,72 @@
 .modal button:hover {
   background-color: #0056b3;
 }
+
+.appointment-section {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.appointment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.appointment-header h2 {
+  margin: 0;
+}
+
+.appointment-header button {
+  padding: 10px 15px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.appointment-header button:hover {
+  background-color: #0056b3;
+}
+
+.appointment-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.appointment-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.appointment-card p {
+  margin: 0;
+  padding: 5px 0;
+}
+
+.appointment-card .appointment-actions {
+  margin-top: 10px;
+}
+
+.appointment-card .appointment-actions button {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.appointment-card .appointment-actions button:hover {
+  background-color: #0056b3;
+}

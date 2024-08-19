@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MedSupplyPortal.Domain.Entities
+namespace MedSupplyPortal.Application.Dtos
 {
-    public class Appointment
+    public class AppointmentDto
     {
         public int CompanyId { get; set; }
         public int AdministratorId { get; set; }
-        public string Duration {  get; set; } 
+        public int Duration { get; set; }
         public DateTime Slot { get; set; }
     }
 }

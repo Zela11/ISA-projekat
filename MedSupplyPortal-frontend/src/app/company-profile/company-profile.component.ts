@@ -18,6 +18,7 @@ import VectorSource from 'ol/source/Vector';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import { Equipment } from '../shared/model/equipment';
+import { Appointment } from '../shared/model/appointment';
 
 @Component({
   selector: 'app-company-profile',
@@ -26,6 +27,14 @@ import { Equipment } from '../shared/model/equipment';
 })
 export class CompanyProfileComponent implements OnInit {
   @ViewChild('map', { static: true }) mapElement!: ElementRef;
+  showAppointmentModal: boolean = false;
+  isAppointmentUpdateMode: boolean = false;
+  newAppointment: Appointment = {
+    companyId: 0,
+    administratorId: 0,
+    duration: '',
+    slot:  new Date()
+  };
   company: Company = {
     id: 0,
     name: '',
@@ -37,7 +46,10 @@ export class CompanyProfileComponent implements OnInit {
       latitude: 0,
       longitude: 0
     },
+    start: '',
+    end: '',
     averageRating: 0,
+    appointments: [],
     companyAdmins: [],
     equipmentList: []
   };
@@ -247,5 +259,78 @@ export class CompanyProfileComponent implements OnInit {
         }
       );
     }
+  }
+
+  saveAppointment(): void {
+    if (this.isAppointmentUpdateMode) {
+      //this.updateAppointment();
+    } else {
+      this.addAppointment();
+    }
+  }
+  addAppointment(): void {
+    if (this.newAppointment) {
+      console.log(this.newAppointment.administratorId)
+      this.newAppointment.administratorId = Number(this.newAppointment.administratorId);
+      this.companyService.addAppointment(this.company.id, this.newAppointment).subscribe(
+        (response) => {
+          console.log("Success", response);
+          this.company.appointments = [];
+          this.company.appointments.push(this.newAppointment);
+          this.newAppointment= { companyId: 0,  administratorId: 0, duration: '', slot: new Date()};
+          this.closeModal();
+          this.deinitializeMap();
+          this.loadCompanyData(this.company.id);
+          alert('Appointment added successfully!');
+        },
+        (error) => {
+          console.error('Error adding appointment:', error);
+        }
+      );
+    }
+  }
+  /*updateAppointment(): void {
+    if (this.selectedEquipmentId !== null && this.newEquipment.name) {
+      this.companyService.updateEquipment(this.company.id, this.newEquipment).subscribe(
+        (response) => {
+          if(this.company.equipmentList) 
+          {
+            const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipmentId);
+            if (index !== -1) {
+              this.company.equipmentList[index] = { ...this.newEquipment };
+            }
+          }
+         
+          this.closeModal();
+          alert('Equipment updated successfully!');
+        },
+        (error) => {
+          console.error('Error updating equipment:', error);
+        }
+      );
+    }
+  }*/
+  openAddAppointmentDialog() {
+    this.isAppointmentUpdateMode = false;
+    this.newAppointment = {companyId: 0 ,administratorId: 0, duration: '', slot: new Date() };
+    this.showAppointmentModal = true;
+  }
+
+  openUpdateAppointmentDialog(appointment: any) {
+    this.isAppointmentUpdateMode = true;
+    this.newAppointment = { ...appointment };
+    this.showAppointmentModal = true;
+  }
+
+  closeAppointmentModal() {
+    this.showAppointmentModal = false;
+  }
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
   }
 }

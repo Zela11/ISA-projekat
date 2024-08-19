@@ -20,7 +20,7 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Company> Companies { get; set; }
     public DbSet<Equipment> Equipments { get; set; }
-
+    public DbSet<Appointment> Appointments { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -71,6 +71,11 @@ public class AppDbContext : DbContext
                   .WithOne()
                   .HasForeignKey(u => u.CompanyId)
                   .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasMany(c => c.Appointments)
+                  .WithOne()
+                  .HasForeignKey(a => a.CompanyId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
         modelBuilder.Entity<Equipment>(entity =>
         {
@@ -81,6 +86,12 @@ public class AppDbContext : DbContext
 
         });
 
+        modelBuilder.Entity<Appointment>(entity =>
+        {
+            entity.HasKey(a => new { a.CompanyId, a.AdministratorId, a.Slot });
+            entity.Property(a => a.Duration).IsRequired();
+            entity.Property(a => a.Slot).IsRequired();
+        });
 
     }
 }
