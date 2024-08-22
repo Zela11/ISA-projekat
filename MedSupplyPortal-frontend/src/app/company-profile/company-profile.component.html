@@ -127,7 +127,7 @@
       </label>
       <label>
         Duration:
-        <input type="text" [(ngModel)]="newAppointment.duration" name="duration" min="0" required />
+        <input type="number" [(ngModel)]="newAppointment.duration" name="duration" min="0" required />
       </label>
       <button type="submit">{{ isAppointmentUpdateMode ? 'Save Changes' : 'Add Appointment' }}</button>
     </form>
