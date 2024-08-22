@@ -97,6 +97,7 @@ public class CompanyController : ControllerBase
             return BadRequest(ModelState);
 
         await _companyService.AddAppointmentToCompanyAsync(companyId, appointmentDto);
-        return Ok(new { message = "Appointment created successfully." });
+        return Ok();
     }
+
 }

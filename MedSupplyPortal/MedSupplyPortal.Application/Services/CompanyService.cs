@@ -1,5 +1,6 @@
 ﻿using MedSupplyPortal.Application.Dtos;
 using MedSupplyPortal.Application.IServices;
+using MedSupplyPortal.Domain;
 using MedSupplyPortal.Domain.Entities;
 using MedSupplyPortal.Domain.IRepositories;
 using System;
@@ -128,6 +129,7 @@ namespace MedSupplyPortal.Application.Services
             };
 
             await _companyRepository.AddAppointmentToCompanyAsync(appointment);
+
         }
 
     }

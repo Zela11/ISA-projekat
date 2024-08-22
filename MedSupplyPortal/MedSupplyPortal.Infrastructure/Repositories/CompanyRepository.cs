@@ -1,4 +1,5 @@
-﻿using MedSupplyPortal.Domain.Entities;
+﻿using MedSupplyPortal.Domain;
+using MedSupplyPortal.Domain.Entities;
 using MedSupplyPortal.Domain.IRepositories;
 using MedSupplyPortal.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,22 @@ public class CompanyRepository : ICompanyRepository
                .Include(c => c.EquipmentList)
                .Include(c => c.Appointments)
                .ToListAsync();
+    }
+
+    public async Task<List<Appointment>> GetAllAppointmentsByAdminAsync(int companyId, int adminId)
+    {
+        var company = await GetByIdAsync(companyId);
+
+        if (company != null)
+        {
+            var appointments = company.Appointments
+                .Where(a => company.CompanyAdmins.Any(admin => admin.Id == adminId))
+                .ToList();
+
+            return appointments;
+        }
+
+        return new List<Appointment>();
     }
 
     public async Task<Company> GetByIdAsync(int id)
@@ -83,15 +100,35 @@ public class CompanyRepository : ICompanyRepository
     public async Task AddAppointmentToCompanyAsync(Appointment appointment)
     {
         var company = await GetByIdAsync(appointment.CompanyId);
+        var appointments = await GetAllAppointmentsByAdminAsync(appointment.CompanyId, appointment.AdministratorId);
         appointment.Slot = appointment.Slot.ToUniversalTime();
+
+        bool overlaps = CheckOverlap(appointments, appointment);
         bool isInWorkingHours = appointment.Slot.Hour >= company.Start.Hour && appointment.Slot.Hour <= company.End.Hour;
         bool appointmentExists = company.Appointments.Exists(a => a.Slot == appointment.Slot);
-        if (company != null && isInWorkingHours && !appointmentExists)
+
+        if (company != null && isInWorkingHours && !appointmentExists && !overlaps)
         {
             company.Appointments ??= new List<Appointment>();
             company.Appointments.Add(appointment);
             _context.Companies.Update(company);
             await _context.SaveChangesAsync();
         }
+    }
+    private bool CheckOverlap(List<Appointment> appointments, Appointment appointment)
+    {   
+        double duration = Double.Parse(appointment.Duration);
+        if (appointments == null)
+            return true;
+        //Proverava da li je pocetak termina izmedju pocetka i kraja drugog termina
+        else if (appointments.Exists(a => appointment.Slot > a.Slot && appointment.Slot < a.Slot.AddMinutes(Double.Parse(a.Duration))))
+            return true;
+        //Proverava da li je kraj termina izmedju pocetka i kraja drugog termina
+        else if (appointments.Exists(a => appointment.Slot.AddMinutes(duration) > a.Slot && appointment.Slot.AddMinutes(duration) < a.Slot.AddMinutes(Double.Parse(a.Duration))))
+            return true;
+        //Proverava da li je ceo drugi termin unutar termina koji kreiramo
+        else if (appointments.Exists(a => appointment.Slot < a.Slot && appointment.Slot.AddMinutes(duration) > a.Slot.AddMinutes(Int32.Parse(a.Duration))))
+            return true;
+        else return false;
     }
 }
