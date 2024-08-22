@@ -1,6 +1,6 @@
 export interface Appointment {
     companyId: number,
     administratorId: number, 
-    duration: string,
+    duration: number,
     slot: Date
 }

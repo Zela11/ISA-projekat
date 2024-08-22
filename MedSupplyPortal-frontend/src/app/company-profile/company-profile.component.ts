@@ -32,7 +32,7 @@ export class CompanyProfileComponent implements OnInit {
   newAppointment: Appointment = {
     companyId: 0,
     administratorId: 0,
-    duration: '',
+    duration: 0,
     slot:  new Date()
   };
   company: Company = {
@@ -277,11 +277,10 @@ export class CompanyProfileComponent implements OnInit {
           console.log("Success", response);
           this.company.appointments = [];
           this.company.appointments.push(this.newAppointment);
-          this.newAppointment= { companyId: 0,  administratorId: 0, duration: '', slot: new Date()};
+          this.newAppointment= { companyId: 0,  administratorId: 0, duration: 0, slot: new Date()};
           this.closeModal();
           this.deinitializeMap();
           this.loadCompanyData(this.company.id);
-          alert('Appointment added successfully!');
         },
         (error) => {
           console.error('Error adding appointment:', error);
@@ -312,7 +311,7 @@ export class CompanyProfileComponent implements OnInit {
   }*/
   openAddAppointmentDialog() {
     this.isAppointmentUpdateMode = false;
-    this.newAppointment = {companyId: 0 ,administratorId: 0, duration: '', slot: new Date() };
+    this.newAppointment = {companyId: 0 ,administratorId: 0, duration: 0, slot: new Date() };
     this.showAppointmentModal = true;
   }
 
