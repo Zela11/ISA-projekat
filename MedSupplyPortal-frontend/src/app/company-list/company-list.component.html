@@ -1,0 +1,7 @@
+<div class="company-list">
+    <ul>
+      <li *ngFor="let company of companies" (click)="navigateToCompanyDetails(company.id)">
+        {{ company.name }} - Rating: {{ company.averageRating }}
+      </li>
+    </ul>
+  </div>

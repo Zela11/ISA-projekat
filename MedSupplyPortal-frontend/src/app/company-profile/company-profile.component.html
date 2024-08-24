@@ -56,6 +56,7 @@
       <h3>{{ equipment.name }}</h3>
       <p>{{ equipment.description }}</p>
       <p><strong>Status:</strong> {{ equipment.isAvailable ? 'Available' : 'Not Available' }}</p>
+      <p><strong>Amount:</strong> {{ equipment.amount  }}</p>
       <div class="equipment-actions">
         <button (click)="openUpdateEquipmentDialog(equipment)">Update</button>
         <button (click)="deleteEquipment(equipment.id)">Delete</button>
@@ -81,6 +82,10 @@
         <label>
           <input type="checkbox" [(ngModel)]="newEquipment.isAvailable" name="isAvailable" />
           Available
+        </label>
+        <label>
+          <input type="number" [(ngModel)]="newEquipment.amount" name="amount" />
+          Amount
         </label>
         <button type="submit">{{ isUpdateMode ? 'Save Changes' : 'Add Equipment' }}</button>
       </form>

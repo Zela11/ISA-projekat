@@ -92,7 +92,8 @@ namespace MedSupplyPortal.Application.Services
                 Name = equipmentDto.Name,
                 Description = equipmentDto.Description,
                 IsAvailable = equipmentDto.IsAvailable,
-                CompanyId = companyId
+                CompanyId = companyId,
+                Amount = equipmentDto.Amount,
             };
 
             await _companyRepository.AddEquipmentToCompanyAsync(companyId, equipment);
@@ -125,11 +126,31 @@ namespace MedSupplyPortal.Application.Services
                 CompanyId = companyId,
                 AdministratorId = appointmentDto.AdministratorId,
                 Duration = appointmentDto.Duration.ToString(),
-                Slot = appointmentDto.Slot
+                Slot = appointmentDto.Slot,
+                Status = appointmentDto.Status,
+                EquipmentId = appointmentDto.EquipmentId,
+                EquipmentAmount = appointmentDto.EquipmentAmount
+
             };
 
             await _companyRepository.AddAppointmentToCompanyAsync(appointment);
 
+        }
+
+        public async Task ReserveAppointmentAsync(int companyId, AppointmentDto appointmentDto)
+        {
+            var company = await _companyRepository.GetByIdAsync(companyId);
+            if (company != null)
+            {
+                var existingAppointment = company.Appointments?.FirstOrDefault(a => a.AdministratorId == appointmentDto.AdministratorId && a.Slot == appointmentDto.Slot);
+                if (existingAppointment != null)
+                {
+                    existingAppointment.EquipmentId = appointmentDto.EquipmentId;
+                    existingAppointment.EquipmentAmount = appointmentDto.EquipmentAmount;
+                    existingAppointment.Status = AppointmentStatus.Reserved;
+                    await _companyRepository.ReserveAppointmentAsync(existingAppointment);
+                }
+            }
         }
 
     }

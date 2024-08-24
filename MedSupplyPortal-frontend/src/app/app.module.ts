@@ -13,7 +13,9 @@ import { SystemAdminProfileComponent } from './system-admin-profile/system-admin
 import { CompanyFormComponent } from './company-form/company-form.component';
 import { CompanyAdminProfileComponent } from './company-admin-profile/company-admin-profile.component';
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
-import { FilterEquipmentPipe } from './shared/pipes/filter-equipment.pipe';  // Dodaj ovu liniju
+import { FilterEquipmentPipe } from './shared/pipes/filter-equipment.pipe';
+import { CompanyListComponent } from './company-list/company-list.component';
+import { CompanyDetailsComponent } from './company-details/company-details.component';  // Dodaj ovu liniju
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import { FilterEquipmentPipe } from './shared/pipes/filter-equipment.pipe';  // 
     CompanyFormComponent,
     CompanyAdminProfileComponent,
     CompanyProfileComponent,
-    FilterEquipmentPipe
+    FilterEquipmentPipe,
+    CompanyListComponent,
+    CompanyDetailsComponent
   ],
   imports: [
     BrowserModule,

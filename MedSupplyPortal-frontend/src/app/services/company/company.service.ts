@@ -42,4 +42,7 @@ export class CompanyService {
     console.log(appointment)
     return this.http.post(`${this.apiUrl}/${companyId}/appointment`, appointment);
   }
+  reserveAppointment(companyId: number ,appointment: Appointment) : Observable<any> {
+    return this.http.put(`${this.apiUrl}/${companyId}/appointment`, appointment);
+  }
 }

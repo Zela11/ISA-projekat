@@ -115,6 +115,13 @@ public class CompanyRepository : ICompanyRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task ReserveAppointmentAsync(Appointment appointment)
+    {
+        _context.Appointments.Update(appointment);
+        await _context.SaveChangesAsync();
+    }
+
     private bool CheckOverlap(List<Appointment> appointments, Appointment appointment)
     {   
         double duration = Double.Parse(appointment.Duration);

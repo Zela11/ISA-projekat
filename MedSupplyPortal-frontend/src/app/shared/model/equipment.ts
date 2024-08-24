@@ -3,5 +3,6 @@ export interface Equipment {
     name: string, 
     description: string,
     isAvailable: boolean,
-    companyId: number
+    companyId: number,
+    amount: number
 }
