@@ -52,5 +52,8 @@ export class NavBarComponent implements OnInit {
       }
     }
   }
+  navigateToReservations(): void {
+    this.router.navigate([`/reservations/${this.currentUser?.companyId}`])
+  }
 }
 

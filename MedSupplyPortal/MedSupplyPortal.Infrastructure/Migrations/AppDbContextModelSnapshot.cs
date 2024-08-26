@@ -37,6 +37,18 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("EquipmentAmount")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("EquipmentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("CompanyId", "AdministratorId", "Slot");
 
                     b.ToTable("Appointments");
@@ -82,6 +94,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("Amount")
+                        .HasColumnType("integer");
+
                     b.Property<int>("CompanyId")
                         .HasColumnType("integer");
 
@@ -97,6 +112,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<int>("ReservedAmount")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

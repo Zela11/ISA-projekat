@@ -10,7 +10,11 @@ namespace MedSupplyPortal.Application.Dtos
     {
         public int CompanyId { get; set; }
         public int AdministratorId { get; set; }
+        public int? UserId { get; set; }
         public int Duration { get; set; }
         public DateTime Slot { get; set; }
+        public AppointmentStatus Status { get; set; }
+        public int? EquipmentId { get; set; }
+        public int? EquipmentAmount { get; set; }
     }
 }

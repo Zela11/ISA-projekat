@@ -83,14 +83,19 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.IsAvailable).IsRequired();
-
+            entity.Property(e => e.Amount).IsRequired();
+            entity.Property(e => e.ReservedAmount).IsRequired();
         });
 
         modelBuilder.Entity<Appointment>(entity =>
         {
             entity.HasKey(a => new { a.CompanyId, a.AdministratorId, a.Slot });
+            entity.Property(a => a.UserId).IsRequired(false);
             entity.Property(a => a.Duration).IsRequired();
             entity.Property(a => a.Slot).IsRequired();
+            entity.Property(a => a.Status).IsRequired(); 
+            entity.Property(a => a.EquipmentId).IsRequired(false); 
+            entity.Property(a => a.EquipmentAmount).IsRequired(false);
         });
 
     }

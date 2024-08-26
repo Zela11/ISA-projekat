@@ -17,5 +17,8 @@ public interface ICompanyService
     Task AddEquipmentToCompanyAsync(int companyId, EquipmentDto equipmentDto);
     Task UpdateEquipmentAsync(int companyId, int equipmentId, EquipmentDto equipmentDto);
     Task DeleteEquipmentAsync(int companyId, int equipmentId);
+    Task UpdateEquipmentAmountAsync(int companyId, int equipmentId, EquipmentDto equipmentDto);
     Task AddAppointmentToCompanyAsync(int companyId, AppointmentDto appointmentDto);
+    Task ReserveAppointmentAsync(int companyId, AppointmentDto appointmentDto);
+    Task CompleteAppointmentAsync(int companyId, AppointmentDto appointmentDto);
 }

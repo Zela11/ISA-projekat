@@ -32,8 +32,12 @@ export class CompanyProfileComponent implements OnInit {
   newAppointment: Appointment = {
     companyId: 0,
     administratorId: 0,
+    userId: null,
     duration: 0,
-    slot:  new Date()
+    slot:  new Date(),
+    status: 0,
+    equipmentId: null,
+    equipmentAmount: null
   };
   company: Company = {
     id: 0,
@@ -66,7 +70,9 @@ export class CompanyProfileComponent implements OnInit {
     name: '',
     description: '',
     isAvailable: false,
-    companyId: 0
+    companyId: 0,
+    amount: 0,
+    reservedAmount: 0
   };
 
   constructor(
@@ -187,7 +193,7 @@ export class CompanyProfileComponent implements OnInit {
   openAddEquipmentDialog(): void {
     this.isUpdateMode = false;
     this.showModal = true;
-    this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0};
+    this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0, amount: 0, reservedAmount: 0};
   }
   saveEquipment(): void {
     if (this.isUpdateMode) {
@@ -248,7 +254,7 @@ export class CompanyProfileComponent implements OnInit {
           console.log("Success", response);
           this.company.equipmentList = [];
           this.company.equipmentList.push(this.newEquipment);
-          this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0};
+          this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0, amount: 0, reservedAmount: 0};
           this.closeModal();
           this.deinitializeMap();
           this.loadCompanyData(this.company.id);
@@ -277,7 +283,7 @@ export class CompanyProfileComponent implements OnInit {
           console.log("Success", response);
           this.company.appointments = [];
           this.company.appointments.push(this.newAppointment);
-          this.newAppointment= { companyId: 0,  administratorId: 0, duration: 0, slot: new Date()};
+          this.newAppointment= { companyId: 0,  administratorId: 0,userId: null, duration: 0, slot: new Date(), status: 0, equipmentId: null, equipmentAmount: null};
           this.closeModal();
           this.deinitializeMap();
           this.loadCompanyData(this.company.id);
@@ -311,7 +317,7 @@ export class CompanyProfileComponent implements OnInit {
   }*/
   openAddAppointmentDialog() {
     this.isAppointmentUpdateMode = false;
-    this.newAppointment = {companyId: 0 ,administratorId: 0, duration: 0, slot: new Date() };
+    this.newAppointment = {companyId: 0 , administratorId: 0, userId: null, duration: 0, slot: new Date(), status: 0, equipmentId: null, equipmentAmount: null };
     this.showAppointmentModal = true;
   }
 
