@@ -38,11 +38,17 @@ export class CompanyService {
   deleteEquipment(companyId: number, equipmentId: number) : Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${companyId}/equipment/${equipmentId}`);
   }
+  updateEquipmentAmount(companyId: number, equipment: Equipment) : Observable<any> {
+    return this.http.put(`${this.apiUrl}/${companyId}/equipmentAmount/${equipment.id}`, equipment);
+  }
   addAppointment(companyId: number, appointment: Appointment) : Observable<any> {
     console.log(appointment)
     return this.http.post(`${this.apiUrl}/${companyId}/appointment`, appointment);
   }
   reserveAppointment(companyId: number ,appointment: Appointment) : Observable<any> {
     return this.http.put(`${this.apiUrl}/${companyId}/appointment`, appointment);
+  }
+  completeAppointment(companyId: number ,appointment: Appointment) : Observable<any> {
+    return this.http.put(`${this.apiUrl}/${companyId}/completeAppointment`, appointment);
   }
 }

@@ -9,7 +9,7 @@ import { CompanyAdminProfileComponent } from './company-admin-profile/company-ad
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
 import { CompanyListComponent } from './company-list/company-list.component';
 import { CompanyDetailsComponent } from './company-details/company-details.component';
-
+import { ReservedEquipmentComponent } from './reserved-equipment/reserved-equipment.component';
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'login' , component: LoginComponent},
@@ -18,8 +18,9 @@ const routes: Routes = [
   {path: 'companyForm', component: CompanyFormComponent},
   {path: 'company-profile', component: CompanyProfileComponent},
   {path: 'company-list', component: CompanyListComponent },
-  { path: 'company/:id', component: CompanyDetailsComponent },
+  {path: 'company/:id', component: CompanyDetailsComponent },
   {path: 'system-admin-profile', component: SystemAdminProfileComponent},
+  {path: 'reservations/:id', component: ReservedEquipmentComponent},
   {path: '', redirectTo: '/home', pathMatch: 'full' },
   {path: '**', redirectTo: '/home' } ,
 

@@ -8,7 +8,7 @@
       <strong>Equipment:</strong>
       <ul>
         <li *ngFor="let equipment of company.equipmentList" (click)="openModal(equipment)">
-          {{ equipment.name }}: {{equipment.amount}}
+          {{ equipment.name }}: {{equipment.amount - equipment.reservedAmount}}
         </li>
       </ul>
     </div>

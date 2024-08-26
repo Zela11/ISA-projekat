@@ -15,5 +15,6 @@ namespace MedSupplyPortal.Domain.Entities
         public bool IsAvailable { get; set; }
         public int CompanyId { get; set; }
         public int Amount {  get; set; }
+        public int ReservedAmount { get; set; }
     }
 }

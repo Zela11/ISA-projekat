@@ -90,6 +90,15 @@ public class CompanyController : ControllerBase
         await _companyService.DeleteEquipmentAsync(companyId, equipmentId);
         return Ok(new { message = "Equipment deleted successfully." });
     }
+    [HttpPut("{companyId}/equipmentAmount/{equipmentId}")]
+    public async Task<IActionResult> UpdateEquipmentAmount(int companyId, int equipmentId, [FromBody] EquipmentDto equipmentDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        await _companyService.UpdateEquipmentAmountAsync(companyId, equipmentId, equipmentDto);
+        return Ok(new { message = "Equipment updated successfully." });
+    }
     [HttpPost("{companyId}/appointment")]
     public async Task<IActionResult> AddAppointment(int companyId, [FromBody] AppointmentDto appointmentDto)
     {
@@ -106,6 +115,15 @@ public class CompanyController : ControllerBase
             return BadRequest(ModelState);
 
         await _companyService.ReserveAppointmentAsync(companyId, appointmentDto);
+        return Ok(new { message = "Appointment updated successfully." });
+    }
+    [HttpPut("{companyId}/completeAppointment")]
+    public async Task<IActionResult> CompleteAppointment(int companyId, [FromBody] AppointmentDto appointmentDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        await _companyService.CompleteAppointmentAsync(companyId, appointmentDto);
         return Ok(new { message = "Appointment updated successfully." });
     }
 }

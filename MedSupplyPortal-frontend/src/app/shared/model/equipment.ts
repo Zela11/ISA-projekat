@@ -4,5 +4,6 @@ export interface Equipment {
     description: string,
     isAvailable: boolean,
     companyId: number,
-    amount: number
+    amount: number,
+    reservedAmount: number
 }

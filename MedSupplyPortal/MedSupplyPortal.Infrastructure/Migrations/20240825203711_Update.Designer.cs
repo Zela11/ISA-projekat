@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedSupplyPortal.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240824122604_Update")]
+    [Migration("20240825203711_Update")]
     partial class Update
     {
         /// <inheritdoc />
@@ -47,6 +47,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("CompanyId", "AdministratorId", "Slot");
@@ -112,6 +115,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<int>("ReservedAmount")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

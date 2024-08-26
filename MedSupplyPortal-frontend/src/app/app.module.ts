@@ -15,7 +15,8 @@ import { CompanyAdminProfileComponent } from './company-admin-profile/company-ad
 import { CompanyProfileComponent } from './company-profile/company-profile.component';
 import { FilterEquipmentPipe } from './shared/pipes/filter-equipment.pipe';
 import { CompanyListComponent } from './company-list/company-list.component';
-import { CompanyDetailsComponent } from './company-details/company-details.component';  // Dodaj ovu liniju
+import { CompanyDetailsComponent } from './company-details/company-details.component';
+import { ReservedEquipmentComponent } from './reserved-equipment/reserved-equipment.component';  // Dodaj ovu liniju
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { CompanyDetailsComponent } from './company-details/company-details.compo
     CompanyProfileComponent,
     FilterEquipmentPipe,
     CompanyListComponent,
-    CompanyDetailsComponent
+    CompanyDetailsComponent,
+    ReservedEquipmentComponent
   ],
   imports: [
     BrowserModule,

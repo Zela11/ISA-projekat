@@ -41,6 +41,7 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     CompanyId = table.Column<int>(type: "integer", nullable: false),
                     AdministratorId = table.Column<int>(type: "integer", nullable: false),
                     Slot = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: true),
                     Duration = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     EquipmentId = table.Column<int>(type: "integer", nullable: true),
@@ -67,7 +68,8 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     IsAvailable = table.Column<bool>(type: "boolean", nullable: false),
                     CompanyId = table.Column<int>(type: "integer", nullable: false),
-                    Amount = table.Column<int>(type: "integer", nullable: false)
+                    Amount = table.Column<int>(type: "integer", nullable: false),
+                    ReservedAmount = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {

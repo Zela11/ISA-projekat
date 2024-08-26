@@ -46,6 +46,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("CompanyId", "AdministratorId", "Slot");
 
                     b.ToTable("Appointments");
@@ -109,6 +112,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
+
+                    b.Property<int>("ReservedAmount")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 

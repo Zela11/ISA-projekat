@@ -4,6 +4,7 @@ import { Company } from '../shared/model/company';
 import { CompanyService } from '../services/company/company.service';
 import { Appointment } from '../shared/model/appointment';
 import { Equipment } from '../shared/model/equipment';
+import { TokenStorageService } from '../services/user/token.service';
 
 @Component({
   selector: 'app-company-details',
@@ -37,10 +38,12 @@ export class CompanyDetailsComponent implements OnInit {
     description: '',
     isAvailable: false,
     companyId: 0,
-    amount: 0
+    amount: 0,
+    reservedAmount: 0
   };
+  userId: number | null = null;
 
-  constructor(private route: ActivatedRoute, private companyService: CompanyService) {}
+  constructor(private route: ActivatedRoute, private companyService: CompanyService, private tokenStorage: TokenStorageService) {}
 
   ngOnInit(): void {
     const companyId = Number(this.route.snapshot.paramMap.get('id'));
@@ -50,6 +53,7 @@ export class CompanyDetailsComponent implements OnInit {
       this.filterAvailableAppointments();
       this.showAppointments = false;
     });
+    this.userId = this.tokenStorage.getUserId();
   }
 
   filterAvailableAppointments(): void {
@@ -67,15 +71,34 @@ export class CompanyDetailsComponent implements OnInit {
 
   reserveAppointment(appointment: Appointment){
     appointment.equipmentId = this.selectedEquipment?.id;
+    appointment.userId = this.userId;
     this.companyService.reserveAppointment(this.company?.id ,appointment).subscribe(
       () => {
         this.closeModal();
         alert('Appointment reserved successfully')
       },
       (error: any) => {
-        console.error('Error updating equipment:', error);
+        console.error('Error updating appointment:', error);
       }
     )
+    this.selectedEquipment.reservedAmount += appointment.equipmentAmount || 0
+    this.companyService.updateEquipmentAmount(this.company.id, this.selectedEquipment).subscribe(
+      (response) => {
+        if(this.company.equipmentList) 
+        {
+          const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipment.id);
+          if (index !== -1) {
+            this.company.equipmentList[index] = { ...this.selectedEquipment };
+          }
+        }
+       
+        this.closeModal();
+        alert('Equipment updated successfully!');
+      },
+      (error) => {
+        console.error('Error updating equipment:', error);
+      }
+    );
   }
 }
 

@@ -1,0 +1,44 @@
+/* Styling for reservation list */
+.appointment-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.appointment-item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 15px;
+    background-color: #f9f9f9;
+}
+
+.appointment-header {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.appointment-details {
+    padding-top: 10px;
+}
+
+.equipment-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.equipment-item {
+    margin-bottom: 5px;
+}
+
+h2, h3, h4 {
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.title {
+    margin-top: 90px; /* Adjust as needed to ensure it's not covered */
+}

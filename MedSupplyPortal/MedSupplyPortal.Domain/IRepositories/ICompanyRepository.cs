@@ -18,4 +18,5 @@ public interface ICompanyRepository
     Task DeleteEquipmentAsync(int companyId, int equipmentId);
     Task AddAppointmentToCompanyAsync(Appointment appointment);
     Task ReserveAppointmentAsync(Appointment appointment);
+    Task CompleteAppointmentAsync(Appointment appointment);
 }

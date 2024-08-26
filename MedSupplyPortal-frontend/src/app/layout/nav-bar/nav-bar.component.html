@@ -9,6 +9,7 @@
     </ul>
     <div class="navbar-actions">
       <button *ngIf="!isLoggedIn" class="navbar-button" routerLink="/login">Login</button>
+      <button *ngIf="this.currentUser?.userType == 1" class="navbar-button" (click)="navigateToReservations()">Reservations</button>
       <button *ngIf="isLoggedIn" class="navbar-button" (click)="navigateToProfile()">Profile</button>
       <button *ngIf="isLoggedIn" class="navbar-button" (click)="logout()">Logout</button>
     </div>
