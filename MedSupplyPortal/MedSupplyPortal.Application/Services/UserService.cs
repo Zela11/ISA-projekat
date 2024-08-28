@@ -215,6 +215,7 @@ namespace MedSupplyPortal.Application.Services
             user.CompanyId = updateUserDto.CompanyId == 0 ? (int?)null : updateUserDto.CompanyId;
             user.Occupation = updateUserDto.Occupation;
             user.Type = (UserType)updateUserDto.UserType;
+            user.PenaltyPoints = updateUserDto.PenaltyPoints;
             user.IsFirstLogin = updateUserDto.IsFirstLogin;
 
             await _userRepository.UpdateAsync(user);
@@ -238,5 +239,4 @@ namespace MedSupplyPortal.Application.Services
             
         }
     }
-    
 }

@@ -73,6 +73,10 @@ export class UserService {
     console.log(user);
     return this.http.put(`${this.apiUrl}/${this.tokenStorage.getUserId()}`, user);
   }
+  updatePenalty(user: User, userId: Number): Observable<any> {
+    console.log(user);
+    return this.http.put(`${this.apiUrl}/${userId}`, user);
+  }
   changePassword(currentPassword: string, newPassword: string): Observable<any> {
     const passwordChangeDto = { currentPassword, newPassword };
     return this.http.put(`${this.apiUrl}/${this.tokenStorage.getUserId()}/change-password`, passwordChangeDto);

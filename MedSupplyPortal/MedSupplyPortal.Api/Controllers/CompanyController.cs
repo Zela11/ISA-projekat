@@ -12,10 +12,14 @@ namespace MedSupplyPortal.Api.Controllers;
 public class CompanyController : ControllerBase
 {
     private readonly ICompanyService _companyService;
+    private readonly IEmailService _emailService;
+    private readonly IUserService _userService;
 
-    public CompanyController(ICompanyService companyService)
+    public CompanyController(ICompanyService companyService, IEmailService emailService, IUserService userService)
     {
         _companyService = companyService;
+        _emailService = emailService;
+        _userService = userService;
     }
     [HttpPost("create")]
     public async Task<IActionResult> Create([FromBody] CompanyDto companyDto)
@@ -123,7 +127,10 @@ public class CompanyController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
+        var user = await _userService.GetByIdAsync((int)appointmentDto.UserId);
+
         await _companyService.CompleteAppointmentAsync(companyId, appointmentDto);
+        await _emailService.SendEmailAsync(user.Email, "Appointment Completed", "Your appointment has been completed.");
         return Ok(new { message = "Appointment updated successfully." });
     }
 }
