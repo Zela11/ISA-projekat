@@ -75,30 +75,29 @@ export class CompanyDetailsComponent implements OnInit {
     this.companyService.reserveAppointment(this.company?.id ,appointment).subscribe(
       () => {
         this.closeModal();
+        this.selectedEquipment.reservedAmount += appointment.equipmentAmount || 0
+        this.companyService.updateEquipmentAmount(this.company.id, this.selectedEquipment).subscribe(
+          (response) => {
+            if(this.company.equipmentList) 
+            {
+              const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipment.id);
+              if (index !== -1) {
+                this.company.equipmentList[index] = { ...this.selectedEquipment };
+              }
+            }
+           
+            this.closeModal();
+          },
+          (error) => {
+            console.error('Error updating equipment:', error);
+          }
+        );
         alert('Appointment reserved successfully')
       },
       (error: any) => {
         console.error('Error updating appointment:', error);
       }
     )
-    this.selectedEquipment.reservedAmount += appointment.equipmentAmount || 0
-    this.companyService.updateEquipmentAmount(this.company.id, this.selectedEquipment).subscribe(
-      (response) => {
-        if(this.company.equipmentList) 
-        {
-          const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipment.id);
-          if (index !== -1) {
-            this.company.equipmentList[index] = { ...this.selectedEquipment };
-          }
-        }
-       
-        this.closeModal();
-        alert('Equipment updated successfully!');
-      },
-      (error) => {
-        console.error('Error updating equipment:', error);
-      }
-    );
   }
 }
 

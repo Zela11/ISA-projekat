@@ -5,9 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { CompanyService } from '../services/company/company.service';
 import { TokenStorageService } from '../services/user/token.service';
 import { UserService } from '../services/user/user.service';
-import { USER } from '../shared/constants';
-import { User } from '../shared/model/user';
 import { Equipment } from '../shared/model/equipment';
+import { User } from '../shared/model/user';
 
 @Component({
   selector: 'app-reserved-equipment',
@@ -41,6 +40,26 @@ export class ReservedEquipmentComponent {
     companyId: 0,
     amount: 0,
     reservedAmount: 0
+  };
+  user: User = {
+    id: 0,
+    email: '',
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    password: '',
+    userType: 1,
+    penaltyPoints: 0,
+    address: {
+      city: '',
+      country: '',
+      street: '',
+      latitude: undefined,
+      longitude: undefined,
+    },
+    companyId: undefined,
+    occupation: '',
+    isFirstLogin: false
   };
   userId: number | null = null;
   reservedAppointments: Appointment[] | undefined;
@@ -84,16 +103,18 @@ export class ReservedEquipmentComponent {
     }, 1000);
   }
   checkForExpiredAppointments(): void {
-    if(this.reservedAppointments){
+      if(this.reservedAppointments){
 
-      this.reservedAppointments.forEach(appointment => {
-        const appointmentEnd = new Date(appointment.slot);
-        appointmentEnd.setMinutes(appointmentEnd.getMinutes() + Number(appointment.duration));
-        if(appointment.status == 1 && appointmentEnd > this.currentTime)
-          this.expireAppointment(appointment)
-    });
+        this.reservedAppointments.forEach(appointment => {
+          const appointmentEnd = new Date(appointment.slot);
+          appointmentEnd.setMinutes(appointmentEnd.getMinutes() + Number(appointment.duration));
+          if(appointment.status == 1 && this.currentTime > appointmentEnd)
+            this.expireAppointment(appointment)
+      });
+    }
   }
-  }
+
+
   isCurrentTimeInSlot(appointment: Appointment): boolean {
     if (appointment.slot && appointment.duration) {
       const appointmentStart = new Date(appointment.slot);
@@ -114,40 +135,74 @@ export class ReservedEquipmentComponent {
     this.companyService.completeAppointment(this.company?.id ,appointment).subscribe(
       () => {
         this.filterReservedAppointments()
+        const equipment = this.company.equipmentList?.find(e => e.id == appointment.equipmentId)
+        if(equipment)
+          this.selectedEquipment = equipment;
+        this.selectedEquipment.reservedAmount = this.selectedEquipment.reservedAmount - (appointment.equipmentAmount || 0);
+        this.selectedEquipment.amount = this.selectedEquipment.amount - (appointment.equipmentAmount || 0);
+        this.companyService.updateEquipmentAmount(this.company.id, this.selectedEquipment).subscribe(
+          (response) => {
+            if(this.company.equipmentList) 
+            {
+              const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipment.id);
+              if (index !== -1) {
+                this.company.equipmentList[index] = { ...this.selectedEquipment };
+              }
+            }
+          },
+          (error) => {
+            console.error('Error updating equipment:', error);
+          }
+        );
         alert('Appointment completed successfully')
       },
       (error: any) => {
         console.error('Error updating appointment:', error);
       }
     )
-    const equipment = this.company.equipmentList?.find(e => e.id == appointment.equipmentId)
-    if(equipment)
-      this.selectedEquipment = equipment;
-    this.selectedEquipment.reservedAmount = this.selectedEquipment.reservedAmount - (appointment.equipmentAmount || 0);
-    this.selectedEquipment.amount = this.selectedEquipment.amount - (appointment.equipmentAmount || 0);
-    this.companyService.updateEquipmentAmount(this.company.id, this.selectedEquipment).subscribe(
-      (response) => {
-        if(this.company.equipmentList) 
-        {
-          const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipment.id);
-          if (index !== -1) {
-            this.company.equipmentList[index] = { ...this.selectedEquipment };
-          }
-        }
-        alert('Equipment updated successfully!');
-      },
-      (error) => {
-        console.error('Error updating equipment:', error);
-      }
-    );
   }
   expireAppointment(appointment: Appointment): void{
     appointment.status = 3;
     console.log(appointment)
     this.companyService.completeAppointment(this.company?.id ,appointment).subscribe(
       () => {
-        this.filterReservedAppointments()
-        alert('Appointment expired successfully')
+        this.filterReservedAppointments();
+        if(appointment.userId){
+        this.userService.getById(appointment.userId).subscribe(
+          (user) => {
+            this.user = user;
+            this.user.penaltyPoints += 2;
+            console.log(this.user)
+            if(appointment.userId)
+            this.userService.updatePenalty(this.user, appointment.userId).subscribe(
+              (response) => {
+                console.log('User updated successfully');
+              },
+              (error) => {
+                console.error('Error updating profile', error);
+              }
+            );
+          }
+        )
+      }
+      const equipment = this.company.equipmentList?.find(e => e.id == appointment.equipmentId)
+        if(equipment)
+          this.selectedEquipment = equipment;
+        this.selectedEquipment.reservedAmount = this.selectedEquipment.reservedAmount - (appointment.equipmentAmount || 0);
+        this.companyService.updateEquipmentAmount(this.company.id, this.selectedEquipment).subscribe(
+          (response) => {
+            if(this.company.equipmentList) 
+            {
+              const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipment.id);
+              if (index !== -1) {
+                this.company.equipmentList[index] = { ...this.selectedEquipment };
+              }
+            }
+          },
+          (error) => {
+            console.error('Error updating equipment:', error);
+          }
+        );
       },
       (error: any) => {
         console.error('Error updating appointment:', error);
