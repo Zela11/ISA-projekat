@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 body {
     font-family: 'Poppins', sans-serif;
-    margin-top: 60px; /* Adjust based on the height of your navbar */
+    margin-top: 100px; /* Adjust based on the height of your navbar */
   }
   
   /* Make the navbar fixed at the top */

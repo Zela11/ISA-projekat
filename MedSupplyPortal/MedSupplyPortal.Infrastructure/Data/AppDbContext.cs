@@ -85,6 +85,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.IsAvailable).IsRequired();
             entity.Property(e => e.Amount).IsRequired();
             entity.Property(e => e.ReservedAmount).IsRequired();
+            entity.Property(e => e.Type).IsRequired();
         });
 
         modelBuilder.Entity<Appointment>(entity =>

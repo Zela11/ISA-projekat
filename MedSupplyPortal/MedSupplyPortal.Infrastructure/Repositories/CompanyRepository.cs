@@ -144,4 +144,9 @@ public class CompanyRepository : ICompanyRepository
             return true;
         else return false;
     }
+
+    public async Task<List<Equipment>> GetEquipmets()
+    {
+       return await _context.Equipments.ToListAsync();
+    }
 }

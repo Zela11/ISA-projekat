@@ -21,4 +21,6 @@ public interface ICompanyService
     Task AddAppointmentToCompanyAsync(int companyId, AppointmentDto appointmentDto);
     Task ReserveAppointmentAsync(int companyId, AppointmentDto appointmentDto);
     Task CompleteAppointmentAsync(int companyId, AppointmentDto appointmentDto);
+    Task<List<Equipment>> GetEquipments();
+
 }

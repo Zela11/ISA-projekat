@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedSupplyPortal.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Update : Migration
+    public partial class UpdatedModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

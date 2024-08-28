@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedSupplyPortal.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240825203711_Update")]
-    partial class Update
+    [Migration("20240828134849_EquipmentUpdate")]
+    partial class EquipmentUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -117,6 +117,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<int>("ReservedAmount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Type")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

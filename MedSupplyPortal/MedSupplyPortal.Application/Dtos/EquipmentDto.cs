@@ -13,5 +13,6 @@ namespace MedSupplyPortal.Application.Dtos
         public bool IsAvailable { get; set; }
         public int Amount { get; set; }
         public int ReservedAmount { get; set; }
+        public int Type { get; set; }
     }
 }

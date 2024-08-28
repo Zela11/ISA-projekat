@@ -65,31 +65,38 @@
   </div>
 </div>
 
-
-  <div class="modal" *ngIf="showModal">
-    <div class="modal-content">
-      <span class="close" (click)="closeModal()">&times;</span>
-      <h2>{{ isUpdateMode ? 'Update Equipment' : 'Add Equipment' }}</h2>
-      <form (ngSubmit)="saveEquipment()">
-        <label>
-          Name:
-          <input type="text" [(ngModel)]="newEquipment.name" name="name" required />
-        </label>
-        <label>
-          Description:
-          <textarea [(ngModel)]="newEquipment.description" name="description"></textarea>
-        </label>
-        <label>
-          <input type="checkbox" [(ngModel)]="newEquipment.isAvailable" name="isAvailable" />
-          Available
-        </label>
-        <label>
-          <input type="number" [(ngModel)]="newEquipment.amount" name="amount" />
-          Amount
-        </label>
-        <button type="submit">{{ isUpdateMode ? 'Save Changes' : 'Add Equipment' }}</button>
-      </form>
-    </div>
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <h2>{{ isUpdateMode ? 'Update Equipment' : 'Add Equipment' }}</h2>
+    <form (ngSubmit)="saveEquipment()">
+      <label>
+        Name:
+        <input type="text" [(ngModel)]="newEquipment.name" name="name" required />
+      </label>
+      <label>
+        Description:
+        <textarea [(ngModel)]="newEquipment.description" name="description"></textarea>
+      </label>
+      <label>
+        <input type="checkbox" [(ngModel)]="newEquipment.isAvailable" name="isAvailable" />
+        Available
+      </label>
+      <label>
+        Amount:
+        <input type="number" [(ngModel)]="newEquipment.amount" name="amount" />
+      </label>
+      <label>
+        Equipment Type:
+        <select [(ngModel)]="newEquipment.type" name="type" required>
+          <option value="0">Diagnostic</option>
+          <option value="1">Therapeutic</option>
+          <option value="2">Surgical</option>
+          <option value="3">Laboratory</option>
+        </select>
+      </label>
+      <button type="submit">{{ isUpdateMode ? 'Save Changes' : 'Add Equipment' }}</button>
+    </form>
   </div>
 </div>
 

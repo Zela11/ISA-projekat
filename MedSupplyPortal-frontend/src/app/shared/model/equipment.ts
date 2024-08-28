@@ -5,5 +5,6 @@ export interface Equipment {
     isAvailable: boolean,
     companyId: number,
     amount: number,
-    reservedAmount: number
+    reservedAmount: number,
+    type: number, 
 }

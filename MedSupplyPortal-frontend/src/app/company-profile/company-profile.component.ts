@@ -72,7 +72,8 @@ export class CompanyProfileComponent implements OnInit {
     isAvailable: false,
     companyId: 0,
     amount: 0,
-    reservedAmount: 0
+    reservedAmount: 0,
+    type: 0
   };
 
   constructor(
@@ -193,7 +194,7 @@ export class CompanyProfileComponent implements OnInit {
   openAddEquipmentDialog(): void {
     this.isUpdateMode = false;
     this.showModal = true;
-    this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0, amount: 0, reservedAmount: 0};
+    this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0, amount: 0, reservedAmount: 0, type: 0};
   }
   saveEquipment(): void {
     if (this.isUpdateMode) {
@@ -248,13 +249,16 @@ export class CompanyProfileComponent implements OnInit {
       );
   }
   addEquipment(): void {
+    console.log(this.newEquipment);
+    
     if (this.newEquipment.name) {
+      
       this.companyService.addEquipment(this.company.id, this.newEquipment).subscribe(
         (response) => {
           console.log("Success", response);
           this.company.equipmentList = [];
           this.company.equipmentList.push(this.newEquipment);
-          this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0, amount: 0, reservedAmount: 0};
+          this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0, amount: 0, reservedAmount: 0, type: 0};
           this.closeModal();
           this.deinitializeMap();
           this.loadCompanyData(this.company.id);
