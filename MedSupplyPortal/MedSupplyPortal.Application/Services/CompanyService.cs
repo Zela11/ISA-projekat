@@ -149,7 +149,8 @@ namespace MedSupplyPortal.Application.Services
                 Slot = appointmentDto.Slot,
                 Status = appointmentDto.Status,
                 EquipmentId = appointmentDto.EquipmentId,
-                EquipmentAmount = appointmentDto.EquipmentAmount
+                EquipmentAmount = appointmentDto.EquipmentAmount,
+                UniqueReservationId = appointmentDto.UniqueReservationId
 
             };
 
@@ -169,6 +170,7 @@ namespace MedSupplyPortal.Application.Services
                     existingAppointment.EquipmentId = appointmentDto.EquipmentId;
                     existingAppointment.EquipmentAmount = appointmentDto.EquipmentAmount;
                     existingAppointment.Status = AppointmentStatus.Reserved;
+                    existingAppointment.UniqueReservationId = appointmentDto.UniqueReservationId;
                     await _companyRepository.ReserveAppointmentAsync(existingAppointment);
                 }
             }

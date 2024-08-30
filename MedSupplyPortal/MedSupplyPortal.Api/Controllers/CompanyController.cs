@@ -4,6 +4,10 @@ using MedSupplyPortal.Application.Services;
 using MedSupplyPortal.Domain.Entities;
 using MedSupplyPortal.Domain.IRepositories;
 using Microsoft.AspNetCore.Mvc;
+using QRCoder;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace MedSupplyPortal.Api.Controllers;
 
@@ -118,7 +122,13 @@ public class CompanyController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
+        var user = await _userService.GetByIdAsync((int)appointmentDto.UserId);
+        var company = await _companyService.GetByIdAsync(companyId);
+        var equipment = company.EquipmentList.Find(e => e.Id == appointmentDto.EquipmentId);
+        var qrCodeImage = GenerateQrCode(company.Name, equipment.Name, appointmentDto);
+
         await _companyService.ReserveAppointmentAsync(companyId, appointmentDto);
+        await _emailService.SendEmailAsync(user.Email, "Reservation Confirmation", "Your reservation has been confirmed!", qrCodeImage);
         return Ok(new { message = "Appointment updated successfully." });
     }
     [HttpPut("{companyId}/completeAppointment")]
@@ -128,9 +138,34 @@ public class CompanyController : ControllerBase
             return BadRequest(ModelState);
 
         var user = await _userService.GetByIdAsync((int)appointmentDto.UserId);
-
         await _companyService.CompleteAppointmentAsync(companyId, appointmentDto);
-        await _emailService.SendEmailAsync(user.Email, "Appointment Completed", "Your appointment has been completed.");
+
+        if(appointmentDto.Status == AppointmentStatus.Completed)
+            await _emailService.SendEmailAsync(user.Email, "Appointment Completed", "Your appointment has been completed.");
         return Ok(new { message = "Appointment updated successfully." });
+    }
+    private byte[] GenerateQrCode(string companyName, string equipmentName, AppointmentDto appointmentDto)
+    {
+;        var qrData = $"Unique Reservation ID: {appointmentDto.UniqueReservationId}\n" +
+            $"Company ID: {appointmentDto.CompanyId}\n" +
+            $"Company: {companyName}\n" +
+            $"Admin Id: {appointmentDto.AdministratorId}\n" +
+            $"Slot: {appointmentDto.Slot}\n" +
+            $"Duration: {appointmentDto.Duration}\n" +
+            $"Equipment: {equipmentName}\n" +
+            $"Amount: {appointmentDto.EquipmentAmount}";
+
+        using (var qrGenerator = new QRCodeGenerator())
+        {
+            var qrCodeData = qrGenerator.CreateQrCode(qrData, QRCodeGenerator.ECCLevel.Q);
+            var qrCode = new QRCode(qrCodeData);
+
+            using (var qrCodeImage = qrCode.GetGraphic(20))
+            using (var stream = new MemoryStream())
+            {
+                qrCodeImage.Save(stream, ImageFormat.Png);
+                return stream.ToArray(); 
+            }
+        }
     }
 }

@@ -13,7 +13,7 @@ public class EmailService : IEmailService
         _emailSettings = emailSettings.Value;
     }
 
-    public async Task SendEmailAsync(string recipientEmail, string subject, string body)
+    public async Task SendEmailAsync(string recipientEmail, string subject, string body, byte[] attachment = null)
     {
         using (var client = new SmtpClient(_emailSettings.SmtpServer, _emailSettings.SmtpPort))
         {
@@ -29,6 +29,14 @@ public class EmailService : IEmailService
             };
 
             mailMessage.To.Add(recipientEmail);
+            
+            if (attachment != null)
+            {
+                var attachmentStream = new MemoryStream(attachment);
+                var qrAttachment = new Attachment(attachmentStream, "QRCode.png", "image/png");
+
+                mailMessage.Attachments.Add(qrAttachment);
+            }
 
             await client.SendMailAsync(mailMessage);
         }

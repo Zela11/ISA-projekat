@@ -45,7 +45,8 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     Duration = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     EquipmentId = table.Column<int>(type: "integer", nullable: true),
-                    EquipmentAmount = table.Column<int>(type: "integer", nullable: true)
+                    EquipmentAmount = table.Column<int>(type: "integer", nullable: true),
+                    UniqueReservationId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

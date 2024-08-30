@@ -7,6 +7,7 @@ import { TokenStorageService } from '../services/user/token.service';
 import { UserService } from '../services/user/user.service';
 import { Equipment } from '../shared/model/equipment';
 import { User } from '../shared/model/user';
+import { BrowserQRCodeReader } from '@zxing/browser';
 
 @Component({
   selector: 'app-reserved-equipment',
@@ -209,4 +210,103 @@ export class ReservedEquipmentComponent {
       }
     )
   }
+
+  onFileSelected(event: Event, appointment: any) {
+    console.log("Usao")
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      this.decodeQrCode(file, appointment);
+    }
+  }
+
+  async decodeQrCode(file: File, appointment: any) {
+    const codeReader = new BrowserQRCodeReader();
+  
+    try {
+      // Read the file as a Data URL
+      const fileReader = new FileReader();
+  
+      fileReader.onload = async (event) => {
+        const dataUrl = event.target?.result as string;
+  
+        // Decode the QR code using the data URL
+        const result = await codeReader.decodeFromImageUrl(dataUrl);
+        const qrText = result.getText();
+  
+        // Parse the QR code data
+        const decodedData = this.parseQrData(qrText);
+  
+        // Compare the parsed data with appointment details
+        if (this.isQrDataValid(decodedData, appointment)) {
+          this.completeAppointment(appointment);
+        } else {
+          alert('The QR code data does not match the appointment details.');
+        }
+      };
+  
+      // Read the file
+      fileReader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error decoding QR code', error);
+      alert('Failed to decode the QR code. Please try again.');
+    }
+  }
+
+  parseQrData(qrText: string): any {
+    const lines = qrText.split('\n'); // Split by new line
+    const data: any = {};
+
+    lines.forEach(line => {
+        const [key, value] = line.split(':').map(part => part.trim()); // Split by colon and trim whitespace
+        if (key && value !== undefined) {
+            // Map the keys from QR to a more structured object
+            switch (key) {
+                case 'Unique Reservation ID':
+                    data.uniqueReservationId = value
+                    break;
+                case 'Company ID':
+                    data.companyId = parseInt(value, 10);
+                    break;
+                case 'Company':
+                    data.companyName = value;
+                    break;
+                case 'Admin Id':
+                    data.administratorId = parseInt(value, 10);
+                    break;
+                case 'Slot':
+                    data.slot = value;
+                    break;
+                case 'Duration':
+                    data.duration = value;
+                    break;
+                case 'Equipment':
+                    data.equipmentName = value;
+                    break;
+                case 'Amount':
+                    data.equipmentAmount = parseInt(value, 10);
+                    break;
+                default:
+                    console.warn(`Unexpected key in QR data: ${key}`);
+            }
+        }
+    });
+
+    return data;
+}
+isQrDataValid(decodedData: any, appointment: any): boolean {
+  if (!decodedData) return false;
+
+  const equipment = this.company.equipmentList?.find(e => e.id === appointment.equipmentId);
+  console.log(decodedData);
+
+  return (
+    decodedData.uniqueReservationId === appointment.uniqueReservationId &&
+    decodedData.companyId === appointment.companyId &&
+    decodedData.administratorId === appointment.administratorId &&
+    decodedData.equipmentName === equipment?.name &&
+    decodedData.equipmentAmount === appointment.equipmentAmount 
+  );
+}
+
 }
