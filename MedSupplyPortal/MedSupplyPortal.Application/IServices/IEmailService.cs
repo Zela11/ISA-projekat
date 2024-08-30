@@ -8,6 +8,6 @@ namespace MedSupplyPortal.Application.IServices
 {
     public interface IEmailService
     {
-        public Task SendEmailAsync(string recipientEmail, string subject, string body);
+        public Task SendEmailAsync(string recipientEmail, string subject, string body, byte[] attachment = null);
     }
 }

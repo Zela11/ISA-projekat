@@ -73,6 +73,7 @@ export class CompanyDetailsComponent implements OnInit {
   reserveAppointment(appointment: Appointment){
     appointment.equipmentId = this.selectedEquipment?.id;
     appointment.userId = this.userId;
+    appointment.uniqueReservationId = this.generateReservationId();
     this.companyService.reserveAppointment(this.company?.id ,appointment).subscribe(
       () => {
         this.closeModal();
@@ -99,6 +100,9 @@ export class CompanyDetailsComponent implements OnInit {
         console.error('Error updating appointment:', error);
       }
     )
+  }
+  generateReservationId(length: number = 8): string {
+    return Math.random().toString(36).substr(2, length) + Date.now().toString(36); // Generates a unique ID
   }
 }
 

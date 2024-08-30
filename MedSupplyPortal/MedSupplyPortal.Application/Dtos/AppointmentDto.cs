@@ -16,5 +16,6 @@ namespace MedSupplyPortal.Application.Dtos
         public AppointmentStatus Status { get; set; }
         public int? EquipmentId { get; set; }
         public int? EquipmentAmount { get; set; }
+        public string? UniqueReservationId { get; set; }
     }
 }
