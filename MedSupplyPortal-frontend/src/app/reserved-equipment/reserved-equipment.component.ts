@@ -40,7 +40,8 @@ export class ReservedEquipmentComponent {
     isAvailable: false,
     companyId: 0,
     amount: 0,
-    reservedAmount: 0
+    reservedAmount: 0,
+    type: 0
   };
   user: User = {
     id: 0,

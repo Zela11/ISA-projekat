@@ -144,6 +144,16 @@ public class CompanyController : ControllerBase
             await _emailService.SendEmailAsync(user.Email, "Appointment Completed", "Your appointment has been completed.");
         return Ok(new { message = "Appointment updated successfully." });
     }
+    [HttpGet("equipments")]
+    public async Task<ActionResult<List<Equipment>>> GetEquipments()
+    {
+        var equipments = await _companyService.GetEquipments();
+        if (equipments == null || !equipments.Any())
+        {
+            return NotFound("No equipment found for this company.");
+        }
+        return Ok(equipments);
+    }
     private byte[] GenerateQrCode(string companyName, string equipmentName, AppointmentDto appointmentDto)
     {
 ;        var qrData = $"Unique Reservation ID: {appointmentDto.UniqueReservationId}\n" +

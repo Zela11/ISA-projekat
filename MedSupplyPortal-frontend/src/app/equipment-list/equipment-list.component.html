@@ -1,0 +1,26 @@
+<div class="search-bar">
+  <input type="text" [(ngModel)]="searchQuery" placeholder="Search equipment..." />
+
+  <select [(ngModel)]="selectedCompany">
+    <option value="">All Companies</option>
+    <option *ngFor="let company of companies" [value]="company.name">{{ company.name }}</option>
+  </select>
+
+  <!-- New filter for Equipment Type -->
+  <select [(ngModel)]="selectedType">
+    <option value="">All Types</option>
+    <option value="0">Diagnostic</option>
+    <option value="1">Therapeutic</option>
+    <option value="2">Surgical</option>
+    <option value="3">Laboratory</option>
+  </select>
+</div>
+
+<div class="equipment-cards">
+  <div *ngFor="let equipment of filterEquipment()" class="card">
+    <h2>{{ equipment.name }}</h2>
+    <p>{{ equipment.description }}</p>
+    <p><strong>Company:</strong> {{ equipment.companyName }}</p>
+    <p><strong>Type:</strong> {{ getEquipmentTypeName(equipment.type) }}</p>
+  </div>
+</div>

@@ -24,6 +24,7 @@ export class CompanyService {
     return this.http.post(`${this.apiUrl}/create`, company);
   } 
   getById(id: number) : Observable<Company> {
+    console.log("u company servicu ", id);
     return this.http.get<Company>(`${this.apiUrl}/${id}`);
   }
   update(company: Company): Observable<any> {

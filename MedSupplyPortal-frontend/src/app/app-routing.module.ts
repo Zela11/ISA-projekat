@@ -10,6 +10,8 @@ import { CompanyProfileComponent } from './company-profile/company-profile.compo
 import { CompanyListComponent } from './company-list/company-list.component';
 import { CompanyDetailsComponent } from './company-details/company-details.component';
 import { ReservedEquipmentComponent } from './reserved-equipment/reserved-equipment.component';
+import { EquipmentListComponent } from './equipment-list/equipment-list.component';
+
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
   {path: 'login' , component: LoginComponent},
@@ -21,6 +23,7 @@ const routes: Routes = [
   {path: 'company/:id', component: CompanyDetailsComponent },
   {path: 'system-admin-profile', component: SystemAdminProfileComponent},
   {path: 'reservations/:id', component: ReservedEquipmentComponent},
+  {path: 'equipment-list', component: EquipmentListComponent},
   {path: '', redirectTo: '/home', pathMatch: 'full' },
   {path: '**', redirectTo: '/home' } ,
 

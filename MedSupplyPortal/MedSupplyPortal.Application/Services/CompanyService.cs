@@ -94,7 +94,8 @@ namespace MedSupplyPortal.Application.Services
                 IsAvailable = equipmentDto.IsAvailable,
                 CompanyId = companyId,
                 Amount = equipmentDto.Amount,
-                ReservedAmount = equipmentDto.ReservedAmount
+                ReservedAmount = equipmentDto.ReservedAmount,
+                Type = (EquipmentType)equipmentDto.Type
             };
 
             await _companyRepository.AddEquipmentToCompanyAsync(companyId, equipment);
@@ -112,7 +113,7 @@ namespace MedSupplyPortal.Application.Services
                     existingEquipment.IsAvailable = equipmentDto.IsAvailable;
                     existingEquipment.CompanyId = companyId;
                     existingEquipment.Amount = equipmentDto.Amount;
-
+                    existingEquipment.Type = (EquipmentType)equipmentDto.Type;
                     await _companyRepository.UpdateEquipmentAsync(existingEquipment);
                 }
             }
@@ -190,5 +191,9 @@ namespace MedSupplyPortal.Application.Services
             }
         }
 
+        public async Task<List<Equipment>> GetEquipments()
+        {
+            return await _companyRepository.GetEquipmets();
+        }
     }
 }

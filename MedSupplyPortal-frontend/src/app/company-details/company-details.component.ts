@@ -39,7 +39,8 @@ export class CompanyDetailsComponent implements OnInit {
     isAvailable: false,
     companyId: 0,
     amount: 0,
-    reservedAmount: 0
+    reservedAmount: 0,
+    type: 0
   };
   userId: number | null = null;
 
