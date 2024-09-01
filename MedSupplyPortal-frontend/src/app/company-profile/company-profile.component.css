@@ -1,7 +1,7 @@
 /* General styling for company profile */
 .company-profile {
   font-family: Arial, sans-serif;
-  max-width: 800px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
   border-radius: 8px;
@@ -343,3 +343,4 @@
 .appointment-card .appointment-actions button:hover {
   background-color: #0056b3;
 }
+/* Custom styling for event titles */

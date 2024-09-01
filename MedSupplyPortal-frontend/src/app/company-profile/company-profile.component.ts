@@ -19,6 +19,11 @@ import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
 import { Equipment } from '../shared/model/equipment';
 import { Appointment } from '../shared/model/appointment';
+import { Calendar, CalendarOptions, EventClickArg } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import { EventInput } from '@fullcalendar/core'; // Ensure you import EventInput
+import listPlugin from '@fullcalendar/interaction'; // Import List Plugin
 
 @Component({
   selector: 'app-company-profile',
@@ -26,6 +31,11 @@ import { Appointment } from '../shared/model/appointment';
   styleUrls: ['./company-profile.component.css']
 })
 export class CompanyProfileComponent implements OnInit {
+
+  calendarOptions: CalendarOptions | undefined;
+  viewMode: string = 'dayGridMonth'; // Default view mode
+
+
   @ViewChild('map', { static: true }) mapElement!: ElementRef;
   showAppointmentModal: boolean = false;
   isAppointmentUpdateMode: boolean = false;
@@ -76,7 +86,7 @@ export class CompanyProfileComponent implements OnInit {
     reservedAmount: 0,
     type: 0
   };
-
+  calendar: Calendar | undefined;
   constructor(
     private companyService: CompanyService,
     private tokenStorage: TokenStorageService,
@@ -88,20 +98,25 @@ export class CompanyProfileComponent implements OnInit {
     const companyId = this.tokenStorage.getCompanyId();
     if(companyId)
     {     
-      this.loadCompanyData(companyId);
+      this.loadCompanyData(companyId, this.viewMode);
     }
+    
   }
 
-  loadCompanyData(id: number): void {
+  loadCompanyData(id: number, viewMode: string): void {
     this.companyService.getById(id).subscribe(
       (data: Company) => {
         this.company = data;
         console.log(this.company);
+  
         if (data.address.latitude && data.address.longitude) {
-          if(!this.map) {
-          this.initializeMap(data.address.latitude, data.address.longitude);
+          if (!this.map) {
+            this.initializeMap(data.address.latitude, data.address.longitude);
           }
         }
+
+        this.loadCalendar(viewMode);
+        
       },
       (error) => {
         console.error('Error fetching company data:', error);
@@ -109,7 +124,66 @@ export class CompanyProfileComponent implements OnInit {
       }
     );
   }
+  loadCalendar(viewMode: string) {
+    if (this.company.appointments) {
+      console.log(this.company.appointments);
 
+      const eventPromises: Promise<EventInput>[] = this.company.appointments.map((appointment) => {
+        return new Promise<EventInput>((resolve) => {
+          const start = new Date(appointment.slot);
+          const end = new Date(start.getTime() + appointment.duration * 60000); // Add duration (in minutes)
+
+          const format12Hour = (date: Date) => {
+            let hours = date.getHours();
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const period = hours >= 12 ? 'p' : 'a';
+            
+            hours = hours % 12 || 12;
+            
+            return `${hours}:${minutes}${period}`;
+          };
+
+          const backgroundColor = appointment.status === 0 ? 'blue' : 'green';
+
+          if (appointment.userId) {
+            this.userService.getById(appointment.userId).subscribe((user) => {
+              resolve({
+                title: `- ${format12Hour(end)}, ${user.firstName} ${user.lastName}`,
+                start: start,
+                end: end,
+                backgroundColor: backgroundColor,
+                borderColor: backgroundColor,
+                textColor: 'white',
+                classNames: ['custom-event-class']
+              });
+            });
+          } else {
+            resolve({
+              title: `- ${format12Hour(end)}`,
+              start: start,
+              end: end,
+              backgroundColor: backgroundColor,
+              borderColor: backgroundColor,
+              textColor: 'white',
+              classNames: ['custom-event-class']
+            });
+          }
+        });
+      });
+      Promise.all(eventPromises).then((events: EventInput[]) => {
+        this.calendarOptions = {
+          plugins: [dayGridPlugin, timeGridPlugin], 
+          initialView: viewMode,
+          events: events,
+          eventClick: this.handleEventClick.bind(this), 
+        };
+      });
+    }
+  }
+
+  handleEventClick(arg: EventClickArg): void {
+    console.log('Clicked event:', arg.event); // Prikazuje sve informacije o događaju u konzoli
+  }
   initializeMap(lat: number, lon: number): void {
     this.map = new Map({
       target: this.mapElement.nativeElement,
@@ -242,7 +316,7 @@ export class CompanyProfileComponent implements OnInit {
       .subscribe(
         (response) => {
           console.log('Equipment created successfully', response);
-          this.loadCompanyData(this.company.id);
+          this.loadCompanyData(this.company.id, this.viewMode);
         },
       (error) => {
         console.error('Error updating company details:', error);
@@ -262,7 +336,7 @@ export class CompanyProfileComponent implements OnInit {
           this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0, amount: 0, reservedAmount: 0, type: 0};
           this.closeModal();
           this.deinitializeMap();
-          this.loadCompanyData(this.company.id);
+          this.loadCompanyData(this.company.id, this.viewMode);
           alert('Equipment added successfully!');
         },
         (error) => {
@@ -291,7 +365,7 @@ export class CompanyProfileComponent implements OnInit {
           this.newAppointment= { companyId: 0,  administratorId: 0,userId: null, duration: 0, slot: new Date(), status: 0, equipmentId: null, equipmentAmount: null, uniqueReservationId: null};
           this.closeModal();
           this.deinitializeMap();
-          this.loadCompanyData(this.company.id);
+          this.loadCompanyData(this.company.id, this.viewMode);
         },
         (error) => {
           console.error('Error adding appointment:', error);
@@ -342,5 +416,16 @@ export class CompanyProfileComponent implements OnInit {
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
+  switchCalendarView(viewMode: string): void {
+    console.log(viewMode);
+    if (this.calendarOptions) {
+      this.calendarOptions = undefined; 
+      this.loadCalendar(viewMode);
+    }
+  }
+  handleClick() {
+    console.log("huh");
   }
 }

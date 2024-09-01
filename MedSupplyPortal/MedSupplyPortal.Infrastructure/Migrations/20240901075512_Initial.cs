@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedSupplyPortal.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdatedModel : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -70,7 +70,8 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     IsAvailable = table.Column<bool>(type: "boolean", nullable: false),
                     CompanyId = table.Column<int>(type: "integer", nullable: false),
                     Amount = table.Column<int>(type: "integer", nullable: false),
-                    ReservedAmount = table.Column<int>(type: "integer", nullable: false)
+                    ReservedAmount = table.Column<int>(type: "integer", nullable: false),
+                    Type = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {

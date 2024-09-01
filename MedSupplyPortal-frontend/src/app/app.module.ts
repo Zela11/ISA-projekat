@@ -18,6 +18,10 @@ import { CompanyListComponent } from './company-list/company-list.component';
 import { CompanyDetailsComponent } from './company-details/company-details.component';
 import { ReservedEquipmentComponent } from './reserved-equipment/reserved-equipment.component';
 import { EquipmentListComponent } from './equipment-list/equipment-list.component';  // Dodaj ovu liniju
+import { FullCalendarModule } from '@fullcalendar/angular'; // FullCalendar moduli
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
 
 
 @NgModule({
@@ -42,7 +46,8 @@ import { EquipmentListComponent } from './equipment-list/equipment-list.componen
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FullCalendarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
