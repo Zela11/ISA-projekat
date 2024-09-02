@@ -1,0 +1,48 @@
+.company-list {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .company-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .company-list li {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 15px;
+    transition: background-color 0.3s, transform 0.3s;
+    cursor: pointer;
+  }
+  
+  .company-list li:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.02);
+  }
+  
+  .company-list li:active {
+    background-color: #ccc;
+  }
+  
+  .company-list li .company-name {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  
+  .company-list li .company-rating {
+    font-size: 1em;
+    color: #555;
+  }
+  
+  .company-list li .company-info {
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #777;
+  }
+  

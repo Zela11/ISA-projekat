@@ -1,29 +1,53 @@
-<div *ngIf="company" class="company-details">
-    <h1>{{ company.name }}</h1>
-    <p>{{ company.description }}</p>
-    <p>Address: {{ company.address.street }}, {{ company.address.city }}</p>
-    <p>Average Rating: {{ company.averageRating }}</p>
-    <p>Working Hours: {{ company.start }} - {{ company.end }}</p>
-    <div>
-      <strong>Equipment:</strong>
+<div class="company-profile">
+  <h1>{{ company.name }}</h1>
+  <p class="description">{{ company.description }}</p>
+  <p>
+    <strong>Average Rating:</strong>
+    <span class="rating">{{ company.averageRating | number: '1.1-1' }}</span>
+  </p>
+
+  <div class="form-group">
+    <label for="map">Location:</label>
+    <div id="map" #map class="map"></div>
+    <div class="location-info">
+      <p>Street: {{ company.address.street || 'N/A' }}</p>
+      <p>City: {{ company.address.city || 'N/A' }}</p>
+      <p>Country: {{ company.address.country || 'N/A' }}</p>
+      <p>Latitude: {{ company.address.latitude || 'N/A' }}</p>
+      <p>Longitude: {{ company.address.longitude || 'N/A' }}</p>
+    </div>
+  </div>
+
+  <button (click)="switchCalendarView('dayGridMonth')">Month View</button>
+  <button (click)="switchCalendarView('dayGridWeek')">Week View</button>
+  <button (click)="switchCalendarView('timeGridDay')">Day View</button>
+  <div id="calendar" *ngIf="calendarOptions">
+    <full-calendar [options]="calendarOptions"></full-calendar>
+  </div>
+  <div class="popup" *ngIf="showPopup">
+    <div class="popup-content">
+      <h2>Select Equipment</h2>
       <ul>
-        <li *ngFor="let equipment of company.equipmentList" (click)="openModal(equipment)">
-          {{ equipment.name }}: {{equipment.amount - equipment.reservedAmount}}
-        </li>
+        <li *ngFor="let equipment of company.equipmentList">
+          <input 
+            type="radio" 
+            [value]="equipment" 
+            name="equipment" 
+            (change)="selectEquipment(equipment)"
+            [checked]="selectedEquipment === equipment" />
+            <span>{{ equipment.name }} ({{ getAvailableAmount(equipment) }} available)</span>
+          </li>
       </ul>
+      <div *ngIf="selectedEquipment">
+        <input 
+          type="number" 
+          [(ngModel)]="selectedAmount" 
+          [min]="1" 
+          [max]="selectedEquipment.amount - selectedEquipment.reservedAmount" 
+          placeholder="Amount" />
+      </div>
+      <button (click)="reserveSelectedEquipment()">Reserve</button>
+      <button (click)="closePopup()">Close</button>
     </div>
   </div>
   
-  <div class="modal" *ngIf="showAppointments">
-    <h2>Select an Appointment</h2>
-    <ul>
-      <li *ngFor="let appointment of availableAppointments">
-        <p>Duration: {{ appointment.duration }} minutes</p>
-        <p>Slot: {{ appointment.slot | date: 'short' }}</p>
-        <label for="equipmentAmount">Equipment Amount:</label>
-        <input id="equipmentAmount" type="number" [(ngModel)]="appointment.equipmentAmount">
-        <button (click)="reserveAppointment(appointment)">Reserve</button>
-      </li>
-    </ul>
-    <button (click)="closeModal()">Cancel</button>
-  </div>

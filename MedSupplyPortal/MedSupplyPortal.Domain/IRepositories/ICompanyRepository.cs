@@ -20,5 +20,5 @@ public interface ICompanyRepository
     Task ReserveAppointmentAsync(Appointment appointment);
     Task CompleteAppointmentAsync(Appointment appointment);
     Task<List<Equipment>> GetEquipmets();
-
+    Task<List<Appointment>> GetAppointments();
 }

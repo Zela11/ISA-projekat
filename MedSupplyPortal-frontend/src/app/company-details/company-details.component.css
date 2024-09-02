@@ -1,0 +1,453 @@
+/* General styling for company profile */
+.company-profile {
+  font-family: Arial, sans-serif;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.company-profile h1 {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.company-profile p {
+  font-size: 1.2em;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.company-profile .description {
+  font-size: 1.1em;
+  line-height: 1.5;
+  color: #666;
+}
+
+.company-profile .rating {
+  font-size: 1.2em;
+  color: #007bff;
+}
+
+.company-profile textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+  font-size: 1em;
+  margin-bottom: 20px;
+}
+
+.company-profile p {
+  font-size: 1em;
+  color: #555;
+}
+
+.company-profile .form-group {
+  margin-bottom: 20px;
+}
+
+.company-profile .form-group label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.company-profile .form-group input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+.company-profile .location-info {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.company-profile .location-info p {
+  margin: 5px 0;
+}
+
+.company-profile .admin-list {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.company-profile .admin-list h2 {
+  font-size: 1.5em;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.company-profile .admin-list .admin-item {
+  margin-bottom: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.company-profile .admin-list .admin-item:last-child {
+  border-bottom: none;
+}
+
+.company-profile .admin-list .admin-item p {
+  margin: 5px 0;
+}
+
+.company-profile button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.company-profile button:hover {
+  background-color: #0056b3;
+}
+
+.address-info,
+.location-info {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.address-info p,
+.location-info p {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+.map {
+  width: 100%;
+  height: 300px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+.equipment-section {
+  margin-top: 20px;
+}
+
+.equipment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.equipment-header h2 {
+  font-size: 1.5em;
+  color: #333;
+  margin-right: auto; 
+}
+.equipment-search-bar {
+  flex-grow: 1;
+  margin: 0 10px; 
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+}
+.equipment-header button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.equipment-header button:hover {
+  background-color: #218838;
+}
+
+.equipment-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.equipment-card {
+  flex: 1 1 calc(33.333% - 30px);
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.equipment-card h3 {
+  font-size: 1.2em;
+  margin-top: 0;
+}
+
+.equipment-card p {
+  margin: 10px 0;
+}
+
+.equipment-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.equipment-actions button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.equipment-actions button:hover {
+  background-color: #0056b3;
+}
+
+/* Modal styles */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 1.5em;
+  color: #333;
+}
+
+.modal h2 {
+  margin-top: 0;
+}
+
+.modal label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.modal input[type="text"],
+.modal textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal button:hover {
+  background-color: #0056b3;
+}
+
+.appointment-section {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.appointment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.appointment-header h2 {
+  margin: 0;
+}
+
+.appointment-header button {
+  padding: 10px 15px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.appointment-header button:hover {
+  background-color: #0056b3;
+}
+
+.appointment-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.appointment-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.appointment-card p {
+  margin: 0;
+  padding: 5px 0;
+}
+
+.appointment-card .appointment-actions {
+  margin-top: 10px;
+}
+
+.appointment-card .appointment-actions button {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.appointment-card .appointment-actions button:hover {
+  background-color: #0056b3;
+}
+/* Popup container styles */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Popup content styles */
+.popup-content {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 90%;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Header styles */
+.popup-content h2 {
+  margin-top: 0;
+  font-size: 1.5em;
+  color: #333;
+}
+
+/* List styles */
+.popup-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.popup-content li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.popup-content input[type="radio"] {
+  margin-right: 10px;
+}
+
+.popup-content span {
+  font-size: 1em;
+  color: #555;
+}
+
+/* Number input styles */
+.popup-content input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  margin-top: 10px;
+}
+
+/* Button styles */
+.popup-content button {
+  background: #007bff;
+  border: none;
+  color: #fff;
+  padding: 10px 15px;
+  margin: 10px 5px 0 0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s ease;
+}
+
+.popup-content button:hover {
+  background: #0056b3;
+}
+
+/* Close button styles */
+.popup-content button:last-of-type {
+  background: #6c757d;
+  margin-left: 0;
+}
+
+.popup-content button:last-of-type:hover {
+  background: #5a6268;
+}

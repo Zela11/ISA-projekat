@@ -22,5 +22,6 @@ public interface ICompanyService
     Task ReserveAppointmentAsync(int companyId, AppointmentDto appointmentDto);
     Task CompleteAppointmentAsync(int companyId, AppointmentDto appointmentDto);
     Task<List<Equipment>> GetEquipments();
+    Task<bool> IsEquipmentReservedAsync(int equipmentId);
 
 }

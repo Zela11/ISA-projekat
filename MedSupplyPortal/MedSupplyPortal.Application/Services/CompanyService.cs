@@ -195,5 +195,24 @@ namespace MedSupplyPortal.Application.Services
         {
             return await _companyRepository.GetEquipmets();
         }
+
+        public async Task<bool> IsEquipmentReservedAsync(int equipmentId)
+        {
+            var appointments = await _companyRepository.GetAppointments();
+            if (appointments == null)
+            {
+                return false;
+            }
+
+            foreach (var appointment in appointments)
+             {
+                if (appointment.EquipmentId == equipmentId && appointment.Status == AppointmentStatus.Reserved)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

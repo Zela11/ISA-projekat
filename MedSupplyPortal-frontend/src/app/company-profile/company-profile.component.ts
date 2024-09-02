@@ -312,16 +312,31 @@ export class CompanyProfileComponent implements OnInit {
   }
 
   deleteEquipment(equipmentId: number) {
-    this.companyService.deleteEquipment(this.company.id, equipmentId)
+    this.companyService.isEquipmentReserved(equipmentId)
       .subscribe(
-        (response) => {
-          console.log('Equipment created successfully', response);
-          this.loadCompanyData(this.company.id, this.viewMode);
+        (reserved: boolean) => {
+          if(!reserved) {
+            console.log("Nije rezervisano");
+            this.companyService.deleteEquipment(this.company.id, equipmentId)
+            .subscribe(
+              (response) => {
+                console.log('Equipment created successfully', response);
+                this.loadCompanyData(this.company.id, this.viewMode);
+              },
+            (error) => {
+              console.error('Error updating company details:', error);
+              }
+            );
+          } else {
+            console.log("Nije rezervisano");
+            alert("Cannot delete this equipment because there already is an appointment for it!");
+          }
         },
-      (error) => {
-        console.error('Error updating company details:', error);
+        (error: any) => {
+          console.error('Error checking if equipment is reserved', error);
         }
       );
+
   }
   addEquipment(): void {
     console.log(this.newEquipment);

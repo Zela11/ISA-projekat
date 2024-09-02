@@ -149,4 +149,9 @@ public class CompanyRepository : ICompanyRepository
     {
        return await _context.Equipments.ToListAsync();
     }
+
+    public async Task<List<Appointment>> GetAppointments()
+    {
+        return await _context.Appointments.ToListAsync();
+    }
 }

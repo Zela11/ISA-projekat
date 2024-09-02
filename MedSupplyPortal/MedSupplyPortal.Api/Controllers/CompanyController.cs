@@ -178,4 +178,11 @@ public class CompanyController : ControllerBase
             }
         }
     }
+    [HttpGet("{equipmentId}/isReserved")]
+    public async Task<IActionResult> IsEquipmentReserved(int equipmentId)
+    {
+        var isReserved = await _companyService.IsEquipmentReservedAsync(equipmentId);
+        return Ok(new { isReserved });
+    }
+
 }
