@@ -239,6 +239,9 @@ export class CompanyDetailsComponent implements OnInit {
     } else {
       this.showPopup = true;
     }
+    if(!this.tokenStorage.getUserId()) {
+      this.showPopup = false;
+    }
 
 
   }
