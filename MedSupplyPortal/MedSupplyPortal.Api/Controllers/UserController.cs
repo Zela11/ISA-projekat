@@ -106,4 +106,40 @@ public class UserController : ControllerBase
         var result = await _userService.ChangePasswordAsync(userId, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
         return Ok(new { message = "Password updated successfully" });
     }
+    [HttpPut("deleteAllCategoryNames")]
+    public async Task<IActionResult> ResetAllUsersCategoryNames()
+    {
+        try
+        {
+            var result = await _userService.ResetAllUsersCategoryNamesAsync();
+            if (!result)
+            {
+                return NotFound("No users found to update.");
+            }
+
+            return Ok(new { message = "All user category names reset to null successfully." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error: " + ex.Message);
+        }
+    }
+    [HttpPut("updateUserCategories")]
+    public async Task<IActionResult> UpdateAllUsersCategoryNames()
+    {
+        try
+        {
+            var result = await _userService.UpdateAllUsersCategoryNamesAsync();
+            if (!result)
+            {
+                return NotFound("No users found to update.");
+            }
+
+            return Ok(new { message = "All user category names reset to null successfully." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error: " + ex.Message);
+        }
+    }
 }

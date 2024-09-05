@@ -12,5 +12,8 @@ export interface User {
     penaltyPoints: number,
     address: Address, 
     companyId?: number,
-    isFirstLogin: boolean
+    isFirstLogin: boolean,
+    points: number,
+    categoryName: string
+    
 }

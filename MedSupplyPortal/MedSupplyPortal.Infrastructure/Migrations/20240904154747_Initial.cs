@@ -35,6 +35,18 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LoyaltyProgram",
+                columns: table => new
+                {
+                    PointsPerPickup = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoyaltyProgram", x => x.PointsPerPickup);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Appointments",
                 columns: table => new
                 {
@@ -71,7 +83,8 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     CompanyId = table.Column<int>(type: "integer", nullable: false),
                     Amount = table.Column<int>(type: "integer", nullable: false),
                     ReservedAmount = table.Column<int>(type: "integer", nullable: false),
-                    Type = table.Column<int>(type: "integer", nullable: false)
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    Price = table.Column<double>(type: "double precision", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -104,7 +117,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     Type = table.Column<int>(type: "integer", nullable: false),
                     PenaltyPoints = table.Column<int>(type: "integer", nullable: false),
                     CompanyId = table.Column<int>(type: "integer", nullable: true),
-                    IsFirstLogin = table.Column<bool>(type: "boolean", nullable: false)
+                    IsFirstLogin = table.Column<bool>(type: "boolean", nullable: false),
+                    Points = table.Column<int>(type: "integer", nullable: false),
+                    CategoryName = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -116,6 +131,32 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "CategoryScales",
+                columns: table => new
+                {
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    MinimumPoints = table.Column<int>(type: "integer", nullable: false),
+                    PenaltyThreshold = table.Column<int>(type: "integer", nullable: false),
+                    Discount = table.Column<int>(type: "integer", nullable: false),
+                    LoyaltyProgramPointsPerPickup = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryScales", x => x.Name);
+                    table.ForeignKey(
+                        name: "FK_CategoryScales_LoyaltyProgram_LoyaltyProgramPointsPerPickup",
+                        column: x => x.LoyaltyProgramPointsPerPickup,
+                        principalTable: "LoyaltyProgram",
+                        principalColumn: "PointsPerPickup",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CategoryScales_LoyaltyProgramPointsPerPickup",
+                table: "CategoryScales",
+                column: "LoyaltyProgramPointsPerPickup");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Equipments_CompanyId",
@@ -135,10 +176,16 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                 name: "Appointments");
 
             migrationBuilder.DropTable(
+                name: "CategoryScales");
+
+            migrationBuilder.DropTable(
                 name: "Equipments");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "LoyaltyProgram");
 
             migrationBuilder.DropTable(
                 name: "Companies");

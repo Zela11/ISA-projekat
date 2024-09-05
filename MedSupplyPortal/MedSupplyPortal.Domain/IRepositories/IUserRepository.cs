@@ -15,4 +15,5 @@ public interface IUserRepository
     Task<IEnumerable<User>> GetAllUsersAsync();
     Task UpdateAsync(User user);
     bool CheckPassword(int userId, string currentPassword);
+    Task<bool> UpdateUsersAsync(IEnumerable<User> users);
 }

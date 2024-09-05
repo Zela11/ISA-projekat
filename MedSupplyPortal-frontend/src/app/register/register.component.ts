@@ -28,7 +28,9 @@ export class RegisterComponent {
       longitude: undefined, // Optional, can be null
     },
     companyId: undefined, // Optional, if applicable
-    isFirstLogin: true
+    isFirstLogin: true,
+    points: 0,
+    categoryName: ''
   };
   password: string = '';
   confirmPassword: string = '';

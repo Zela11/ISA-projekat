@@ -54,4 +54,13 @@ public class UserRepository : IUserRepository
 
         return user.Password == currentPassword;
     }
+    public async Task<bool> UpdateUsersAsync(IEnumerable<User> users)
+    {
+        foreach (var user in users)
+        {
+            _context.Users.Update(user);
+        }
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

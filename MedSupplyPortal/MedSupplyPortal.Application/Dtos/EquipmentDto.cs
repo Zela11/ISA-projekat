@@ -14,5 +14,7 @@ namespace MedSupplyPortal.Application.Dtos
         public int Amount { get; set; }
         public int ReservedAmount { get; set; }
         public int Type { get; set; }
+        public double Price { get; set; }
+        public double DiscountedPrice {  get; set; }
     }
 }

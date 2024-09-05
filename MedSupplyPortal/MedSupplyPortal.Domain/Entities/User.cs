@@ -20,4 +20,6 @@ public class User
     public int PenaltyPoints { get; set; }
     public int? CompanyId {  get; set; }
     public bool IsFirstLogin { get; set; }
+    public int Points {  get; set; }
+    public string? CategoryName { get; set; }
 }

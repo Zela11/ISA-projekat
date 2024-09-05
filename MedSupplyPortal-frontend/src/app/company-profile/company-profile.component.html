@@ -87,6 +87,10 @@
         <input type="number" [(ngModel)]="newEquipment.amount" name="amount" />
       </label>
       <label>
+        Price:
+        <input type="number" [(ngModel)]="newEquipment.price" name="price" required step="0.01" />
+      </label>
+      <label>
         Equipment Type:
         <select [(ngModel)]="newEquipment.type" name="type" required>
           <option value="0">Diagnostic</option>

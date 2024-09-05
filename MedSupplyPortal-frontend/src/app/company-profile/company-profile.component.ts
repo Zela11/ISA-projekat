@@ -84,7 +84,8 @@ export class CompanyProfileComponent implements OnInit {
     companyId: 0,
     amount: 0,
     reservedAmount: 0,
-    type: 0
+    type: 0,
+    price: 0
   };
   calendar: Calendar | undefined;
   constructor(
@@ -269,7 +270,7 @@ export class CompanyProfileComponent implements OnInit {
   openAddEquipmentDialog(): void {
     this.isUpdateMode = false;
     this.showModal = true;
-    this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0, amount: 0, reservedAmount: 0, type: 0};
+    this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0, amount: 0, reservedAmount: 0, type: 0, price: 0};
   }
   saveEquipment(): void {
     if (this.isUpdateMode) {
@@ -315,7 +316,7 @@ export class CompanyProfileComponent implements OnInit {
     this.companyService.isEquipmentReserved(equipmentId)
       .subscribe(
         (reserved: boolean) => {
-          if(!reserved) {
+          if(reserved != true) {
             console.log("Nije rezervisano");
             this.companyService.deleteEquipment(this.company.id, equipmentId)
             .subscribe(
@@ -348,7 +349,7 @@ export class CompanyProfileComponent implements OnInit {
           console.log("Success", response);
           this.company.equipmentList = [];
           this.company.equipmentList.push(this.newEquipment);
-          this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0, amount: 0, reservedAmount: 0, type: 0};
+          this.newEquipment = { id: 0,  name: '', description: '', isAvailable: false , companyId: 0, amount: 0, reservedAmount: 0, type: 0, price: 0};
           this.closeModal();
           this.deinitializeMap();
           this.loadCompanyData(this.company.id, this.viewMode);

@@ -21,6 +21,8 @@ public class AppDbContext : DbContext
     public DbSet<Company> Companies { get; set; }
     public DbSet<Equipment> Equipments { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
+    public DbSet<LoyaltyProgram> LoyaltyProgram { get; set; }
+    public DbSet<CategoryScale> CategoryScales { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -37,6 +39,8 @@ public class AppDbContext : DbContext
             entity.Property(e => e.PenaltyPoints).IsRequired();
             entity.Property(e => e.Type).IsRequired();
             entity.Property(e => e.IsFirstLogin).IsRequired();
+            entity.Property(e => e.Points).IsRequired();
+            entity.Property(e => e.CategoryName).IsRequired(false);
             // Configure Address as owned entity
             entity.OwnsOne(e => e.Address, a =>
             {
@@ -86,6 +90,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Amount).IsRequired();
             entity.Property(e => e.ReservedAmount).IsRequired();
             entity.Property(e => e.Type).IsRequired();
+            entity.Property(e => e.Price).IsRequired();
         });
 
         modelBuilder.Entity<Appointment>(entity =>
@@ -100,5 +105,15 @@ public class AppDbContext : DbContext
             entity.Property(a => a.UniqueReservationId).IsRequired(false);
         });
 
+        modelBuilder.Entity<LoyaltyProgram>()
+                .HasKey(lp => lp.PointsPerPickup);
+
+        modelBuilder.Entity<LoyaltyProgram>()
+                .HasMany(lp => lp.CategoryScales)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<CategoryScale>()
+                .HasKey(cs => cs.Name);
     }
 }

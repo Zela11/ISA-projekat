@@ -21,12 +21,14 @@ namespace MedSupplyPortal.Application.Services
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
         private readonly ICompanyRepository _companyRepository;
+        private readonly ILoyaltyProgramRepository _loyaltyProgramRepository;
 
-        public UserService(IUserRepository userRepository, ITokenService tokenService,ICompanyRepository companyRepository )
+        public UserService(IUserRepository userRepository, ITokenService tokenService,ICompanyRepository companyRepository, ILoyaltyProgramRepository loyaltyProgramRepository )
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
             _companyRepository = companyRepository;
+            _loyaltyProgramRepository = loyaltyProgramRepository;
 
         }
         
@@ -50,6 +52,22 @@ namespace MedSupplyPortal.Application.Services
         
         public async Task<bool> RegisterUserAsync(RegisterUserDto registerUserDto)
         {
+            var loyaltyPrograms = await _loyaltyProgramRepository.GetAsync();
+            var loyaltyProgram = loyaltyPrograms.FirstOrDefault();
+            if (loyaltyProgram != null)
+            {
+                var sortedCategories = loyaltyProgram.CategoryScales
+                                                     .OrderBy(cs => cs.MinimumPoints)
+                                                     .ToList();
+
+                foreach (CategoryScale c in sortedCategories)
+                {
+                    if (registerUserDto.Points >= c.MinimumPoints)
+                    {
+                        registerUserDto.CategoryName = c.Name;
+                    }
+                }
+            }
             var address = new Address
             {
                 City = registerUserDto.Address?.City,
@@ -71,7 +89,9 @@ namespace MedSupplyPortal.Application.Services
                 Type = (UserType)registerUserDto.UserType,
                 PenaltyPoints = registerUserDto.PenaltyPoints,
                 CompanyId = registerUserDto.CompanyId,
-                IsFirstLogin = true
+                IsFirstLogin = true,
+                Points = registerUserDto.Points,
+                CategoryName = registerUserDto.CategoryName,
             };
 
             await _userRepository.AddAsync(user);
@@ -121,7 +141,9 @@ namespace MedSupplyPortal.Application.Services
                     Longitude = user.Address.Longitude
                 },
                 CompanyId = user.CompanyId,
-                IsFirstLogin = user.IsFirstLogin
+                IsFirstLogin = user.IsFirstLogin,
+                Points = user.Points,
+                CategoryName = user.CategoryName
             };
         }
 
@@ -146,7 +168,9 @@ namespace MedSupplyPortal.Application.Services
                     Latitude = u.Address.Latitude,
                     Longitude = u.Address.Longitude
                 },
-                IsFirstLogin = u.IsFirstLogin
+                IsFirstLogin = u.IsFirstLogin,
+                Points = 0,
+                CategoryName = null
             });
         }
         public async Task<bool> RegisterCompanyAdminAsync(RegisterUserDto userDto, int companyId)
@@ -176,7 +200,9 @@ namespace MedSupplyPortal.Application.Services
                     Longitude = userDto.Address.Longitude
                 },
                 CompanyId = companyId,
-                IsFirstLogin = true
+                IsFirstLogin = true,
+                Points = 0,
+                CategoryName = null
 
             };
 
@@ -190,13 +216,56 @@ namespace MedSupplyPortal.Application.Services
         }
         public async Task<bool> UpdateUserAsync(int id, RegisterUserDto updateUserDto)
         {
+            
             var user = await _userRepository.GetByIdAsync(id);
 
             if (user == null)
             {
                 return false;
             }
+            bool shouldCheckPenalties = user.PenaltyPoints != updateUserDto.PenaltyPoints;
+            bool shouldCheckPoints = user.Points != updateUserDto.Points;
+            var loyaltyPrograms = await _loyaltyProgramRepository.GetAsync();
+            var loyaltyProgram = loyaltyPrograms.FirstOrDefault();
+            if (loyaltyProgram != null)
+            {
+                var sortedCategories = loyaltyProgram.CategoryScales
+                                        .OrderBy(cs => cs.MinimumPoints)
+                                        .ToList();
+                var category = loyaltyProgram.CategoryScales.Find(c => c.Name == user.CategoryName);
 
+
+                if (shouldCheckPenalties)
+                {
+                    user.PenaltyPoints = updateUserDto.PenaltyPoints;
+                    if (user.PenaltyPoints >= category.PenaltyThreshold)
+                    {
+                        int currentIndex = sortedCategories.IndexOf(category);
+                        if (currentIndex > 0)
+                        {
+                            var previousCategory = sortedCategories[currentIndex - 1];
+                            user.CategoryName = previousCategory.Name;
+                            user.Points = 0;
+                            user.PenaltyPoints = 0;
+                        }
+                        else
+                        {
+                            user.CategoryName = updateUserDto.CategoryName;
+                        }
+                    }
+
+                }
+
+                if (shouldCheckPoints)
+                {
+                    user.Points = updateUserDto.Points;
+                    foreach (CategoryScale c in sortedCategories)
+                    {
+                        if (user.Points >= c.MinimumPoints)
+                            user.CategoryName = c.Name;
+                    }
+                }
+            }
             var address = new Address
             {
                 City = updateUserDto.Address.City,
@@ -215,7 +284,6 @@ namespace MedSupplyPortal.Application.Services
             user.CompanyId = updateUserDto.CompanyId == 0 ? (int?)null : updateUserDto.CompanyId;
             user.Occupation = updateUserDto.Occupation;
             user.Type = (UserType)updateUserDto.UserType;
-            user.PenaltyPoints = updateUserDto.PenaltyPoints;
             user.IsFirstLogin = updateUserDto.IsFirstLogin;
 
             await _userRepository.UpdateAsync(user);
@@ -237,6 +305,49 @@ namespace MedSupplyPortal.Application.Services
             await _userRepository.UpdateAsync(user);
             return true;
             
+        }
+        public async Task<bool> ResetAllUsersCategoryNamesAsync()
+        {
+            var users = await _userRepository.GetAllUsersAsync();
+
+            if (users == null || !users.Any())
+            {
+                return false; // No users found
+            }
+
+            users = users.Where(u => u.Type == UserType.RegisteredUser).ToList();
+            foreach (var user in users)
+            {
+                user.CategoryName = null; 
+            }
+
+            return await _userRepository.UpdateUsersAsync(users);
+        }
+        public async Task<bool> UpdateAllUsersCategoryNamesAsync()
+        {
+            var users = await _userRepository.GetAllUsersAsync();
+            var loyaltyPrograms = await _loyaltyProgramRepository.GetAsync();
+            var loyaltyProgram = loyaltyPrograms.FirstOrDefault();
+            var sortedCategories = loyaltyProgram.CategoryScales
+                                                     .OrderBy(cs => cs.MinimumPoints)
+                                                     .ToList();
+            if (users == null || !users.Any())
+            {
+                return false; // No users found
+            }
+
+            users = users.Where(u => u.Type == UserType.RegisteredUser).ToList();
+            foreach(var user in users)
+            {
+                foreach (CategoryScale c in sortedCategories)
+                {
+                    if (user.Points >= c.MinimumPoints)
+                    {
+                        user.CategoryName = c.Name;
+                    }
+                }
+            }
+            return await _userRepository.UpdateUsersAsync(users);
         }
     }
 }

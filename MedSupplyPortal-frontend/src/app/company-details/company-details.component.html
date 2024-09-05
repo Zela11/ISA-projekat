@@ -24,30 +24,42 @@
   <div id="calendar" *ngIf="calendarOptions">
     <full-calendar [options]="calendarOptions"></full-calendar>
   </div>
-  <div class="popup" *ngIf="showPopup">
-    <div class="popup-content">
-      <h2>Select Equipment</h2>
-      <ul>
-        <li *ngFor="let equipment of company.equipmentList">
-          <input 
-            type="radio" 
-            [value]="equipment" 
-            name="equipment" 
-            (change)="selectEquipment(equipment)"
-            [checked]="selectedEquipment === equipment" />
-            <span>{{ equipment.name }} ({{ getAvailableAmount(equipment) }} available)</span>
-          </li>
-      </ul>
-      <div *ngIf="selectedEquipment">
-        <input 
-          type="number" 
-          [(ngModel)]="selectedAmount" 
-          [min]="1" 
-          [max]="selectedEquipment.amount - selectedEquipment.reservedAmount" 
-          placeholder="Amount" />
-      </div>
-      <button (click)="reserveSelectedEquipment()">Reserve</button>
-      <button (click)="closePopup()">Close</button>
-    </div>
-  </div>
   
+  <!-- Equipment Selection Popup -->
+  <div class="popup" *ngIf="showPopup">
+  <div class="popup-content">
+    <h2>Select Equipment</h2>
+    <ul>
+      <li *ngFor="let equipment of company.equipmentList">
+        <input 
+          type="radio" 
+          [value]="equipment" 
+          name="equipment" 
+          (change)="selectEquipment(equipment)"
+          [checked]="selectedEquipment === equipment" />
+        <span>
+          {{ equipment.name }} 
+          ({{ getAvailableAmount(equipment) }} available) 
+          - 
+          <strong *ngIf="discount > 0">
+            <span style="text-decoration: line-through;">Price: {{ equipment.price | currency }}</span> 
+            <span>Discounted Price: {{ equipment.discountedPrice | currency }}</span>
+          </strong>
+          <strong *ngIf="discount === 0">
+            Price: {{ equipment.price | currency }}
+          </strong>
+        </span>
+      </li>
+    </ul>
+    <div *ngIf="selectedEquipment">
+      <input 
+        type="number" 
+        [(ngModel)]="selectedAmount" 
+        [min]="1" 
+        [max]="selectedEquipment.amount - selectedEquipment.reservedAmount" 
+        placeholder="Amount" />
+    </div>
+    <button (click)="reserveSelectedEquipment()">Reserve</button>
+    <button (click)="closePopup()">Close</button>
+  </div>
+</div>

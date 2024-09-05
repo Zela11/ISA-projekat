@@ -1,0 +1,75 @@
+<div class="loyalty-program-form">
+  <h2>Create Loyalty Program</h2>
+
+  <!-- Form to Create Loyalty Program -->
+  <div *ngIf="!isProgramCreated">
+    <form (ngSubmit)="createLoyaltyProgram()" #pointsForm="ngForm">
+      <div class="form-group">
+        <label for="pointsPerPickup">Points Per Pickup</label>
+        <input type="number" id="pointsPerPickup" name="pointsPerPickup" [(ngModel)]="loyaltyProgram.pointsPerPickup" required />
+      </div>
+      <button type="submit" class="submit-button">Confirm Points Per Pickup</button>
+    </form>
+  </div>
+
+  <!-- Display and Manage Categories if Program is Created -->
+  <div *ngIf="isProgramCreated">
+    <!-- Button to Delete the Entire Loyalty Program -->
+    <button (click)="deleteLoyaltyProgram()" class="delete-button">Delete Loyalty Program</button>
+
+    <h3>Add Category Scales</h3>
+    <form (ngSubmit)="addCategoryScale()" #categoryForm="ngForm">
+      <div class="category-scale-group">
+        <label for="categoryName">Category Name</label>
+        <input type="text" id="categoryName" [(ngModel)]="newCategoryScale.name" name="categoryName" required />
+
+        <label for="minimumPoints">Minimum Points</label>
+        <input type="number" id="minimumPoints" [(ngModel)]="newCategoryScale.minimumPoints" name="minimumPoints" required />
+
+        <label for="penaltyThreshold">Penalty Threshold</label>
+        <input type="number" id="penaltyThreshold" [(ngModel)]="newCategoryScale.penaltyThreshold" name="penaltyThreshold" required />
+
+        <label for="discount">Discount (%)</label>
+        <input type="number" id="discount" [(ngModel)]="newCategoryScale.discount" name="discount" required />
+      </div>
+      <button type="submit" class="submit-button">Add Category</button>
+    </form>
+
+    <!-- List of Added Categories with Delete and Edit Buttons -->
+    <div class="added-categories">
+      <h3>Added Categories</h3>
+      <ul>
+        <li *ngFor="let scale of categories">
+          {{ scale.name }} - Min Points: {{ scale.minimumPoints }}, Penalty Threshold: {{ scale.penaltyThreshold }}, Discount: {{ scale.discount }}%
+          <!-- Edit Button -->
+          <button (click)="selectCategoryForEdit(scale)" class="edit-button">Edit</button>
+          <!-- Delete Button -->
+          <button (click)="deleteCategory(scale.name)" class="delete-button">Delete</button>
+        </li>
+      </ul>
+      <button (click)="saveUserCategoryChanges()" class="save-button">Save Changes</button>
+    </div>
+
+    <!-- Edit Category Form -->
+    <div *ngIf="selectedCategoryForEdit">
+      <h3>Edit Category: {{ selectedCategoryForEdit.name }}</h3>
+      <form (ngSubmit)="updateCategoryScale()" #editCategoryForm="ngForm">
+        <div class="category-scale-group">
+          <label for="editCategoryName">Category Name</label>
+          <input type="text" id="editCategoryName" [(ngModel)]="selectedCategoryForEdit.name" name="editCategoryName" required />
+
+          <label for="editMinimumPoints">Minimum Points</label>
+          <input type="number" id="editMinimumPoints" [(ngModel)]="selectedCategoryForEdit.minimumPoints" name="editMinimumPoints" required />
+
+          <label for="editPenaltyThreshold">Penalty Threshold</label>
+          <input type="number" id="editPenaltyThreshold" [(ngModel)]="selectedCategoryForEdit.penaltyThreshold" name="editPenaltyThreshold" required />
+
+          <label for="editDiscount">Discount (%)</label>
+          <input type="number" id="editDiscount" [(ngModel)]="selectedCategoryForEdit.discount" name="editDiscount" required />
+        </div>
+        <button type="submit" class="submit-button">Save Changes</button>
+        <button type="button" (click)="cancelEdit()" class="cancel-button">Cancel</button>
+      </form>
+    </div>
+  </div>
+</div>
