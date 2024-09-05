@@ -7,4 +7,6 @@ export interface Equipment {
     amount: number,
     reservedAmount: number,
     type: number, 
+    price: number,
+    discountedPrice?: number
 }

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedSupplyPortal.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240901075512_Initial")]
+    [Migration("20240904154747_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -58,6 +58,30 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     b.HasKey("CompanyId", "AdministratorId", "Slot");
 
                     b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("MedSupplyPortal.Domain.Entities.CategoryScale", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Discount")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("LoyaltyProgramPointsPerPickup")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MinimumPoints")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PenaltyThreshold")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Name");
+
+                    b.HasIndex("LoyaltyProgramPointsPerPickup");
+
+                    b.ToTable("CategoryScales");
                 });
 
             modelBuilder.Entity("MedSupplyPortal.Domain.Entities.Company", b =>
@@ -119,6 +143,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<double>("Price")
+                        .HasColumnType("double precision");
+
                     b.Property<int>("ReservedAmount")
                         .HasColumnType("integer");
 
@@ -132,6 +159,19 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     b.ToTable("Equipments");
                 });
 
+            modelBuilder.Entity("MedSupplyPortal.Domain.Entities.LoyaltyProgram", b =>
+                {
+                    b.Property<int>("PointsPerPickup")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PointsPerPickup"));
+
+                    b.HasKey("PointsPerPickup");
+
+                    b.ToTable("LoyaltyProgram");
+                });
+
             modelBuilder.Entity("MedSupplyPortal.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -139,6 +179,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("text");
 
                     b.Property<int?>("CompanyId")
                         .HasColumnType("integer");
@@ -179,6 +222,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
+                    b.Property<int>("Points")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
@@ -196,6 +242,14 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MedSupplyPortal.Domain.Entities.CategoryScale", b =>
+                {
+                    b.HasOne("MedSupplyPortal.Domain.Entities.LoyaltyProgram", null)
+                        .WithMany("CategoryScales")
+                        .HasForeignKey("LoyaltyProgramPointsPerPickup")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MedSupplyPortal.Domain.Entities.Company", b =>
@@ -299,6 +353,11 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     b.Navigation("CompanyAdmins");
 
                     b.Navigation("EquipmentList");
+                });
+
+            modelBuilder.Entity("MedSupplyPortal.Domain.Entities.LoyaltyProgram", b =>
+                {
+                    b.Navigation("CategoryScales");
                 });
 #pragma warning restore 612, 618
         }

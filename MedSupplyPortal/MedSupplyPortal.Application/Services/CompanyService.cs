@@ -95,7 +95,8 @@ namespace MedSupplyPortal.Application.Services
                 CompanyId = companyId,
                 Amount = equipmentDto.Amount,
                 ReservedAmount = equipmentDto.ReservedAmount,
-                Type = (EquipmentType)equipmentDto.Type
+                Type = (EquipmentType)equipmentDto.Type,
+                Price = equipmentDto.Price
             };
 
             await _companyRepository.AddEquipmentToCompanyAsync(companyId, equipment);
@@ -114,6 +115,7 @@ namespace MedSupplyPortal.Application.Services
                     existingEquipment.CompanyId = companyId;
                     existingEquipment.Amount = equipmentDto.Amount;
                     existingEquipment.Type = (EquipmentType)equipmentDto.Type;
+                    existingEquipment.Price = equipmentDto.Price;
                     await _companyRepository.UpdateEquipmentAsync(existingEquipment);
                 }
             }

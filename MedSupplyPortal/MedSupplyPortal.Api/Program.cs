@@ -19,6 +19,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<ITokenService, TokenService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<ILoyaltyProgramRepository, LoyaltyProgramRepository>();
+builder.Services.AddScoped<ILoyaltyProgramService, LoyaltyProgramService>();
 
 
 

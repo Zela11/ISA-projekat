@@ -35,7 +35,9 @@ export class CompanyAdminProfileComponent implements OnInit{
     },
     companyId: undefined,
     occupation: '',
-    isFirstLogin: false
+    isFirstLogin: false,
+    points: 0,
+    categoryName: ''
   };
 
   constructor(private userService: UserService, private tokenStorage: TokenStorageService) {}

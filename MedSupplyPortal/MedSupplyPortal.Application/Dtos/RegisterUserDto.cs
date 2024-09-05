@@ -19,4 +19,6 @@ public class RegisterUserDto
     public AddressDto Address { get; set; }
     public int? CompanyId { get; set; }
     public bool IsFirstLogin { get; set; } 
+    public int Points { get; set; }
+    public string? CategoryName { get; set; }
 }

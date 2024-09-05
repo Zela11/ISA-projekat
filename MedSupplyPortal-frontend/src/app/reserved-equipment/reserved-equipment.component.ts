@@ -8,6 +8,8 @@ import { UserService } from '../services/user/user.service';
 import { Equipment } from '../shared/model/equipment';
 import { User } from '../shared/model/user';
 import { BrowserQRCodeReader } from '@zxing/browser';
+import { LoyaltyProgram } from '../shared/model/loyaltyProgram';
+import { LoyaltyProgramService } from '../services/loyaltyProgram/loyalty-program.service';
 
 @Component({
   selector: 'app-reserved-equipment',
@@ -41,7 +43,8 @@ export class ReservedEquipmentComponent {
     companyId: 0,
     amount: 0,
     reservedAmount: 0,
-    type: 0
+    type: 0,
+    price: 0
   };
   user: User = {
     id: 0,
@@ -61,7 +64,19 @@ export class ReservedEquipmentComponent {
     },
     companyId: undefined,
     occupation: '',
-    isFirstLogin: false
+    isFirstLogin: false,
+    points: 0,
+    categoryName: ''
+  };
+  loyaltyProgram: any = {
+    pointsPerPickup: 0,
+    categoryScales: []
+  };
+  newCategoryScale: any = {
+    name: '',
+    minimumPoints: 0,
+    penaltyThreshold: 0,
+    discount: 0
   };
   userId: number | null = null;
   reservedAppointments: Appointment[] | undefined;
@@ -69,7 +84,7 @@ export class ReservedEquipmentComponent {
   userNames: { [key: number]: string } = {};
   currentTime: Date = new Date();
   intervalId: any;
-  constructor(private route: ActivatedRoute, private companyService: CompanyService, private userService: UserService, private tokenStorage: TokenStorageService) {}
+  constructor(private route: ActivatedRoute, private companyService: CompanyService, private userService: UserService, private tokenStorage: TokenStorageService, private loyaltyProgramService: LoyaltyProgramService) {}
 
   ngOnInit(): void {
     const companyId = Number(this.route.snapshot.paramMap.get('id'));
@@ -134,34 +149,70 @@ export class ReservedEquipmentComponent {
   }
   completeAppointment(appointment: Appointment): void {
     appointment.status = 2;
-    this.companyService.completeAppointment(this.company?.id ,appointment).subscribe(
+    this.companyService.completeAppointment(this.company?.id, appointment).subscribe(
       () => {
-        this.filterReservedAppointments()
-        const equipment = this.company.equipmentList?.find(e => e.id == appointment.equipmentId)
-        if(equipment)
+        this.filterReservedAppointments();
+        const equipment = this.company.equipmentList?.find(e => e.id == appointment.equipmentId);
+        if (equipment) {
           this.selectedEquipment = equipment;
-        this.selectedEquipment.reservedAmount = this.selectedEquipment.reservedAmount - (appointment.equipmentAmount || 0);
-        this.selectedEquipment.amount = this.selectedEquipment.amount - (appointment.equipmentAmount || 0);
-        this.companyService.updateEquipmentAmount(this.company.id, this.selectedEquipment).subscribe(
-          (response) => {
-            if(this.company.equipmentList) 
-            {
-              const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipment.id);
-              if (index !== -1) {
-                this.company.equipmentList[index] = { ...this.selectedEquipment };
+          this.selectedEquipment.reservedAmount -= (appointment.equipmentAmount || 0);
+          this.selectedEquipment.amount -= (appointment.equipmentAmount || 0);
+          this.companyService.updateEquipmentAmount(this.company.id, this.selectedEquipment).subscribe(
+            (response) => {
+              if (this.company.equipmentList) {
+                const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipment.id);
+                if (index !== -1) {
+                  this.company.equipmentList[index] = { ...this.selectedEquipment };
+                }
               }
+            },
+            (error) => {
+              console.error('Error updating equipment:', error);
             }
-          },
-          (error) => {
-            console.error('Error updating equipment:', error);
-          }
-        );
-        alert('Appointment completed successfully')
+          );
+        }
+  
+        if (appointment.userId) {
+          const id = appointment.userId;
+          this.userService.getById(appointment.userId).subscribe(
+            (user) => {
+              this.user = user; // Store the fetched user
+              // Fetch the loyalty program and update points afterward
+              this.loyaltyProgramService.getLoyaltyProgram().subscribe(
+                (response: LoyaltyProgram[] | null) => {
+                  if (response && response.length > 0) {
+                    this.loyaltyProgram = response[0]; // Assuming you have a list and taking the first item
+                    this.user.points += this.loyaltyProgram.pointsPerPickup; // Update user points
+                    
+                    // Update user points on the server
+                    this.userService.updatePoints(this.user, id).subscribe(
+                      () => {
+                        console.log('User points updated successfully');
+                        alert('Appointment completed successfully');
+                      },
+                      (error) => {
+                        console.error('Error updating user points', error);
+                      }
+                    );
+                  } else {
+                    console.error('No loyalty program data found.');
+                  }
+                },
+                (error: any) => {
+                  console.error('Error fetching loyalty program', error);
+                }
+              );
+            },
+            (error) => {
+              console.error('Error fetching user data', error);
+            }
+          );
+        }
       },
       (error: any) => {
         console.error('Error updating appointment:', error);
       }
-    )
+    );
   }
   expireAppointment(appointment: Appointment): void{
     appointment.status = 3;

@@ -22,6 +22,7 @@ import { FullCalendarModule } from '@fullcalendar/angular'; // FullCalendar modu
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { LoyaltyProgramComponent } from './loyalty-program/loyalty-program.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import interactionPlugin from '@fullcalendar/interaction';
     CompanyListComponent,
     CompanyDetailsComponent,
     ReservedEquipmentComponent,
-    EquipmentListComponent
+    EquipmentListComponent,
+    LoyaltyProgramComponent
   ],
   imports: [
     BrowserModule,

@@ -22,6 +22,10 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import { EventInput } from '@fullcalendar/core'; 
 import { UserService } from '../services/user/user.service';
 import { aD } from '@fullcalendar/core/internal-common';
+import { LoyaltyProgram } from '../shared/model/loyaltyProgram';
+import { LoyaltyProgramService } from '../services/loyaltyProgram/loyalty-program.service';
+import { CategoryScale } from '../shared/model/categoryScale';
+import { User } from '../shared/model/user';
 
 @Component({
   selector: 'app-company-details',
@@ -67,19 +71,64 @@ export class CompanyDetailsComponent implements OnInit {
     companyId: 0,
     amount: 0,
     reservedAmount: 0,
-    type: 0
+    type: 0,
+    price: 0,
+    discountedPrice: 0
+  };
+  loyaltyProgram: any = {
+    pointsPerPickup: 0,
+    categoryScales: []
+  };
+  user: User = {
+    id: 0,
+    email: '',
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    password: '',
+    userType: 1,
+    penaltyPoints: 0,
+    address: {
+      city: '',
+      country: '',
+      street: '',
+      latitude: undefined,
+      longitude: undefined,
+    },
+    companyId: undefined,
+    occupation: '',
+    isFirstLogin: false,
+    points: 0,
+    categoryName: ''
   };
   userId: number | null = null;
-
+  userCategoryName: string = '';
+  discount: number = 0;
+  categories: CategoryScale[] = [];
   constructor(    private userService: UserService, 
-    private route: ActivatedRoute, private companyService: CompanyService, private tokenStorage: TokenStorageService) {}
+    private route: ActivatedRoute, private companyService: CompanyService, private tokenStorage: TokenStorageService, private loyaltyProgramService: LoyaltyProgramService) {}
 
   ngOnInit(): void {
     this.loadCompany();
   }
+  loadUser(): void {
+    this.userId = this.tokenStorage.getUserId();
+    console.log("User ID je ", this.userId)
+    if (this.userId) {
+      this.userService.getById(this.userId).subscribe(
+       (data: User) => {
+          this.user = data;
+          this.userCategoryName = this.user.categoryName;
+       } ,
+       (error) => {
+         console.error('Error fetching admin profile', error);
+       }
+     );
+    }
+  }
+
   selectEquipment(equipment: Equipment): void {
     this.selectedEquipment = equipment;
-    console.log(this.selectEquipment);
     this.selectedAmount = 1;
   }
 
@@ -93,6 +142,7 @@ export class CompanyDetailsComponent implements OnInit {
           this.initializeMap(data.address.latitude, data.address.longitude);
         }
       }
+      this.loadLoyaltyProgram();
       this.filterAvailableAppointments();
       this.showAppointments = false;
       this.loadCalendar(viewMode);
@@ -319,6 +369,37 @@ export class CompanyDetailsComponent implements OnInit {
       this.calendarOptions = undefined; 
       this.loadCalendar(viewMode);
     }
+  }
+  loadLoyaltyProgram(): void {
+    this.loadUser();
+    this.loyaltyProgramService.getLoyaltyProgram().subscribe(
+      (response: LoyaltyProgram[] | null) => {
+        if (response) {
+          this.loyaltyProgram = response[0];
+          this.categories = this.loyaltyProgram.categoryScales;
+          const category = this.categories.find(c => c.name == this.userCategoryName)
+          if (category) {
+            this.discount = category.discount;
+            this.applyDiscounts()
+          }
+        }
+      },
+      (error: any) => {
+        console.error('Error fetching loyalty program', error);
+      }
+    );
+  }
+  applyDiscounts(): void {
+    if (this.discount > 0 && this.company.equipmentList) {
+      this.company.equipmentList.forEach(equipment => {
+        equipment.discountedPrice = this.calculateDiscountedPrice(equipment.price);
+        console.log(equipment.discountedPrice)
+      });
+    }
+  }
+
+  calculateDiscountedPrice(price: number): number {
+    return price - (price * (this.discount / 100));
   }
 }
 
