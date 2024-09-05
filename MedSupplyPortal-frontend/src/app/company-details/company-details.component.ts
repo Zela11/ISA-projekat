@@ -154,9 +154,9 @@ export class CompanyDetailsComponent implements OnInit {
     return equipment.amount - equipment.reservedAmount;
   }
   loadCalendar(viewMode: string) {
-    if (this.company.appointments) {
+    if (this.availableAppointments) {
 
-      const eventPromises: Promise<EventInput>[] = this.company.appointments.map((appointment) => {
+      const eventPromises: Promise<EventInput>[] = this.availableAppointments.map((appointment) => {
         return new Promise<EventInput>((resolve) => {
           const start = new Date(appointment.slot);
           const end = new Date(start.getTime() + appointment.duration * 60000); // Add duration (in minutes)
@@ -290,11 +290,19 @@ export class CompanyDetailsComponent implements OnInit {
     }
   }
   // ----------------- PAPIJEVO---------------------
-  filterAvailableAppointments(): void {
-    this.availableAppointments = this.company?.appointments?.filter(appointment => appointment.status === 0)
-    console.log(this.availableAppointments)
-  }
- 
+filterAvailableAppointments(): void {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Postavi vreme na 0 da uporediš samo datume
+
+  // Filtriramo appointments tako da ostanu samo termini koji su nakon današnjeg datuma
+  this.availableAppointments = this.company?.appointments?.filter(appointment => {
+    const appointmentDate = new Date(appointment.slot);
+    appointmentDate.setHours(0, 0, 0, 0); // Postavi i ovde vreme na 0 radi poređenja samo datuma
+
+    return appointmentDate >= today; // Vrati samo termine koji su jednaki ili nakon današnjeg datuma
+  });
+}
+
   generateReservationId(length: number = 8): string {
     return Math.random().toString(36).substr(2, length) + Date.now().toString(36); // Generates a unique ID
   }

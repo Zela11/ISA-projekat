@@ -315,8 +315,8 @@ export class CompanyProfileComponent implements OnInit {
   deleteEquipment(equipmentId: number) {
     this.companyService.isEquipmentReserved(equipmentId)
       .subscribe(
-        (reserved: boolean) => {
-          if(reserved != true) {
+        (response) => {
+          if(!response.isReserved) {
             console.log("Nije rezervisano");
             this.companyService.deleteEquipment(this.company.id, equipmentId)
             .subscribe(
