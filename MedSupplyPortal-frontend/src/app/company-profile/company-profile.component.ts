@@ -103,7 +103,9 @@ export class CompanyProfileComponent implements OnInit {
     }
     
   }
-
+  navigateToAnalytics(): void {
+    this.router.navigate(['/analytics']);
+  }
   loadCompanyData(id: number, viewMode: string): void {
     this.companyService.getById(id).subscribe(
       (data: Company) => {

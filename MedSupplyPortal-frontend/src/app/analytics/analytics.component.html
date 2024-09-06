@@ -1,0 +1,12 @@
+<h1>COMPANY REPORT</h1>
+<div>
+    <h2>Average rating: {{ averageRating }}</h2>
+</div>
+<div>
+    <h3>Grafik prikaz termina</h3>
+    <ngx-charts-bar-vertical
+      [results]="bookingsStats"
+      [xAxis]="true"
+      [yAxis]="true">
+    </ngx-charts-bar-vertical>
+</div>

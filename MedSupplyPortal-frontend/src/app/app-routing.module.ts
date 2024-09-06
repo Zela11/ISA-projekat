@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Component, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
@@ -12,6 +12,7 @@ import { CompanyDetailsComponent } from './company-details/company-details.compo
 import { ReservedEquipmentComponent } from './reserved-equipment/reserved-equipment.component';
 import { EquipmentListComponent } from './equipment-list/equipment-list.component';
 import { LoyaltyProgramComponent } from './loyalty-program/loyalty-program.component';
+import { AnalyticsComponent } from './analytics/analytics.component';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -26,6 +27,7 @@ const routes: Routes = [
   {path: 'reservations/:id', component: ReservedEquipmentComponent},
   {path: 'equipment-list', component: EquipmentListComponent},
   {path: 'loyaltyProgramForm', component: LoyaltyProgramComponent},
+  {path: 'analytics', component: AnalyticsComponent},
   {path: '', redirectTo: '/home', pathMatch: 'full' },
   {path: '**', redirectTo: '/home' } ,
 
