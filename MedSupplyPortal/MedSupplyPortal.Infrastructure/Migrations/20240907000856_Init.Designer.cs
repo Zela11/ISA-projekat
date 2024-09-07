@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedSupplyPortal.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240904154747_Initial")]
-    partial class Initial
+    [Migration("20240907000856_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,6 +48,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
+
+                    b.Property<double?>("TotalPrice")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("UniqueReservationId")
                         .HasColumnType("text");

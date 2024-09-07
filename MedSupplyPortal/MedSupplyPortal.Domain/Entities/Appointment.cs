@@ -17,5 +17,6 @@ namespace MedSupplyPortal.Domain.Entities
         public int? EquipmentId { get; set; }
         public int? EquipmentAmount {  get; set; }
         public string? UniqueReservationId { get; set; }
+        public double? TotalPrice { get; set; }
     }
 }

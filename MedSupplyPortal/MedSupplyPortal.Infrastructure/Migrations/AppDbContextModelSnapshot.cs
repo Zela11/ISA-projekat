@@ -46,6 +46,9 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
+                    b.Property<double?>("TotalPrice")
+                        .HasColumnType("double precision");
+
                     b.Property<string>("UniqueReservationId")
                         .HasColumnType("text");
 

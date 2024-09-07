@@ -3,10 +3,46 @@
     <h2>Average rating: {{ averageRating }}</h2>
 </div>
 <div>
-    <h3>Grafik prikaz termina</h3>
+    <label for="timePeriod">Select Time Period: </label>
+    <select id="timePeriod" [(ngModel)]="selectedPeriod" (change)="onPeriodChange($event)">
+      <option value="monthly">Monthly</option>
+      <option value="quarterly">Quarterly</option>
+      <option value="yearly">Yearly</option>
+    </select>
+</div>
+<div *ngIf="selectedPeriod === 'monthly'">
+    <label for="year">Select Year: </label>
+    <select id="year" [(ngModel)]="selectedYear" (change)="onYearChange($event)">
+      <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+    </select>
+</div>
+<div>
+    <h3>Appointments</h3>
     <ngx-charts-bar-vertical
-      [results]="bookingsStats"
-      [xAxis]="true"
-      [yAxis]="true">
+    [results]="appointmentsStats"
+    [xAxis]="true"
+    [yAxis]="true">
     </ngx-charts-bar-vertical>
+</div>
+<div>
+    <h3>Reserved appointments</h3>
+    <ngx-charts-bar-vertical
+    [results]="reservedAppointmentsStats"
+    [xAxis]="true"
+    [yAxis]="true">
+    </ngx-charts-bar-vertical>
+</div>
+<div>
+    <h3>Income for given period:</h3>
+    <p>{{income}}</p>
+    <div>
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" [(ngModel)]="startDate" (change)="onDateChange()">
+    </div>
+    <div>
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" [(ngModel)]="endDate" (change)="onDateChange()">
+    </div>
+    <h3>Total income:</h3>
+    <p>{{totalIncome}}</p>
 </div>

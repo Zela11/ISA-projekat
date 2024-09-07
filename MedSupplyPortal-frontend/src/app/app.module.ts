@@ -24,6 +24,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { LoyaltyProgramComponent } from './loyalty-program/loyalty-program.component';
 import { AnalyticsComponent } from './analytics/analytics.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { AnalyticsComponent } from './analytics/analytics.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    FullCalendarModule
+    FullCalendarModule,
+    NgxChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

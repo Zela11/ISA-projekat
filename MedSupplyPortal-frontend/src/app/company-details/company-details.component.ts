@@ -38,7 +38,7 @@ export class CompanyDetailsComponent implements OnInit {
   calendarOptions: CalendarOptions | undefined;
   viewMode: string = 'dayGridMonth'; 
   showPopup: boolean = false;
-  selectedEvent: Appointment | null = null;
+  selectedAppointment: Appointment | null = null;
   selectedAmount: number = 1;
   private map!: Map;
   private marker!: Feature;
@@ -227,14 +227,14 @@ export class CompanyDetailsComponent implements OnInit {
     if(this.company.appointments){
       this.company.appointments.forEach((appointment) => {
         if(appointment.administratorId == adminId && appointment.slot == slot) {
-          this.selectedEvent = appointment;
+          this.selectedAppointment = appointment;
         }
       });
       
     }
-    console.log(this.selectedEvent);
+    console.log(this.selectedAppointment);
 
-    if(this.selectedEvent?.userId) {
+    if(this.selectedAppointment?.userId) {
       alert("Ovaj termin je vec zakazan od strane drugog korisnika");
     } else {
       this.showPopup = true;
@@ -244,20 +244,24 @@ export class CompanyDetailsComponent implements OnInit {
   }
   closePopup(): void {
     this.showPopup = false;
-    this.selectedEvent = null;
+    this.selectedAppointment = null;
   }
   reserveSelectedEquipment(): void {
     console.log("kada rez",this.selectedEquipment);
-    console.log("kada rez",this.selectedEvent);
+    console.log("kada rez",this.selectedAppointment);
 
     
     if(this.selectedEquipment.id != 0) {
-      if(this.selectedEvent) {
-        this.selectedEvent.userId = this.userId;
-        this.selectedEvent.equipmentAmount = this.selectedAmount;
-        this.selectedEvent.uniqueReservationId = this.generateReservationId();
-        this.selectedEvent.equipmentId = this.selectedEquipment?.id;
-        this.companyService.reserveAppointment(this.company?.id ,this.selectedEvent).subscribe(
+      if(this.selectedAppointment) { 
+        this.selectedAppointment.userId = this.userId;
+        this.selectedAppointment.equipmentAmount = this.selectedAmount;
+        this.selectedAppointment.uniqueReservationId = this.generateReservationId();
+        this.selectedAppointment.equipmentId = this.selectedEquipment?.id;
+        if(this.discount > 0 && this.selectedEquipment.discountedPrice)
+          this.selectedAppointment.totalPrice = this.selectedAmount * this.selectedEquipment.discountedPrice;
+        else
+          this.selectedAppointment.totalPrice = this.selectedAmount * this.selectedEquipment.price;
+        this.companyService.reserveAppointment(this.company?.id ,this.selectedAppointment).subscribe(
           () => {
             this.closePopup();
             this.selectedEquipment.reservedAmount += this.selectedAmount;
