@@ -7,5 +7,6 @@ export interface Appointment {
     status: number,
     equipmentId: number | null,
     equipmentAmount: number | null,
-    uniqueReservationId: string | null
+    uniqueReservationId: string | null,
+    totalPrice: number | null
 }

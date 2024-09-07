@@ -48,7 +48,8 @@ export class CompanyProfileComponent implements OnInit {
     status: 0,
     equipmentId: null,
     equipmentAmount: null,
-    uniqueReservationId: null
+    uniqueReservationId: null,
+    totalPrice: null
   };
   company: Company = {
     id: 0,
@@ -103,7 +104,9 @@ export class CompanyProfileComponent implements OnInit {
     }
     
   }
-
+  navigateToAnalytics(): void {
+    this.router.navigate(['/analytics']);
+  }
   loadCompanyData(id: number, viewMode: string): void {
     this.companyService.getById(id).subscribe(
       (data: Company) => {
@@ -378,7 +381,7 @@ export class CompanyProfileComponent implements OnInit {
           console.log("Success", response);
           this.company.appointments = [];
           this.company.appointments.push(this.newAppointment);
-          this.newAppointment= { companyId: 0,  administratorId: 0,userId: null, duration: 0, slot: new Date(), status: 0, equipmentId: null, equipmentAmount: null, uniqueReservationId: null};
+          this.newAppointment= { companyId: 0,  administratorId: 0,userId: null, duration: 0, slot: new Date(), status: 0, equipmentId: null, equipmentAmount: null, uniqueReservationId: null, totalPrice: null};
           this.closeModal();
           this.deinitializeMap();
           this.loadCompanyData(this.company.id, this.viewMode);
@@ -412,7 +415,7 @@ export class CompanyProfileComponent implements OnInit {
   }*/
   openAddAppointmentDialog() {
     this.isAppointmentUpdateMode = false;
-    this.newAppointment = {companyId: 0 , administratorId: 0, userId: null, duration: 0, slot: new Date(), status: 0, equipmentId: null, equipmentAmount: null, uniqueReservationId: null };
+    this.newAppointment = {companyId: 0 , administratorId: 0, userId: null, duration: 0, slot: new Date(), status: 0, equipmentId: null, equipmentAmount: null, uniqueReservationId: null, totalPrice: null };
     this.showAppointmentModal = true;
   }
 

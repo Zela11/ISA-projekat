@@ -103,6 +103,7 @@ public class AppDbContext : DbContext
             entity.Property(a => a.EquipmentId).IsRequired(false); 
             entity.Property(a => a.EquipmentAmount).IsRequired(false);
             entity.Property(a => a.UniqueReservationId).IsRequired(false);
+            entity.Property(a => a.TotalPrice).IsRequired(false);
         });
 
         modelBuilder.Entity<LoyaltyProgram>()

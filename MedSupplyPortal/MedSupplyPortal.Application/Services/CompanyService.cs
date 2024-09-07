@@ -153,7 +153,8 @@ namespace MedSupplyPortal.Application.Services
                 Status = appointmentDto.Status,
                 EquipmentId = appointmentDto.EquipmentId,
                 EquipmentAmount = appointmentDto.EquipmentAmount,
-                UniqueReservationId = appointmentDto.UniqueReservationId
+                UniqueReservationId = appointmentDto.UniqueReservationId,
+                TotalPrice = appointmentDto.TotalPrice
 
             };
 
@@ -174,6 +175,7 @@ namespace MedSupplyPortal.Application.Services
                     existingAppointment.EquipmentAmount = appointmentDto.EquipmentAmount;
                     existingAppointment.Status = AppointmentStatus.Reserved;
                     existingAppointment.UniqueReservationId = appointmentDto.UniqueReservationId;
+                    existingAppointment.TotalPrice = appointmentDto.TotalPrice;
                     await _companyRepository.ReserveAppointmentAsync(existingAppointment);
                 }
             }

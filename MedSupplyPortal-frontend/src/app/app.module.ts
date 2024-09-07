@@ -23,7 +23,8 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { LoyaltyProgramComponent } from './loyalty-program/loyalty-program.component';
-
+import { AnalyticsComponent } from './analytics/analytics.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { LoyaltyProgramComponent } from './loyalty-program/loyalty-program.compo
     CompanyDetailsComponent,
     ReservedEquipmentComponent,
     EquipmentListComponent,
-    LoyaltyProgramComponent
+    LoyaltyProgramComponent,
+    AnalyticsComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +51,8 @@ import { LoyaltyProgramComponent } from './loyalty-program/loyalty-program.compo
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    FullCalendarModule
+    FullCalendarModule,
+    NgxChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
