@@ -142,4 +142,35 @@ public class UserController : ControllerBase
             return StatusCode(500, "Internal server error: " + ex.Message);
         }
     }
+    /*
+     * 
+     * [HttpGet("getSystemAdmins")]
+    public async Task<ActionResult<IEnumerable<RegisterUserDto>>> GetSystemAdmins()
+    {
+        try
+        {
+            var admins = await _userService.GetSystemAdmins();
+            return Ok(admins);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error");
+
+        }
+    }
+     * */
+    [HttpGet("getUsers/{companyId}")]
+    public async Task<ActionResult<IEnumerable<RegisterUserDto>>> GetUsersWithEquipmentReservationForCompany(int companyId)
+    {
+        try
+        {
+            var admins = await _userService.GetUsersWithEquipmentReservationForCompany(companyId);
+            return Ok(admins);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "Internal server error");
+
+        }
+    }
 }

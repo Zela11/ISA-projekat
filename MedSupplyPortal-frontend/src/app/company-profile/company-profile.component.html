@@ -49,13 +49,20 @@
       [(ngModel)]="searchQuery"
       class="equipment-search-bar"
     />
-
+    <!-- New filter for Equipment Type -->
+    <select [(ngModel)]="selectedType">
+      <option value="">All Types</option>
+      <option value="0">Diagnostic</option>
+      <option value="1">Therapeutic</option>
+      <option value="2">Surgical</option>
+      <option value="3">Laboratory</option>
+    </select>
     <button (click)="openAddEquipmentDialog()">Add Equipment</button>
   </div>
   <div class="equipment-list">
     <div
-    *ngFor="let equipment of (company.equipmentList || []) | filterEquipment:searchQuery"
-    class="equipment-card"
+      *ngFor="let equipment of getFilteredEquipment()"
+      class="equipment-card"
     >
       <h3>{{ equipment.name }}</h3>
       <p>{{ equipment.description }}</p>
@@ -68,6 +75,7 @@
     </div>
   </div>
 </div>
+
 
 <div class="modal" *ngIf="showModal">
   <div class="modal-content">
@@ -128,9 +136,19 @@
   </div>
 </div>
 
+<div class="user-reserved-equipment-section">
+  <h2>Users which have reserved equipment</h2>
+  <div *ngFor="let user of usersReserved" class="user-card">
+    <p><strong>First Name:</strong> {{ user.firstName }}</p>
+    <p><strong>Last Name:</strong> {{ user.lastName }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+  </div>
+</div>
+
 <button (click)="switchCalendarView('dayGridMonth')">Month View</button>
 <button (click)="switchCalendarView('dayGridWeek')">Week View</button>
 <button (click)="switchCalendarView('timeGridDay')">Day View</button>
+
 <div id="calendar" *ngIf="calendarOptions">
   <full-calendar [options]="calendarOptions"></full-calendar>
 </div>

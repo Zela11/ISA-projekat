@@ -31,11 +31,13 @@ import listPlugin from '@fullcalendar/interaction'; // Import List Plugin
   styleUrls: ['./company-profile.component.css']
 })
 export class CompanyProfileComponent implements OnInit {
-
+  
+  selectedType: string = '';
+  
   calendarOptions: CalendarOptions | undefined;
   viewMode: string = 'dayGridMonth'; // Default view mode
 
-
+  usersReserved: User[] | undefined;
   @ViewChild('map', { static: true }) mapElement!: ElementRef;
   showAppointmentModal: boolean = false;
   isAppointmentUpdateMode: boolean = false;
@@ -102,7 +104,20 @@ export class CompanyProfileComponent implements OnInit {
     {     
       this.loadCompanyData(companyId, this.viewMode);
     }
+    if(companyId)
+      this.loadUsers(companyId);
     
+  }
+  loadUsers(companyId: number) {
+    this.userService.getUsersWithEquipmentReservationForCompany(companyId)
+      .subscribe(
+        (data: User[]) => {
+          this.usersReserved = data;
+        },
+        (error) => {
+          console.error('Failed to fetch companies', error);
+        }
+      );
   }
   navigateToAnalytics(): void {
     this.router.navigate(['/analytics']);
@@ -147,7 +162,16 @@ export class CompanyProfileComponent implements OnInit {
             return `${hours}:${minutes}${period}`;
           };
 
-          const backgroundColor = appointment.status === 0 ? 'blue' : 'green';
+          let backgroundColor = "";
+          if(appointment.status === 0) {
+            backgroundColor = 'blue';
+          } else if(appointment.status === 1) {
+            backgroundColor = 'yellow';
+          } else if (appointment.status === 2) {
+            backgroundColor = 'green';
+          } else {
+            backgroundColor = 'red';
+          }
 
           if (appointment.userId) {
             this.userService.getById(appointment.userId).subscribe((user) => {
@@ -446,5 +470,14 @@ export class CompanyProfileComponent implements OnInit {
   }
   handleClick() {
     console.log("huh");
+  }
+  getFilteredEquipment() {
+    if(this.company.equipmentList) {
+      return this.company.equipmentList.filter(equipment => 
+        (this.selectedType === '' || equipment.type.toString() === this.selectedType) &&
+        (equipment.name.toLowerCase().includes(this.searchQuery.toLowerCase()))
+      );
+    }
+    return;
   }
 }

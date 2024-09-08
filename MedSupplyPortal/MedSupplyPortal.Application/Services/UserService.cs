@@ -349,5 +349,37 @@ namespace MedSupplyPortal.Application.Services
             }
             return await _userRepository.UpdateUsersAsync(users);
         }
+
+        public async Task<IEnumerable<RegisterUserDto>> GetUsersWithEquipmentReservationForCompany(int companyId)
+        {
+            var appointments = await _companyRepository.GetAppointments();
+            var usersWithReservations = new List<RegisterUserDto>();
+
+            foreach (var app in appointments)
+            {
+                if (app.Status == AppointmentStatus.Reserved || app.Status == AppointmentStatus.Completed)
+                {
+                    var user = await _userRepository.GetByIdAsync((int)app.UserId);
+
+                    if (user != null)
+                    {
+                        var userDto = new RegisterUserDto
+                        {
+                            FirstName = user.FirstName,
+                            LastName = user.LastName,
+                            Email = user.Email,                            
+                        };
+                        if (!usersWithReservations.Any(u => u.Email == userDto.Email))
+                        {
+                            usersWithReservations.Add(userDto);
+                        }
+
+                    }
+                }
+            }
+
+            return usersWithReservations;
+        }
+
     }
 }

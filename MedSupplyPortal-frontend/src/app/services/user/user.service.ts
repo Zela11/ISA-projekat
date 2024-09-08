@@ -91,5 +91,8 @@ export class UserService {
   updateUserCategories(): Observable<any> {
     return this.http.put(`${this.apiUrl}/updateUserCategories`, {});
   }
+  getUsersWithEquipmentReservationForCompany(companyId: number) : Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/getUsers/${companyId}`);
+  }
 
 }

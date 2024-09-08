@@ -87,6 +87,10 @@ export class CompanyAdminProfileComponent implements OnInit{
       this.passwordsDoNotMatch = true;
       return;
     }
+    if(this.newPassword === this.admin.password) {
+      alert('New password is the same as the current one');
+      return;
+    }
     this.admin.password = this.newPassword;
     this.userService.update(this.admin).subscribe(
       (response) => {

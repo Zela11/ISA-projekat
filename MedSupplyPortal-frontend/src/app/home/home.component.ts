@@ -40,8 +40,13 @@ export class HomeComponent implements OnInit {
   }
 
   changePassword(): void {
+
     if (this.newPassword !== this.confirmNewPassword) {
       alert('New passwords do not match!');
+      return;
+    }
+    if(this.currentPassword === this.newPassword) {
+      alert('New password is the same as the current one');
       return;
     }
 

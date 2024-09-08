@@ -297,18 +297,19 @@ export class CompanyDetailsComponent implements OnInit {
     }
   }
   // ----------------- PAPIJEVO---------------------
-filterAvailableAppointments(): void {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // Postavi vreme na 0 da uporediš samo datume
-
-  // Filtriramo appointments tako da ostanu samo termini koji su nakon današnjeg datuma
-  this.availableAppointments = this.company?.appointments?.filter(appointment => {
-    const appointmentDate = new Date(appointment.slot);
-    appointmentDate.setHours(0, 0, 0, 0); // Postavi i ovde vreme na 0 radi poređenja samo datuma
-
-    return appointmentDate >= today; // Vrati samo termine koji su jednaki ili nakon današnjeg datuma
-  });
-}
+  filterAvailableAppointments(): void {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Postavi vreme na 0 da uporediš samo datume
+  
+    // Filtriramo appointments tako da ostanu samo termini koji su nakon današnjeg datuma i status je 0
+    this.availableAppointments = this.company?.appointments?.filter(appointment => {
+      const appointmentDate = new Date(appointment.slot);
+      appointmentDate.setHours(0, 0, 0, 0); // Postavi i ovde vreme na 0 radi poređenja samo datuma
+  
+      return appointmentDate >= today && appointment.status === 0; // Dodaj uslov za status
+    }) || []; // U slučaju da company ili appointments nisu definisani, postavi na praznu listu
+  }
+  
 
   generateReservationId(length: number = 8): string {
     return Math.random().toString(36).substr(2, length) + Date.now().toString(36); // Generates a unique ID

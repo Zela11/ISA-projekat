@@ -344,3 +344,136 @@
   background-color: #0056b3;
 }
 /* Custom styling for event titles */
+.company-profile {
+  font-family: Arial, sans-serif;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* User Reserved Equipment Section */
+.user-reserved-equipment-section {
+  margin-top: 40px;
+}
+
+.user-reserved-equipment-section h2 {
+  font-size: 1.8em;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.user-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-card p {
+  margin: 5px 0;
+}
+
+.user-card p strong {
+  color: #555;
+}
+.status-cards {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px; /* Razmak ispod kartica i dugmadi */
+}
+
+.status-card {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+  margin-top: 30px;
+}
+
+.status-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.status-card p {
+  margin: 0;
+  font-weight: bold;
+}
+
+/* Boje za različite statuse */
+.status-icon.available {
+  background-color: #007bff; /* Blue */
+}
+
+.status-icon.reserved {
+  background-color: #ffc107; /* Yellow */
+}
+
+.status-icon.completed {
+  background-color: #28a745; /* Green */
+}
+
+.status-icon.expired {
+  background-color: #dc3545; /* Red */
+}
+
+/* Osnovne stilove za dugmad */
+button {
+  margin: 0 5px;
+}
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar input,
+.search-bar select {
+  margin-right: 10px;
+  padding: 5px;
+}
+
+.equipment-section {
+  padding: 20px;
+}
+
+.equipment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.equipment-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.equipment-card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.equipment-actions {
+  margin-top: 10px;
+}
+
+.equipment-actions button {
+  margin-right: 5px;
+}
+.equipment-header select {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 1rem;
+}

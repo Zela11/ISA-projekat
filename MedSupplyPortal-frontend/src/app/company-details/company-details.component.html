@@ -18,9 +18,6 @@
     </div>
   </div>
 
-  <button (click)="switchCalendarView('dayGridMonth')">Month View</button>
-  <button (click)="switchCalendarView('dayGridWeek')">Week View</button>
-  <button (click)="switchCalendarView('timeGridDay')">Day View</button>
   <div id="calendar" *ngIf="calendarOptions">
     <full-calendar [options]="calendarOptions"></full-calendar>
   </div>
