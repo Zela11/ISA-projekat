@@ -55,6 +55,12 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     b.Property<int?>("UserId")
                         .HasColumnType("integer");
 
+                    b.Property<uint>("version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.HasKey("CompanyId", "AdministratorId", "Slot");
 
                     b.ToTable("Appointments");

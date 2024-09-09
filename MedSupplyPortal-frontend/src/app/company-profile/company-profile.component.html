@@ -148,6 +148,24 @@
 <button (click)="switchCalendarView('dayGridMonth')">Month View</button>
 <button (click)="switchCalendarView('dayGridWeek')">Week View</button>
 <button (click)="switchCalendarView('timeGridDay')">Day View</button>
+<div class="status-cards">
+  <div class="status-card">
+    <span class="status-icon available"></span>
+    <span class="status-text">Available</span>
+  </div>
+  <div class="status-card">
+    <span class="status-icon reserved"></span>
+    <span class="status-text">Reserved</span>
+  </div>
+  <div class="status-card">
+    <span class="status-icon completed"></span>
+    <span class="status-text">Completed</span>
+  </div>
+  <div class="status-card">
+    <span class="status-icon expired"></span>
+    <span class="status-text">Expired</span>
+  </div>
+</div>
 
 <div id="calendar" *ngIf="calendarOptions">
   <full-calendar [options]="calendarOptions"></full-calendar>

@@ -101,6 +101,10 @@ export class CompanyDetailsComponent implements OnInit {
     points: 0,
     categoryName: ''
   };
+  reservedAppointments: Appointment[] | undefined;
+  expiredAppointments: Appointment[] | undefined;
+  currentTime: Date = new Date();
+  intervalId: any;
   userId: number | null = null;
   userCategoryName: string = '';
   discount: number = 0;
@@ -110,7 +114,36 @@ export class CompanyDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCompany();
+    this.startRealTimeUpdates();
   }
+  startRealTimeUpdates(): void {
+    this.intervalId = setInterval(() => {
+      this.currentTime = new Date();
+      this.checkForExpiredAppointments();
+    }, 1000);
+  }
+  checkForExpiredAppointments(): void {
+    if(this.company.appointments){
+      this.company.appointments.forEach(appointment => {
+        const appointmentEnd = new Date(appointment.slot);
+        appointmentEnd.setMinutes(appointmentEnd.getMinutes() + Number(appointment.duration));
+        if(this.currentTime > appointmentEnd && (appointment.status == 0 || appointment.status == 1))
+          this.expireAppointment(appointment)
+    });
+  }
+}
+expireAppointment(appointment: Appointment): void{
+  appointment.status = 3;
+  console.log(appointment)
+  this.companyService.completeAppointment(this.company?.id ,appointment).subscribe(
+    () => {
+      this.loadCompany();
+    },
+    (error: any) => {
+      console.error('Error updating appointment:', error);
+    }
+  )
+}
   loadUser(): void {
     this.userId = this.tokenStorage.getUserId();
     console.log("User ID je ", this.userId)
@@ -250,34 +283,42 @@ export class CompanyDetailsComponent implements OnInit {
     this.selectedAppointment = null;
   }
   reserveSelectedEquipment(): void {
-    console.log("kada rez",this.selectedEquipment);
-    console.log("kada rez",this.selectedAppointment);
-
-    
-    if(this.selectedEquipment.id != 0) {
-      if(this.selectedAppointment) { 
+    console.log("kada rez", this.selectedEquipment);
+    console.log("kada rez", this.selectedAppointment);
+  
+    if (this.selectedEquipment.id != 0) {
+      if (this.selectedAppointment) { 
+        const availableAmount = this.selectedEquipment.amount - this.selectedEquipment.reservedAmount;
+  
+        // Check if the selected amount is more than the available amount
+        if (this.selectedAmount > availableAmount) {
+          alert("Cannot reserve more than the available amount.");
+          return;
+        }
+  
         this.selectedAppointment.userId = this.userId;
         this.selectedAppointment.equipmentAmount = this.selectedAmount;
         this.selectedAppointment.uniqueReservationId = this.generateReservationId();
         this.selectedAppointment.equipmentId = this.selectedEquipment?.id;
-        if(this.discount > 0 && this.selectedEquipment.discountedPrice)
+        
+        if (this.discount > 0 && this.selectedEquipment.discountedPrice)
           this.selectedAppointment.totalPrice = this.selectedAmount * this.selectedEquipment.discountedPrice;
         else
           this.selectedAppointment.totalPrice = this.selectedAmount * this.selectedEquipment.price;
-        this.companyService.reserveAppointment(this.company?.id ,this.selectedAppointment).subscribe(
+  
+        this.companyService.reserveAppointment(this.company?.id, this.selectedAppointment).subscribe(
           () => {
             this.closePopup();
-            this.selectedEquipment.reservedAmount += this.selectedAmount;
+            this.selectedEquipment.reservedAmount += this.selectedAmount; // Update the reserved amount
+  
             this.companyService.updateEquipmentAmount(this.company.id, this.selectedEquipment).subscribe(
               (response) => {
-                if(this.company.equipmentList) 
-                {
+                if (this.company.equipmentList) {
                   const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipment.id);
                   if (index !== -1) {
                     this.company.equipmentList[index] = { ...this.selectedEquipment };
                   }
                 }
-              
                 this.closePopup();
               },
               (error) => {
@@ -285,17 +326,18 @@ export class CompanyDetailsComponent implements OnInit {
               }
             );
             this.loadCompany();
-            alert('Appointment reserved successfully')
+            alert('Appointment reserved successfully');
           },
           (error: any) => {
             console.error('Error updating appointment:', error);
           }
-        )
+        );
       }
     } else {
-      alert("First select equipment you would like to reserve");
+      alert("First select equipment you would like to reserve.");
     }
   }
+  
   // ----------------- PAPIJEVO---------------------
   filterAvailableAppointments(): void {
     const today = new Date();

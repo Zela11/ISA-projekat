@@ -190,7 +190,7 @@ namespace MedSupplyPortal.Application.Services
                 if (existingAppointment != null)
                 {
                     existingAppointment.Status = appointmentDto.Status;
-                    await _companyRepository.ReserveAppointmentAsync(existingAppointment);
+                    await _companyRepository.CompleteAppointmentAsync(existingAppointment);
                 }
             }
         }

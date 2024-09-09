@@ -20,7 +20,7 @@
                     Customer Name: <strong>{{ userNames[appointment.userId] || 'Loading...' }}</strong>
                 </p>
                 <button *ngIf="isCurrentTimeInSlot(appointment)" (click)="completeAppointment(appointment)">Complete</button>
-                <input  type="file" (change)="onFileSelected($event, appointment)" accept="image/*" />
+                <input  *ngIf="isCurrentTimeInSlot(appointment)" type="file" (change)="onFileSelected($event, appointment)" accept="image/*" />
             </div>
         </li>
     </ul>

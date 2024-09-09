@@ -52,7 +52,6 @@ export class CompanyService {
     return this.http.put(`${this.apiUrl}/${companyId}/appointment`, appointment);
   }
   completeAppointment(companyId: number ,appointment: Appointment) : Observable<any> {
-    console.log("U complemete appointmentu sam u servicu na frontu");
     return this.http.put(`${this.apiUrl}/${companyId}/completeAppointment`, appointment);
   }
   isEquipmentReserved(equipmentId: number): Observable<{ isReserved: boolean }> {

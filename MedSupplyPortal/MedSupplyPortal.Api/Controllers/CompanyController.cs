@@ -137,11 +137,13 @@ public class CompanyController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var user = await _userService.GetByIdAsync((int)appointmentDto.UserId);
         await _companyService.CompleteAppointmentAsync(companyId, appointmentDto);
 
-        if(appointmentDto.Status == AppointmentStatus.Completed)
+        if (appointmentDto.Status == AppointmentStatus.Completed)
+        {
+            var user = await _userService.GetByIdAsync((int)appointmentDto.UserId);
             await _emailService.SendEmailAsync(user.Email, "Appointment Completed", "Your appointment has been completed.");
+        }
         return Ok(new { message = "Appointment updated successfully." });
     }
     [HttpGet("equipments")]

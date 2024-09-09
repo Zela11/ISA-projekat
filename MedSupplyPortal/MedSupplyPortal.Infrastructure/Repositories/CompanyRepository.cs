@@ -46,7 +46,6 @@ public class CompanyRepository : ICompanyRepository
             var appointments = company.Appointments
                 .Where(a => company.CompanyAdmins.Any(admin => admin.Id == adminId))
                 .ToList();
-
             return appointments;
         }
 
