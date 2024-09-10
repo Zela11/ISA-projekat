@@ -322,6 +322,8 @@ expireAppointment(appointment: Appointment): void{
         alert('Company details updated successfully.');
       },
       (error) => {
+        alert('Update failed, company may have been updated already by another admin');
+        this.loadCompanyData(this.company.id, this.viewMode)
         console.error('Error updating company details:', error);
       }
     );
@@ -443,6 +445,7 @@ expireAppointment(appointment: Appointment): void{
           this.loadCompanyData(this.company.id, this.viewMode);
         },
         (error) => {
+          alert("Can't make appointment, put in correct values")
           console.error('Error adding appointment:', error);
         }
       );

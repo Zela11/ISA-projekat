@@ -56,7 +56,7 @@ public class AppDbContext : DbContext
             entity.HasKey(c => c.Id);
             entity.Property(c => c.Name).IsRequired().HasMaxLength(100);
             entity.Property(c => c.Description).HasMaxLength(500);
-
+            entity.Property<uint>("version").IsRowVersion();
             entity.OwnsOne(c => c.Address, a =>
             {
                 a.Property(ad => ad.City).HasMaxLength(100).IsRequired();

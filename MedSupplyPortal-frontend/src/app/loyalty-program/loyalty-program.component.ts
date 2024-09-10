@@ -55,6 +55,7 @@ export class LoyaltyProgramComponent {
         this.loadLoyaltyProgram(); // Reload the program to reflect changes
       },
       (error) => {
+        alert("Error while creating loyalty program, loyalty program may have already been created")
         console.error('Error creating loyalty program', error);
       }
     );

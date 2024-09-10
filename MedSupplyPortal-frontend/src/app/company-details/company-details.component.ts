@@ -287,7 +287,7 @@ expireAppointment(appointment: Appointment): void{
     console.log("kada rez", this.selectedAppointment);
   
     if (this.selectedEquipment.id != 0) {
-      if (this.selectedAppointment) { 
+      if (this.selectedAppointment) {
         const availableAmount = this.selectedEquipment.amount - this.selectedEquipment.reservedAmount;
   
         // Check if the selected amount is more than the available amount
@@ -300,11 +300,12 @@ expireAppointment(appointment: Appointment): void{
         this.selectedAppointment.equipmentAmount = this.selectedAmount;
         this.selectedAppointment.uniqueReservationId = this.generateReservationId();
         this.selectedAppointment.equipmentId = this.selectedEquipment?.id;
-        
-        if (this.discount > 0 && this.selectedEquipment.discountedPrice)
+  
+        if (this.discount > 0 && this.selectedEquipment.discountedPrice) {
           this.selectedAppointment.totalPrice = this.selectedAmount * this.selectedEquipment.discountedPrice;
-        else
+        } else {
           this.selectedAppointment.totalPrice = this.selectedAmount * this.selectedEquipment.price;
+        }
   
         this.selectedEquipment.reservedAmount += this.selectedAmount;
         this.companyService.reserveAppointment(this.company?.id, this.selectedAppointment, this.selectedEquipment).subscribe(
@@ -321,6 +322,15 @@ expireAppointment(appointment: Appointment): void{
           },
           (error: any) => {
             console.error('Error updating appointment:', error);
+            
+            // Check for a 500 Internal Server Error and display a specific alert
+            if (error.status === 500) {
+              alert("There was an error reserving the appointment, another user may have reserved it already.");
+              this.loadCompany();
+            } else {
+              alert("An error occurred while reserving the appointment. Please try again.");
+              this.loadCompany();
+            }
           }
         );
       }
@@ -328,6 +338,7 @@ expireAppointment(appointment: Appointment): void{
       alert("First select equipment you would like to reserve.");
     }
   }
+  
   
   // ----------------- PAPIJEVO---------------------
   filterAvailableAppointments(): void {
