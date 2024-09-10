@@ -19,7 +19,7 @@ public interface ICompanyService
     Task DeleteEquipmentAsync(int companyId, int equipmentId);
     Task UpdateEquipmentAmountAsync(int companyId, int equipmentId, EquipmentDto equipmentDto);
     Task AddAppointmentToCompanyAsync(int companyId, AppointmentDto appointmentDto);
-    Task ReserveAppointmentAsync(int companyId, AppointmentDto appointmentDto);
+    Task ReserveAppointmentAsync(int companyId, AppointmentEquipmentDto appointmentEquipmentDto);
     Task CompleteAppointmentAsync(int companyId, AppointmentDto appointmentDto);
     Task<List<Equipment>> GetEquipments();
     Task<bool> IsEquipmentReservedAsync(int equipmentId);

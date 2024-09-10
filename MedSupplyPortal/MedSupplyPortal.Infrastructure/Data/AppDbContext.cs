@@ -91,6 +91,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.ReservedAmount).IsRequired();
             entity.Property(e => e.Type).IsRequired();
             entity.Property(e => e.Price).IsRequired();
+            entity.Property<uint>("version").IsRowVersion();
         });
 
         modelBuilder.Entity<Appointment>(entity =>

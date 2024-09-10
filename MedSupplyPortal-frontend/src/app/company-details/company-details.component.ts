@@ -120,7 +120,7 @@ export class CompanyDetailsComponent implements OnInit {
     this.intervalId = setInterval(() => {
       this.currentTime = new Date();
       this.checkForExpiredAppointments();
-    }, 1000);
+    }, 5000);
   }
   checkForExpiredAppointments(): void {
     if(this.company.appointments){
@@ -306,25 +306,16 @@ expireAppointment(appointment: Appointment): void{
         else
           this.selectedAppointment.totalPrice = this.selectedAmount * this.selectedEquipment.price;
   
-        this.companyService.reserveAppointment(this.company?.id, this.selectedAppointment).subscribe(
+        this.selectedEquipment.reservedAmount += this.selectedAmount;
+        this.companyService.reserveAppointment(this.company?.id, this.selectedAppointment, this.selectedEquipment).subscribe(
           () => {
             this.closePopup();
-            this.selectedEquipment.reservedAmount += this.selectedAmount; // Update the reserved amount
-  
-            this.companyService.updateEquipmentAmount(this.company.id, this.selectedEquipment).subscribe(
-              (response) => {
-                if (this.company.equipmentList) {
-                  const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipment.id);
-                  if (index !== -1) {
-                    this.company.equipmentList[index] = { ...this.selectedEquipment };
-                  }
-                }
-                this.closePopup();
-              },
-              (error) => {
-                console.error('Error updating equipment:', error);
+            if (this.company.equipmentList) {
+              const index = this.company.equipmentList.findIndex(e => e.id === this.selectedEquipment.id);
+              if (index !== -1) {
+                this.company.equipmentList[index] = { ...this.selectedEquipment };
               }
-            );
+            }
             this.loadCompany();
             alert('Appointment reserved successfully');
           },

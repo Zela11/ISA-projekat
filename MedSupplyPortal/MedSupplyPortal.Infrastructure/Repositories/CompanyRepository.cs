@@ -115,10 +115,32 @@ public class CompanyRepository : ICompanyRepository
         }
     }
 
-    public async Task ReserveAppointmentAsync(Appointment appointment)
+    public async Task ReserveAppointmentAsync(Appointment appointment, Equipment equipment)
     {
-        _context.Appointments.Update(appointment);
-        await _context.SaveChangesAsync();
+        using (var transaction = await _context.Database.BeginTransactionAsync())
+        {
+            try
+            {
+
+                _context.Appointments.Update(appointment);
+                await _context.SaveChangesAsync();
+
+                _context.Equipments.Update(equipment);
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception($"An error occurred while processing the transaction: {ex.Message}");
+            }
+        }
     }
 
     public async Task CompleteAppointmentAsync(Appointment appointment)

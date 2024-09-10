@@ -115,7 +115,7 @@ export class CompanyProfileComponent implements OnInit {
     this.intervalId = setInterval(() => {
       this.currentTime = new Date();
       this.checkForExpiredAppointments();
-    }, 1000);
+    }, 5000);
   }
   checkForExpiredAppointments(): void {
     console.log("sekunda")

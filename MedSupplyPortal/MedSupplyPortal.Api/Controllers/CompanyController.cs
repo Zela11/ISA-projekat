@@ -116,18 +116,18 @@ public class CompanyController : ControllerBase
         await _companyService.AddAppointmentToCompanyAsync(companyId, appointmentDto);
         return Ok();
     }
-    [HttpPut("{companyId}/appointment")]
-    public async Task<IActionResult> ReserveAppointment(int companyId, [FromBody] AppointmentDto appointmentDto)
+    [HttpPut("{companyId}/appointmentAndEquipment")]
+    public async Task<IActionResult> ReserveAppointment(int companyId, [FromBody] AppointmentEquipmentDto appointmentEquipmentDto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var user = await _userService.GetByIdAsync((int)appointmentDto.UserId);
+        var user = await _userService.GetByIdAsync((int)appointmentEquipmentDto.appointmentDto.UserId);
         var company = await _companyService.GetByIdAsync(companyId);
-        var equipment = company.EquipmentList.Find(e => e.Id == appointmentDto.EquipmentId);
-        var qrCodeImage = GenerateQrCode(company.Name, equipment.Name, appointmentDto);
+        var equipment = company.EquipmentList.Find(e => e.Id == appointmentEquipmentDto.appointmentDto.EquipmentId);
+        var qrCodeImage = GenerateQrCode(company.Name, equipment.Name, appointmentEquipmentDto.appointmentDto);
 
-        await _companyService.ReserveAppointmentAsync(companyId, appointmentDto);
+        await _companyService.ReserveAppointmentAsync(companyId, appointmentEquipmentDto);
         await _emailService.SendEmailAsync(user.Email, "Reservation Confirmation", "Your reservation has been confirmed!", qrCodeImage);
         return Ok(new { message = "Appointment updated successfully." });
     }

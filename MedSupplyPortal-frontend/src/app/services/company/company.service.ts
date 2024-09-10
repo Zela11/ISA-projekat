@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Company } from 'src/app/shared/model/company';
 import { environment } from 'src/env/enviroment';
 import { TokenStorageService } from '../user/token.service';
@@ -48,9 +48,23 @@ export class CompanyService {
     console.log(appointment)
     return this.http.post(`${this.apiUrl}/${companyId}/appointment`, appointment);
   }
-  reserveAppointment(companyId: number ,appointment: Appointment) : Observable<any> {
-    return this.http.put(`${this.apiUrl}/${companyId}/appointment`, appointment);
-  }
+  public reserveAppointment(companyId: number, appointmentDto: Appointment, equipmentDto: Equipment): Observable<any> {
+    const appointmentEquipmentDto = {
+        appointmentDto: appointmentDto,
+        equipmentDto: equipmentDto
+    };
+
+    return this.http.put(`${this.apiUrl}/${companyId}/appointmentAndEquipment`, appointmentEquipmentDto)
+        .pipe(
+            catchError(this.handleError)
+        );
+}
+
+// Example error handler
+private handleError(error: HttpErrorResponse) {
+    console.error('Error occurred:', error.message);
+    return throwError(() => new Error('Something went wrong. Please try again later.'));
+}
   completeAppointment(companyId: number ,appointment: Appointment) : Observable<any> {
     return this.http.put(`${this.apiUrl}/${companyId}/completeAppointment`, appointment);
   }
@@ -58,3 +72,4 @@ export class CompanyService {
     return this.http.get<{ isReserved: boolean }>(`${this.apiUrl}/${equipmentId}/isReserved`);
   }
 }
+
