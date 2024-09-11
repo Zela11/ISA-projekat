@@ -62,13 +62,13 @@ public class CompanyRepository : ICompanyRepository
     }
     public async Task UpdateAsync(Company company)
     {
-        using (var transaction = _context.Database.BeginTransaction())
+        using (var transaction = _context.Database.BeginTransaction(System.Data.IsolationLevel.ReadCommitted))
         {
             try
             {
                 _context.Companies.Update(company);
                 await _context.SaveChangesAsync();
-                transaction.CommitAsync();
+                await transaction.CommitAsync();
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -80,12 +80,12 @@ public class CompanyRepository : ICompanyRepository
                         var databaseEntry = await entry.GetDatabaseValuesAsync();
                         if (databaseEntry == null)
                         {
-                            transaction.Rollback();
+                            await transaction.RollbackAsync();
                             throw new InvalidOperationException("The company being updated has been deleted.");
                         }
                         else
                         {
-                            transaction.Rollback();
+                            await transaction.RollbackAsync();
                             throw new DbUpdateConcurrencyException("The company has been modified by another user.");
                         }
                     }
@@ -159,7 +159,7 @@ public class CompanyRepository : ICompanyRepository
 
     public async Task ReserveAppointmentAsync(Appointment appointment, Equipment equipment)
     {
-        using (var transaction = await _context.Database.BeginTransactionAsync())
+        using (var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted))
         {
             try
             {

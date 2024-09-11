@@ -26,7 +26,6 @@ namespace MedSupplyPortal.Infrastructure.Repositories
                 {
                     if (loyaltyProgram != null)
                     {
-                        // Check for an existing LoyaltyProgram to avoid duplicates
                         var existingProgram = await _context.LoyaltyProgram.FirstOrDefaultAsync();
 
                         if (existingProgram == null)
