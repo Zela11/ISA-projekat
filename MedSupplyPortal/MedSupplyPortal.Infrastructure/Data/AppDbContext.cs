@@ -56,7 +56,7 @@ public class AppDbContext : DbContext
             entity.HasKey(c => c.Id);
             entity.Property(c => c.Name).IsRequired().HasMaxLength(100);
             entity.Property(c => c.Description).HasMaxLength(500);
-
+            entity.Property<uint>("version").IsRowVersion();
             entity.OwnsOne(c => c.Address, a =>
             {
                 a.Property(ad => ad.City).HasMaxLength(100).IsRequired();
@@ -91,6 +91,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.ReservedAmount).IsRequired();
             entity.Property(e => e.Type).IsRequired();
             entity.Property(e => e.Price).IsRequired();
+            entity.Property<uint>("version").IsRowVersion();
         });
 
         modelBuilder.Entity<Appointment>(entity =>
@@ -104,6 +105,8 @@ public class AppDbContext : DbContext
             entity.Property(a => a.EquipmentAmount).IsRequired(false);
             entity.Property(a => a.UniqueReservationId).IsRequired(false);
             entity.Property(a => a.TotalPrice).IsRequired(false);
+            entity.Property<uint>("version").IsRowVersion();
+                   
         });
 
         modelBuilder.Entity<LoyaltyProgram>()

@@ -117,7 +117,7 @@ export class ReservedEquipmentComponent {
     this.intervalId = setInterval(() => {
       this.currentTime = new Date();
       this.checkForExpiredAppointments();
-    }, 1000);
+    }, 5000);
   }
   checkForExpiredAppointments(): void {
       if(this.reservedAppointments){

@@ -46,7 +46,6 @@ public class CompanyRepository : ICompanyRepository
             var appointments = company.Appointments
                 .Where(a => company.CompanyAdmins.Any(admin => admin.Id == adminId))
                 .ToList();
-
             return appointments;
         }
 
@@ -63,9 +62,40 @@ public class CompanyRepository : ICompanyRepository
     }
     public async Task UpdateAsync(Company company)
     {
-        _context.Set<Company>().Update(company);
-        await _context.SaveChangesAsync();
+        using (var transaction = _context.Database.BeginTransaction(System.Data.IsolationLevel.ReadCommitted))
+        {
+            try
+            {
+                _context.Companies.Update(company);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                // Handle the concurrency exception here
+                foreach (var entry in ex.Entries)
+                {
+                    if (entry.Entity is Company)
+                    {
+                        var databaseEntry = await entry.GetDatabaseValuesAsync();
+                        if (databaseEntry == null)
+                        {
+                            await transaction.RollbackAsync();
+                            throw new InvalidOperationException("The company being updated has been deleted.");
+                        }
+                        else
+                        {
+                            await transaction.RollbackAsync();
+                            throw new DbUpdateConcurrencyException("The company has been modified by another user.");
+                        }
+                    }
+                }
+
+                throw;
+            }
+        }
     }
+
     public async Task AddEquipmentToCompanyAsync(int companyId, Equipment equipment)
     {
         var company = await GetByIdAsync(companyId); 
@@ -99,27 +129,60 @@ public class CompanyRepository : ICompanyRepository
     }
     public async Task AddAppointmentToCompanyAsync(Appointment appointment)
     {
-        var company = await GetByIdAsync(appointment.CompanyId);
-        var appointments = await GetAllAppointmentsByAdminAsync(appointment.CompanyId, appointment.AdministratorId);
-        appointment.Slot = appointment.Slot.ToUniversalTime();
+        using (var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable)) {
 
-        bool overlaps = CheckOverlap(appointments, appointment);
-        bool isInWorkingHours = appointment.Slot.Hour >= company.Start.Hour && appointment.Slot.Hour <= company.End.Hour;
-        bool appointmentExists = company.Appointments.Exists(a => a.Slot == appointment.Slot);
+            try
+            {
+                var company = await GetByIdAsync(appointment.CompanyId);
+                var appointments = await GetAllAppointmentsByAdminAsync(appointment.CompanyId, appointment.AdministratorId);
+                appointment.Slot = appointment.Slot.ToUniversalTime();
 
-        if (company != null && isInWorkingHours && !appointmentExists && !overlaps)
-        {
-            company.Appointments ??= new List<Appointment>();
-            company.Appointments.Add(appointment);
-            _context.Companies.Update(company);
-            await _context.SaveChangesAsync();
+                bool overlaps = CheckOverlap(appointments, appointment);
+                bool isInWorkingHours = appointment.Slot.Hour >= company.Start.Hour && appointment.Slot.Hour <= company.End.Hour;
+                bool appointmentExists = company.Appointments.Exists(a => a.Slot == appointment.Slot);
+
+                if (company != null && isInWorkingHours && !appointmentExists && !overlaps)
+                {
+                    company.Appointments ??= new List<Appointment>();
+                    company.Appointments.Add(appointment);
+                    _context.Companies.Update(company);
+                    await _context.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+            }catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
     }
 
-    public async Task ReserveAppointmentAsync(Appointment appointment)
+    public async Task ReserveAppointmentAsync(Appointment appointment, Equipment equipment)
     {
-        _context.Appointments.Update(appointment);
-        await _context.SaveChangesAsync();
+        using (var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.ReadCommitted))
+        {
+            try
+            {
+
+                _context.Appointments.Update(appointment);
+                await _context.SaveChangesAsync();
+
+                _context.Equipments.Update(equipment);
+                await _context.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception($"An error occurred while processing the transaction: {ex.Message}");
+            }
+        }
     }
 
     public async Task CompleteAppointmentAsync(Appointment appointment)

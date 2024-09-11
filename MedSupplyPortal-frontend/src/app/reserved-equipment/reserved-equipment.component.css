@@ -1,44 +1,90 @@
-/* Styling for reservation list */
-.appointment-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.appointment-item {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    padding: 15px;
-    background-color: #f9f9f9;
-}
-
-.appointment-header {
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-}
-
-.appointment-details {
-    padding-top: 10px;
-}
-
-.equipment-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
-.equipment-item {
-    margin-bottom: 5px;
-}
-
-h2, h3, h4 {
-    margin: 0;
-    padding: 0;
-    color: #333;
-}
-
-.title {
-    margin-top: 90px; /* Adjust as needed to ensure it's not covered */
-}
+/* Container and title styling */
+.reservations-container {
+    max-width: 800px; /* Adjust for your page width */
+    margin: 0 auto; /* Center the container */
+    padding: 20px; /* Add padding */
+    background-color: #f9f9f9; /* Light background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  .title {
+    text-align: center; /* Center-align title */
+    margin-bottom: 20px; /* Space below title */
+    color: #333; /* Dark text color */
+  }
+  
+  /* Appointment list and items */
+  .appointment-list {
+    list-style: none; /* Remove bullet points */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+  }
+  
+  .appointment-item {
+    background-color: #ffffff; /* White background for items */
+    border: 1px solid #e0e0e0; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 15px; /* Inner padding */
+    margin-bottom: 15px; /* Spacing between items */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+  }
+  
+  .appointment-header h3 {
+    margin: 0 0 5px 0; /* Reduce margin around header */
+    color: #007bff; /* Accent color for headings */
+  }
+  
+  .appointment-header p {
+    margin: 0; /* Remove margin */
+    color: #666; /* Secondary text color */
+  }
+  
+  /* Equipment list */
+  .equipment-list {
+    list-style: none; /* Remove bullet points */
+    padding: 0; /* Remove padding */
+    margin: 10px 0; /* Space above and below */
+  }
+  
+  .equipment-item p {
+    margin: 0; /* Remove margin */
+    color: #444; /* Slightly darker text color */
+  }
+  
+  /* Appointment actions */
+  .appointment-actions {
+    margin-top: 15px; /* Space above actions */
+    display: flex; /* Flexbox for alignment */
+    gap: 10px; /* Spacing between actions */
+    align-items: center; /* Align vertically */
+  }
+  
+  .btn {
+    padding: 8px 16px; /* Button padding */
+    border: none; /* Remove border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    background-color: #007bff; /* Primary button color */
+    color: #fff; /* White text color */
+    transition: background-color 0.3s; /* Smooth hover effect */
+  }
+  
+  .btn:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+  }
+  
+  .file-input {
+    padding: 5px; /* Input padding */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 4px; /* Rounded corners */
+  }
+  
+  /* Media query for responsiveness */
+  @media (max-width: 600px) {
+    .appointment-actions {
+      flex-direction: column; /* Stack buttons vertically */
+      gap: 5px; /* Smaller gap */
+    }
+  }
+  

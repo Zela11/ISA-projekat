@@ -91,6 +91,8 @@ export class CompanyProfileComponent implements OnInit {
     price: 0
   };
   calendar: Calendar | undefined;
+  currentTime: Date = new Date();
+  intervalId: any;
   constructor(
     private companyService: CompanyService,
     private tokenStorage: TokenStorageService,
@@ -106,8 +108,38 @@ export class CompanyProfileComponent implements OnInit {
     }
     if(companyId)
       this.loadUsers(companyId);
+    this.startRealTimeUpdates();
     
   }
+  startRealTimeUpdates(): void {
+    this.intervalId = setInterval(() => {
+      this.currentTime = new Date();
+      this.checkForExpiredAppointments();
+    }, 5000);
+  }
+  checkForExpiredAppointments(): void {
+    console.log("sekunda")
+    if(this.company.appointments){
+      this.company.appointments.forEach(appointment => {
+        const appointmentEnd = new Date(appointment.slot);
+        appointmentEnd.setMinutes(appointmentEnd.getMinutes() + Number(appointment.duration));
+        if(this.currentTime > appointmentEnd && (appointment.status == 0 || appointment.status == 1))
+          this.expireAppointment(appointment)
+    });
+  }
+}
+expireAppointment(appointment: Appointment): void{
+  appointment.status = 3;
+  console.log(appointment)
+  this.companyService.completeAppointment(this.company?.id ,appointment).subscribe(
+    () => {
+      this.loadCompanyData(this.company.id, this.viewMode);
+    },
+    (error: any) => {
+      console.error('Error updating appointment:', error);
+    }
+  )
+}
   loadUsers(companyId: number) {
     this.userService.getUsersWithEquipmentReservationForCompany(companyId)
       .subscribe(
@@ -290,6 +322,8 @@ export class CompanyProfileComponent implements OnInit {
         alert('Company details updated successfully.');
       },
       (error) => {
+        alert('Update failed, company may have been updated already by another admin');
+        this.loadCompanyData(this.company.id, this.viewMode)
         console.error('Error updating company details:', error);
       }
     );
@@ -411,6 +445,7 @@ export class CompanyProfileComponent implements OnInit {
           this.loadCompanyData(this.company.id, this.viewMode);
         },
         (error) => {
+          alert("Can't make appointment, put in correct values")
           console.error('Error adding appointment:', error);
         }
       );

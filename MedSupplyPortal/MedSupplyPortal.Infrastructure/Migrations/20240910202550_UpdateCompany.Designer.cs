@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedSupplyPortal.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240907201959_Inital")]
-    partial class Inital
+    [Migration("20240910202550_UpdateCompany")]
+    partial class UpdateCompany
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,6 +57,12 @@ namespace MedSupplyPortal.Infrastructure.Migrations
 
                     b.Property<int?>("UserId")
                         .HasColumnType("integer");
+
+                    b.Property<uint>("version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.HasKey("CompanyId", "AdministratorId", "Slot");
 
@@ -114,6 +120,12 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     b.Property<TimeOnly>("Start")
                         .HasColumnType("time without time zone");
 
+                    b.Property<uint>("version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
@@ -154,6 +166,12 @@ namespace MedSupplyPortal.Infrastructure.Migrations
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
+
+                    b.Property<uint>("version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
 
                     b.HasKey("Id");
 

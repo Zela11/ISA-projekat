@@ -1,27 +1,42 @@
-<div *ngIf="company">
+<div *ngIf="company" class="reservations-container">
     <h2 class="title">Reservations</h2>
     <ul class="appointment-list">
-        <li *ngFor="let appointment of reservedAppointments" class="appointment-item">
-            <div class="appointment-header">
-                <h3>Slot: {{ appointment.slot | date:'short' }}</h3>
-                <p>Duration: {{ appointment.duration }}</p>
-            </div>
-            <div class="appointment-details">
-                <h4>Equipment:</h4>
-                <ul class="equipment-list">
-                    <li *ngFor="let equipment of company.equipmentList" class="equipment-item">
-                        <ng-container *ngIf="equipment.id === appointment.equipmentId">
-                            <p><strong>{{ equipment.name }}</strong></p>
-                            <p>Amount: {{ appointment.equipmentAmount }}</p>
-                        </ng-container>
-                    </li>
-                </ul>
-                <p *ngIf="appointment.userId !== null">
-                    Customer Name: <strong>{{ userNames[appointment.userId] || 'Loading...' }}</strong>
-                </p>
-                <button *ngIf="isCurrentTimeInSlot(appointment)" (click)="completeAppointment(appointment)">Complete</button>
-                <input  type="file" (change)="onFileSelected($event, appointment)" accept="image/*" />
-            </div>
-        </li>
+      <li *ngFor="let appointment of reservedAppointments" class="appointment-item card">
+        <div class="appointment-header">
+          <h3>Slot: {{ appointment.slot | date: 'short' }}</h3>
+          <p>Duration: {{ appointment.duration }} minutes</p>
+        </div>
+        <div class="appointment-details">
+          <h4>Equipment:</h4>
+          <ul class="equipment-list">
+            <li *ngFor="let equipment of company.equipmentList" class="equipment-item">
+              <ng-container *ngIf="equipment.id === appointment.equipmentId">
+                <p><strong>{{ equipment.name }}</strong></p>
+                <p>Amount: {{ appointment.equipmentAmount }}</p>
+              </ng-container>
+            </li>
+          </ul>
+          <p *ngIf="appointment.userId !== null">
+            Customer Name: <strong>{{ userNames[appointment.userId] || 'Loading...' }}</strong>
+          </p>
+          <div class="appointment-actions">
+            <button
+              *ngIf="isCurrentTimeInSlot(appointment)"
+              (click)="completeAppointment(appointment)"
+              class="btn btn-primary"
+            >
+              Complete
+            </button>
+            <input
+              *ngIf="isCurrentTimeInSlot(appointment)"
+              type="file"
+              (change)="onFileSelected($event, appointment)"
+              accept="image/*"
+              class="file-input"
+            />
+          </div>
+        </div>
+      </li>
     </ul>
-</div>
+  </div>
+  

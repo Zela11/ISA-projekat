@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MedSupplyPortal.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Inital : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -59,7 +59,8 @@ namespace MedSupplyPortal.Infrastructure.Migrations
                     EquipmentId = table.Column<int>(type: "integer", nullable: true),
                     EquipmentAmount = table.Column<int>(type: "integer", nullable: true),
                     UniqueReservationId = table.Column<string>(type: "text", nullable: true),
-                    TotalPrice = table.Column<double>(type: "double precision", nullable: true)
+                    TotalPrice = table.Column<double>(type: "double precision", nullable: true),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false, defaultValue: 0u)
                 },
                 constraints: table =>
                 {

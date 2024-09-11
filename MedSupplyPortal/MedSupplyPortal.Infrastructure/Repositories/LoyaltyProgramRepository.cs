@@ -20,9 +20,34 @@ namespace MedSupplyPortal.Infrastructure.Repositories
         }
         public async Task AddAsync(LoyaltyProgram loyaltyProgram)
         {
-            if (loyaltyProgram != null) { await _context.AddAsync(loyaltyProgram); }
-            await _context.SaveChangesAsync();
+            using (var transaction = await _context.Database.BeginTransactionAsync(System.Data.IsolationLevel.Serializable))
+            {
+                try
+                {
+                    if (loyaltyProgram != null)
+                    {
+                        var existingProgram = await _context.LoyaltyProgram.FirstOrDefaultAsync();
+
+                        if (existingProgram == null)
+                        {
+                            await _context.AddAsync(loyaltyProgram);
+                            await _context.SaveChangesAsync();
+                            await transaction.CommitAsync();
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("A Loyalty program  already exists.");
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
         }
+
 
         public async Task<List<LoyaltyProgram>> GetAsync()
         {

@@ -17,7 +17,7 @@ public interface ICompanyRepository
     Task UpdateEquipmentAsync(Equipment equipment);
     Task DeleteEquipmentAsync(int companyId, int equipmentId);
     Task AddAppointmentToCompanyAsync(Appointment appointment);
-    Task ReserveAppointmentAsync(Appointment appointment);
+    Task ReserveAppointmentAsync(Appointment appointment, Equipment equipment);
     Task CompleteAppointmentAsync(Appointment appointment);
     Task<List<Equipment>> GetEquipmets();
     Task<List<Appointment>> GetAppointments();

@@ -6,7 +6,7 @@
     <form (ngSubmit)="createLoyaltyProgram()" #pointsForm="ngForm">
       <div class="form-group">
         <label for="pointsPerPickup">Points Per Pickup</label>
-        <input type="number" id="pointsPerPickup" name="pointsPerPickup" [(ngModel)]="loyaltyProgram.pointsPerPickup" required />
+        <input type="number" id="pointsPerPickup" name="pointsPerPickup" [(ngModel)]="loyaltyProgram.pointsPerPickup" required min="1"/>
       </div>
       <button type="submit" class="submit-button">Confirm Points Per Pickup</button>
     </form>
@@ -24,10 +24,10 @@
         <input type="text" id="categoryName" [(ngModel)]="newCategoryScale.name" name="categoryName" required />
 
         <label for="minimumPoints">Minimum Points</label>
-        <input type="number" id="minimumPoints" [(ngModel)]="newCategoryScale.minimumPoints" name="minimumPoints" required />
+        <input type="number" id="minimumPoints" [(ngModel)]="newCategoryScale.minimumPoints" name="minimumPoints" required min="1"/>
 
         <label for="penaltyThreshold">Penalty Threshold</label>
-        <input type="number" id="penaltyThreshold" [(ngModel)]="newCategoryScale.penaltyThreshold" name="penaltyThreshold" required />
+        <input type="number" id="penaltyThreshold" [(ngModel)]="newCategoryScale.penaltyThreshold" name="penaltyThreshold" required min="1"/>
 
         <label for="discount">Discount (%)</label>
         <input type="number" id="discount" [(ngModel)]="newCategoryScale.discount" name="discount" required />
